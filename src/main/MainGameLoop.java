@@ -51,12 +51,15 @@ public class MainGameLoop implements Runnable {
 		Timer t = new Timer();
 		DisplayManager.createDisplay(1440, 810, false);
 		loader = new Loader();
+		Timer assetTimer = new Timer();
 		Assets.load(loader);
 
 		TextMaster.init(loader);
 		camera = new Camera();
 		renderer = new MasterRenderer(loader, camera);
 		ParticleMaster.init(loader, renderer.getProjectionMatrix());
+
+		System.out.println("\nFinished loading assets in " + assetTimer.getTime());
 
 		world = new World(loader, renderer);
 		renderer.setWorld(world);
@@ -78,11 +81,11 @@ public class MainGameLoop implements Runnable {
 
 		thread = new Thread(new MainGameLoop(), "update-thread");
 		thread.start();
-		System.out.println("finished game initalization took " + t.getTime());
+		System.out.println("finished game initalization took " + t.getTime() + "\n");
 
 		system = new ParticleSystem(Assets.particleTexture, 100, 1f, 1, 2);
 
-		//DisplayManager.setDisplayMode(100, 100, true);
+		world.printGenStats();
 		//****************Game Loop Below*********************
 		while (running.get()) {
 			ParticleMaster.update(camera);

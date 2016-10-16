@@ -4,6 +4,7 @@ import static org.lwjgl.opengl.GL11.*;
 import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.IntBuffer;
 import javax.imageio.ImageIO;
 import org.lwjgl.opengl.GL14;
 import org.lwjgl.opengl.GL30;
@@ -30,6 +31,11 @@ public class Texture {
 
 	public Texture(String name, boolean b) {
 		this("./res/textures/" + name + ".png");
+	}
+
+	public TextureData getTextureData() {
+
+		return new TextureData(null, width, height);
 	}
 
 	private int load(String path, int filter, float mipMappingBias) {
@@ -130,6 +136,37 @@ public class Texture {
 
 	public void setReflectivity(float reflectivity) {
 		this.reflectivity = reflectivity;
+	}
+
+	public static TextureData loadTextureData(String path) {
+		int[] pixels = null;
+		int width = 0, height = 0;
+		try {
+			BufferedImage image = ImageIO.read(new FileInputStream(path));
+			width = image.getWidth();
+			height = image.getHeight();
+			pixels = new int[width * height];
+			image.getRGB(0, 0, width, height, pixels, 0, width);
+			System.out.println("loading texture " + path);
+		} catch (IOException e) {
+			System.err.println("Unable to load texture " + path);
+			e.printStackTrace();
+		}
+
+		int[] data = new int[width * height];
+		for (int i = 0; i < width * height; i++) {
+			int a = (pixels[i] & 0xff000000) >> 24;
+			int r = (pixels[i] & 0xff0000) >> 16;
+			int g = (pixels[i] & 0xff00) >> 8;
+			int b = (pixels[i] & 0xff);
+
+			data[i] = a << 24 | b << 16 | g << 8 | r;
+		}
+
+		int result = glGenTextures();
+		glBindTexture(GL_TEXTURE_2D, result);
+		IntBuffer buffer = BufferUtils.createIntBuffer(data);
+		return new TextureData(buffer, width, height);
 	}
 
 }

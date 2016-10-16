@@ -8,8 +8,6 @@
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="The Dungeon Looter Alpha 3d/lib/native"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/slick-util.jar"/>
-	<classpathentry kind="lib" path="lib/PNGDecoder.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Troy Berry Core"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

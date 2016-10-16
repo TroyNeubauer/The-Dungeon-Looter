@@ -6,10 +6,10 @@ public class GameSettings {
 	public static boolean SHOW_PLAYER_SHADOW = (SHADOW_PCF_COUNT > 3), SHAWODS_ENABLED = false, DEBUG = true;
 	public static int SHADOW_BUFFER_SIZE = 1024, MULTISAMPLE_COUNT = 2;
 	public static float FOG_DENSITY = 0.004f, FOG_GRADIENT = 20.0f, FONT_SIZE = 1.1f;
-	public static volatile double RENDER_DISTANCE = 500.0;
+	public static volatile double RENDER_DISTANCE;
 
 	static {
-		setRenderDistance(400.0);
+		setRenderDistance(600.0);
 	}
 
 	private GameSettings() {

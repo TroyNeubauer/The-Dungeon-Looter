@@ -20,16 +20,23 @@ public class Terrain {
 	public final Mesh model;
 	public TerrainTexturePack texturePack;
 
+	private final double divideFactor, persistence;
+	private final int largestFeature;
+
 	private float[][] heights;
 	private float[] vertices;
 	private int[] indices;
 
-	public Terrain(int gridX, int gridZ, Loader loader, TerrainTexturePack texturePack, TerrainTexture blendMap, float divideFactor, long seed) {
+	public Terrain(int gridX, int gridZ, Loader loader, TerrainTexturePack texturePack, TerrainTexture blendMap, double divideFactor,
+		double persistence, int largestFeature, long seed) {
 		this.texturePack = texturePack;
 		this.blendMap = blendMap;
 		this.x = gridX * SIZE;
 		this.z = gridZ * SIZE;
-		this.generator = new HeightGenerator(gridX, gridZ, seed, divideFactor);
+		this.divideFactor = divideFactor;
+		this.persistence = persistence;
+		this.largestFeature = largestFeature;
+		this.generator = new HeightGenerator(gridX, gridZ, divideFactor, persistence, largestFeature, seed);
 		this.model = generateTerrain(loader);
 	}
 
@@ -110,10 +117,10 @@ public class Terrain {
 	private Vector3f calculateNormal(int x, int z) {
 		Vector3f normal = null;
 		try {
-			float heightL = heights[x - 1][z];
-			float heightR = heights[x + 1][z];
-			float heightD = heights[x][z - 1];
-			float heightU = heights[x][z + 1];
+			float heightL = getHeight(x - 1, z);
+			float heightR = getHeight(x + 1, z);
+			float heightD = getHeight(x, z - 1);
+			float heightU = getHeight(x, z + 1);
 			normal = new Vector3f(heightL - heightR, 2f, heightD - heightU);
 		} catch (Exception e) {
 			normal = new Vector3f(0, 1, 0);

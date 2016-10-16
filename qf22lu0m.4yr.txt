@@ -1,0 +1,34 @@
+﻿
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch master
+# Changes to be committed:
+#	modified:   .classpath
+#	new file:   .gitignore
+#	modified:   .project
+#	modified:   bin/entity/EntityPlayer.class
+#	modified:   bin/graphics/Texture.class
+#	modified:   bin/graphics/TextureData.class
+#	modified:   bin/input/GameSettings.class
+#	modified:   bin/main/MainGameLoop.class
+#	modified:   bin/normalMappingRenderer/normalMapFShader.txt
+#	modified:   bin/renderEngine/Loader.class
+#	modified:   bin/world/HeightGenerator.class
+#	modified:   bin/world/Terrain.class
+#	modified:   bin/world/World.class
+#	deleted:    hs_err_pid4192.log
+#	deleted:    lib/PNGDecoder.jar
+#	deleted:    lib/lwjgl_util.jar
+#	deleted:    lib/slick-util.jar
+#	deleted:    saved.png
+#	modified:   src/entity/EntityPlayer.java
+#	modified:   src/graphics/Texture.java
+#	modified:   src/graphics/TextureData.java
+#	modified:   src/input/GameSettings.java
+#	modified:   src/main/MainGameLoop.java
+#	modified:   src/renderEngine/Loader.java
+#	modified:   src/world/HeightGenerator.java
+#	modified:   src/world/Terrain.java
+#	modified:   src/world/World.java
+#
+

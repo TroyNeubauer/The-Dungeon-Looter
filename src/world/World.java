@@ -37,7 +37,9 @@ public class World {
 	private DecimalFormat df = new DecimalFormat("00.0");
 
 	public static final float GRAVITY = 0.0021f;
-	private long seed;
+	private final long seed;
+	private final int largestFeature;
+	private final double divideFactor, persistence;
 
 	private WaterFrameBuffers buffers;
 	private WaterShader waterShader;
@@ -58,7 +60,7 @@ public class World {
 		System.out.println("Loading world");
 		Timer t = new Timer();
 		timeText = new GUIText("" + time, 1, Assets.debugFont, new Vector2f(0.9f, 0.001f), 1f, false);
-		seed = new Random().nextLong();
+		this.seed = new Random().nextLong();
 		terrains = new ArrayList<Terrain>();
 
 		entities = new ArrayList<Entity>();
@@ -73,10 +75,16 @@ public class World {
 		waterRenderer = new WaterRenderer(loader, waterShader, renderer.getProjectionMatrix(), buffers);
 		waters = new ArrayList<WaterTile>();
 
-		Maths.setSeed(seed);
-		float divideFactor = Maths.randRange(2.0f, 4.0f);
+		Maths.setSeed(new Random(this.seed).nextLong());
+		//this.divideFactor = Maths.randRange(20.0, 140.0);
+		//this.persistence = Maths.randRange(0.8, 1.5);
+		//this.largestFeature = Maths.randRange(20, 150);
 
-		int raduis = 2;
+		this.divideFactor = 140.0;
+		this.persistence = 1.5;
+		this.largestFeature = 100;
+
+		int raduis = 5;
 		int terrainsToGen = 0;
 		for (int z = -raduis; z <= raduis; z++) {
 			for (int x = -raduis; x <= raduis; x++) {
@@ -84,10 +92,10 @@ public class World {
 			}
 		}
 		int counter = 0;
-		System.out.println("divide factor = " + divideFactor + " seed " + seed);
 		for (int z = -raduis; z <= raduis; z++) {
 			for (int x = -raduis; x <= raduis; x++) {
-				terrains.add(new Terrain(x, z, loader, Assets.texturePack, Assets.blendMap, divideFactor, seed));
+				terrains.add(new Terrain(x, z, loader, Assets.texturePack, Assets.blendMap, this.divideFactor, this.persistence, this.largestFeature,
+					this.seed));
 				counter++;
 				System.out.println("generating terrain " + ((double) counter / (double) terrainsToGen));
 			}
@@ -214,6 +222,13 @@ public class World {
 		}
 
 		return 0;
+	}
+
+	public void printGenStats() {
+		System.out.println("World seed is " + this.seed);
+		System.out.println("World divide factor is " + this.divideFactor);
+		System.out.println("World presistence is " + this.persistence);
+		System.out.println("World's largest feature is " + this.largestFeature);
 	}
 
 }
