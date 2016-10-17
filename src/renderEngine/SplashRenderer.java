@@ -19,6 +19,7 @@ public class SplashRenderer {
 	public static void init() {
 		quad = Loader.getLoader().loadToVAO(POSITIONS, 2);
 		shader = new LoadingScreenShader();
+		SplashRenderer.render();
 	}
 
 	public static void render() {
@@ -27,11 +28,10 @@ public class SplashRenderer {
 
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, Assets.loadingTexture.id);
-		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 		GL11.glDrawArrays(GL11.GL_TRIANGLE_STRIP, 0, 4);
 		shader.start();
 		end();
-		DisplayManager.updateDisplay();
+		DisplayManager.updateDisplay(false);
 	}
 
 	private static void start() {

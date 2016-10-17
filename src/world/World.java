@@ -36,7 +36,7 @@ public class World {
 	private Map<Entity, Boolean> entitiesToAdd = new HashMap<Entity, Boolean>();
 	private DecimalFormat df = new DecimalFormat("00.0");
 
-	public static final float GRAVITY = 0.0021f;
+	public static final float GRAVITY = 0.0017f;
 	private final long seed;
 	private final int largestFeature;
 	private final double divideFactor, persistence;
@@ -80,7 +80,7 @@ public class World {
 		this.persistence = Maths.randRange(0.8, 1.5);
 		this.largestFeature = Maths.randRange(20, 150);
 
-		int raduis = 2;
+		int raduis = 1;
 		int terrainsToGen = 0;
 		for (int z = -raduis; z <= raduis; z++) {
 			for (int x = -raduis; x <= raduis; x++) {

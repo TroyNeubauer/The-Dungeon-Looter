@@ -16,7 +16,7 @@ import world.World;
 public class EntityPlayer extends EntityLiving {
 
 	private boolean grabbed = true;
-	private static final float RUN_SPEED = 0.05f * 4f, JUMP_POWER = 0.06f;
+	private static final float RUN_SPEED = 0.05f, JUMP_POWER = 0.05f;
 	private float slope = 0f;
 	private GUIText healthText;
 

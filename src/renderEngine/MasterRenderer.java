@@ -67,7 +67,7 @@ public class MasterRenderer {
 		Vector4f clipPlane, double renderDistance) {
 		for (Terrain terrain : terrains) {
 			if (Maths.approximateDistanceBetweenPoints(terrain.x + Terrain.SIZE / 2.0, terrain.z + Terrain.SIZE / 2.0, camera.position.x,
-				camera.position.z) > renderDistance) continue;
+				camera.position.z) > renderDistance + 50.0) continue;
 			processTerrain(terrain);
 		}
 		for (Entity entity : entities) {

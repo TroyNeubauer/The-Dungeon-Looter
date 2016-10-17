@@ -63,7 +63,7 @@ public class GameManager {
 		guiRenderer.render(guiTextures);
 		TextMaster.render();
 
-		DisplayManager.updateDisplay();
+		DisplayManager.updateDisplay(true);
 	}
 
 	public static void cleanUp() {
@@ -81,12 +81,13 @@ public class GameManager {
 	public static void init() {
 		System.out.println("Starting " + Version.getWindowTitle() + "\n");
 		Timer t = new Timer();
-		DisplayManager.createDisplay(1440, 810, false);
+		DisplayManager.createDisplay(1440, 810, true);
+		Assets.loadCoreAssets(Loader.getLoader());
+		SplashRenderer.init();
+
 		TextMaster.init();
 		MasterRenderer.init();
 		ParticleMaster.init(MasterRenderer.projectionMatrix);
-		Assets.loadCoreAssets(Loader.getLoader());
-		SplashRenderer.init();
 		Assets.load(Loader.getLoader());
 
 		world = new World();

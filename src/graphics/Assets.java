@@ -45,6 +45,11 @@ public class Assets {
 			SplashRenderer.render();
 			rock.getTexture().setReflectivity(0.5f);
 
+			font = new FontType(new Texture("./res/fonts/harrington.png").id, new File("res/fonts/harrington.fnt"));
+			SplashRenderer.render();
+			debugFont = new FontType(new Texture("./res/fonts/verdana.png").id, new File("./res/fonts/verdana.fnt"));
+			SplashRenderer.render();
+
 			person = new TexturedModel(personMesh, new Texture("playerTexture", true));
 			SplashRenderer.render();
 			tree = new TexturedModel(treeMesh, new Texture("pine", true));
@@ -75,8 +80,6 @@ public class Assets {
 
 	public static void loadCoreAssets(Loader loader) {
 		loadingTexture = new Texture("loading", true);
-		font = new FontType(new Texture("./res/fonts/harrington.png").id, new File("res/fonts/harrington.fnt"));
-		debugFont = new FontType(new Texture("./res/fonts/verdana.png").id, new File("./res/fonts/verdana.fnt"));
 	}
 
 }

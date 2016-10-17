@@ -108,24 +108,25 @@ public class DisplayManager {
 		}
 	}
 
-	public static void updateDisplay() {
-		frames++;
-		long now = System.nanoTime();
-		timeTaken = (now - lastFrameTime);
-		timer += timeTaken;
-		delta = timeTaken / 1000000000l;
-		if (timer > 1000000000l) {
-			TextMaster.removeText(FPSText);
-			FPSText = new GUIText("fps " + frames, GameSettings.FONT_SIZE, Assets.debugFont, new Vector2f(0.001f, 0.001f), 1f, false);
-			TextMaster.loadText(FPSText);
-			timer = 0;
-			frames = 0;
+	public static void updateDisplay(boolean calcFPS) {
+		if (calcFPS) {
+			frames++;
+			long now = System.nanoTime();
+			timeTaken = (now - lastFrameTime);
+			timer += timeTaken;
+			delta = timeTaken / 1000000000l;
+			lastFrameTime = now;
+			if (timer > 1000000000l) {
+				TextMaster.removeText(FPSText);
+				FPSText = new GUIText("fps " + frames, GameSettings.FONT_SIZE, Assets.debugFont, new Vector2f(0.001f, 0.001f), 1f, false);
+				TextMaster.loadText(FPSText);
+				timer = 0;
+				frames = 0;
+			}
 		}
 		Display.update();
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 		GL11.glClearColor(1, 1, 1, 1);
-
-		lastFrameTime = now;
 	}
 
 	public static void closeDisplay() {
