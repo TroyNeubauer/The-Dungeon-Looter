@@ -4,7 +4,7 @@ import com.troy.troyberry.math.Maths;
 import com.troy.troyberry.math.Vector2f;
 import com.troy.troyberry.math.Vector3f;
 import entity.Camera;
-import renderEngine.DisplayManager;
+import main.DisplayManager;
 import world.World;
 
 public class Particle {
@@ -35,12 +35,12 @@ public class Particle {
 		return age;
 	}
 
-	protected boolean update(Camera camera) {
+	protected boolean update() {
 		this.velocity.y -= World.GRAVITY * gravityEffect * (DisplayManager.getFrameTimeSeconds() * 1000f);
 		Vector3f change = new Vector3f(velocity);
 		change.scale(DisplayManager.getFrameTimeSeconds());
 		this.position.add(change);
-		distance = Vector3f.sub(camera.position, position, null).lengthSquared();
+		distance = Vector3f.sub(Camera.getCamera().position, position, null).lengthSquared();
 		updateTextureCoordInfo();
 		age += DisplayManager.getFrameTimeSeconds();
 		return age < lifeLength;

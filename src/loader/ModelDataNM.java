@@ -1,5 +1,5 @@
 
-package normalMappingObjConverter;
+package loader;
 
 public class ModelDataNM {
 

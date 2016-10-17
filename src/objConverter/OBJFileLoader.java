@@ -10,7 +10,7 @@ import java.util.List;
 import com.troy.troyberry.math.Vector2f;
 import com.troy.troyberry.math.Vector3f;
 import graphics.Mesh;
-import renderEngine.Loader;
+import loader.Loader;
 
 public class OBJFileLoader {
 

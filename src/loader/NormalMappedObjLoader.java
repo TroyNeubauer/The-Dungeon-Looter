@@ -1,4 +1,4 @@
-package normalMappingObjConverter;
+package loader;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -9,7 +9,7 @@ import java.util.List;
 import com.troy.troyberry.math.Vector2f;
 import com.troy.troyberry.math.Vector3f;
 import graphics.Mesh;
-import renderEngine.Loader;
+import input.GameSettings;
 
 public class NormalMappedObjLoader {
 
@@ -19,7 +19,7 @@ public class NormalMappedObjLoader {
 		FileReader isr = null;
 		String path = RES_LOC + objFileName + ".obj";
 		File objFile = new File(path);
-		System.out.println("Loading model " + path);
+		if (GameSettings.DEBUG) System.out.println("Loading model " + path);
 		BufferedReader reader = null;
 		try {
 			isr = new FileReader(objFile);

@@ -10,8 +10,8 @@ import entity.Light;
 public class TerrainShader extends ShaderProgram {
 
 	private static final int MAX_LIGHTS = 4;
-	private static final String VERTEX_FILE = "src/graphics/shader/terrainVertexShader.txt";
-	private static final String FRAGMENT_FILE = "src/graphics/shader/terrainFragmentShader.txt";
+	private static final String VERTEX_FILE = "src/graphics/shader/terrain.vert";
+	private static final String FRAGMENT_FILE = "src/graphics/shader/terrain.frag";
 
 	private int location_transformationMatrix;
 	private int location_projectionMatrix;

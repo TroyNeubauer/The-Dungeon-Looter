@@ -28,8 +28,8 @@ import graphics.water.WaterShader;
 import graphics.water.WaterTile;
 import input.GameSettings;
 import postProcessing.Fbo;
-import renderEngine.Loader;
 import renderEngine.MasterRenderer;
+import renderEngine.SplashRenderer;
 
 public class World {
 
@@ -56,7 +56,7 @@ public class World {
 	public List<Entity> normalMapEntities;
 	public Light sun;
 
-	public World(Loader loader, MasterRenderer renderer) {
+	public World() {
 		System.out.println("Loading world");
 		Timer t = new Timer();
 		timeText = new GUIText("" + time, 1, Assets.debugFont, new Vector2f(0.9f, 0.001f), 1f, false);
@@ -72,32 +72,30 @@ public class World {
 
 		buffers = new WaterFrameBuffers();
 		waterShader = new WaterShader();
-		waterRenderer = new WaterRenderer(loader, waterShader, renderer.getProjectionMatrix(), buffers);
+		waterRenderer = new WaterRenderer(waterShader, MasterRenderer.projectionMatrix, buffers);
 		waters = new ArrayList<WaterTile>();
 
 		Maths.setSeed(new Random(this.seed).nextLong());
-		//this.divideFactor = Maths.randRange(20.0, 140.0);
-		//this.persistence = Maths.randRange(0.8, 1.5);
-		//this.largestFeature = Maths.randRange(20, 150);
+		this.divideFactor = Maths.randRange(20.0, 140.0);
+		this.persistence = Maths.randRange(0.8, 1.5);
+		this.largestFeature = Maths.randRange(20, 150);
 
-		this.divideFactor = 140.0;
-		this.persistence = 1.5;
-		this.largestFeature = 100;
-
-		int raduis = 5;
+		int raduis = 2;
 		int terrainsToGen = 0;
 		for (int z = -raduis; z <= raduis; z++) {
 			for (int x = -raduis; x <= raduis; x++) {
 				terrainsToGen++;
 			}
 		}
+		if (GameSettings.DEBUG) System.out.println("World going to generate " + terrainsToGen + " terrains");
 		int counter = 0;
 		for (int z = -raduis; z <= raduis; z++) {
 			for (int x = -raduis; x <= raduis; x++) {
-				terrains.add(new Terrain(x, z, loader, Assets.texturePack, Assets.blendMap, this.divideFactor, this.persistence, this.largestFeature,
-					this.seed));
+				SplashRenderer.render();
+				terrains
+					.add(new Terrain(x, z, Assets.texturePack, Assets.blendMap, this.divideFactor, this.persistence, this.largestFeature, this.seed));
 				counter++;
-				System.out.println("generating terrain " + ((double) counter / (double) terrainsToGen));
+				System.out.println("generating world " + df.format(((double) counter / (double) terrainsToGen) * 100.0) + "%");
 			}
 		}
 		System.out.println("Generating world done!  Took " + t.getTime());
@@ -164,38 +162,39 @@ public class World {
 		}
 		entitiesToAdd.clear();
 		for (int i = 0; i < entities.size(); i++) {
-			entities.get(i).update(this);
+			entities.get(i).update();
 		}
 	}
 
-	public void render(MasterRenderer renderer, Camera camera, Fbo postProcessingFbo) {
+	public void render(Fbo postProcessingFbo) {
 		TextMaster.removeText(timeText);
 		timeText = new GUIText(getTime(), GameSettings.FONT_SIZE + 0.2f, Assets.debugFont, new Vector2f(0.91f, 0.96f), 1f, false);
 		TextMaster.loadText(timeText);
 		double renderDistance = GameSettings.RENDER_DISTANCE;
 
 		for (WaterTile water : waters) {
-			if (Maths.getDistanceBetweenPoints(water.x, water.z, camera.position.x, camera.position.z) > renderDistance) continue;
+			if (Maths.getDistanceBetweenPoints(water.x, water.z, Camera.getCamera().position.x, Camera.getCamera().position.z) > renderDistance)
+				continue;
 			buffers.bindReflectionFrameBuffer();
-			float distance = 2 * (camera.position.y - water.height);
-			Camera dumyCamera = Camera.copyCamera(camera);
+			float distance = 2 * (Camera.getCamera().position.y - water.height);
+			Camera dumyCamera = Camera.copyCamera(Camera.getCamera());
 			dumyCamera.position.y -= distance;
 			dumyCamera.invertPitch();
-			renderer.renderScene(new ArrayList<Entity>(entities), new ArrayList<Entity>(normalMapEntities), terrains, lights, dumyCamera,
+			MasterRenderer.renderScene(new ArrayList<Entity>(entities), new ArrayList<Entity>(normalMapEntities), terrains, lights, dumyCamera,
 				new Vector4f(0, 1, 0, -water.height + 1), renderDistance);
 
 			buffers.bindRefractionFrameBuffer();
-			renderer.renderScene(new ArrayList<Entity>(entities), new ArrayList<Entity>(normalMapEntities), terrains, lights, camera,
-				new Vector4f(0, -1, 0, water.height), renderDistance);
+			MasterRenderer.renderScene(new ArrayList<Entity>(entities), new ArrayList<Entity>(normalMapEntities), terrains, lights,
+				Camera.getCamera(), new Vector4f(0, -1, 0, water.height), renderDistance);
 
 		}
 		GL11.glDisable(GL30.GL_CLIP_DISTANCE0);
 		buffers.unbindCurrentFrameBuffer();
 		postProcessingFbo.bindFrameBuffer();
 
-		renderer.renderScene(new ArrayList<Entity>(entities), new ArrayList<Entity>(normalMapEntities), terrains, lights, camera,
+		MasterRenderer.renderScene(new ArrayList<Entity>(entities), new ArrayList<Entity>(normalMapEntities), terrains, lights, Camera.getCamera(),
 			new Vector4f(0, -1, 0, 100000), renderDistance);
-		waterRenderer.render(waters, camera, sun);
+		waterRenderer.render(waters, sun);
 		postProcessingFbo.unbindFrameBuffer();
 	}
 

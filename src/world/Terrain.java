@@ -5,7 +5,7 @@ import com.troy.troyberry.math.Vector3f;
 import graphics.Mesh;
 import graphics.TerrainTexture;
 import graphics.TerrainTexturePack;
-import renderEngine.Loader;
+import loader.Loader;
 import toolbox.Maths;
 
 public class Terrain {
@@ -27,8 +27,8 @@ public class Terrain {
 	private float[] vertices;
 	private int[] indices;
 
-	public Terrain(int gridX, int gridZ, Loader loader, TerrainTexturePack texturePack, TerrainTexture blendMap, double divideFactor,
-		double persistence, int largestFeature, long seed) {
+	public Terrain(int gridX, int gridZ, TerrainTexturePack texturePack, TerrainTexture blendMap, double divideFactor, double persistence,
+		int largestFeature, long seed) {
 		this.texturePack = texturePack;
 		this.blendMap = blendMap;
 		this.x = gridX * SIZE;
@@ -37,7 +37,7 @@ public class Terrain {
 		this.persistence = persistence;
 		this.largestFeature = largestFeature;
 		this.generator = new HeightGenerator(gridX, gridZ, divideFactor, persistence, largestFeature, seed);
-		this.model = generateTerrain(loader);
+		this.model = generateTerrain();
 	}
 
 	public float getHeightOfTerrain(float worldX, float worldZ) {
@@ -66,7 +66,7 @@ public class Terrain {
 		return answer;
 	}
 
-	private Mesh generateTerrain(Loader loader) {
+	private Mesh generateTerrain() {
 
 		int count = VERTEX_COUNT * VERTEX_COUNT;
 		heights = new float[VERTEX_COUNT][VERTEX_COUNT];
@@ -111,7 +111,7 @@ public class Terrain {
 				indices[pointer++] = bottomRight;
 			}
 		}
-		return loader.loadToVAO(vertices, textureCoords, normals, indices);
+		return Loader.getLoader().loadToVAO(vertices, textureCoords, normals, indices);
 	}
 
 	private Vector3f calculateNormal(int x, int z) {

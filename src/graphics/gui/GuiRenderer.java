@@ -7,7 +7,7 @@ import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import com.troy.troyberry.math.Matrix4f;
 import graphics.Mesh;
-import renderEngine.Loader;
+import loader.Loader;
 import toolbox.Maths;
 
 public class GuiRenderer {
@@ -15,9 +15,9 @@ public class GuiRenderer {
 	private final Mesh quad;
 	private GuiShader shader;
 
-	public GuiRenderer(Loader loader) {
+	public GuiRenderer() {
 		float[] positions = { -1, 1, -1, -1, 1, 1, 1, -1 };
-		quad = loader.loadToVAO(positions, 2);
+		quad = Loader.getLoader().loadToVAO(positions, 2);
 		shader = new GuiShader();
 	}
 

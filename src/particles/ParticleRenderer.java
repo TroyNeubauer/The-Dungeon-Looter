@@ -10,7 +10,7 @@ import com.troy.troyberry.math.Matrix4f;
 import com.troy.troyberry.math.Vector3f;
 import entity.Camera;
 import graphics.Mesh;
-import renderEngine.Loader;
+import loader.Loader;
 
 public class ParticleRenderer {
 
@@ -19,16 +19,16 @@ public class ParticleRenderer {
 	private Mesh quad;
 	private ParticleShader shader;
 
-	protected ParticleRenderer(Loader loader, Matrix4f projectionMatrix) {
-		quad = loader.loadToVAO(VERTICES, 2);
+	protected ParticleRenderer(Matrix4f projectionMatrix) {
+		quad = Loader.getLoader().loadToVAO(VERTICES, 2);
 		shader = new ParticleShader();
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.stop();
 	}
 
-	protected void render(Map<ParticleTexture, List<Particle>> particles, Camera camera) {
-		Matrix4f viewMatrix = camera.getViewMatrix();
+	protected void render(Map<ParticleTexture, List<Particle>> particles) {
+		Matrix4f viewMatrix = Camera.getCamera().getViewMatrix();
 		prepare();
 		for (ParticleTexture texture : particles.keySet()) {
 			GL13.glActiveTexture(GL13.GL_TEXTURE0);

@@ -25,9 +25,9 @@ public class EntityPlayer extends EntityLiving {
 		this.scale = 0.25f;
 	}
 
-	public void update(World world) {
+	public void update() {
 		if (isDead) return;
-		move(world);
+		move();
 		this.position.add(velocity);
 	}
 
@@ -38,8 +38,7 @@ public class EntityPlayer extends EntityLiving {
 		TextMaster.loadText(healthText);
 	}
 
-	private void move(World world) {
-
+	private void move() {
 		Mouse.setGrabbed(grabbed);
 
 		if (grabbed) {

@@ -1,4 +1,4 @@
-package renderEngine;
+package main;
 
 import java.awt.GraphicsEnvironment;
 import org.lwjgl.LWJGLException;
@@ -14,7 +14,6 @@ import fontMeshCreator.GUIText;
 import fontRendering.TextMaster;
 import graphics.Assets;
 import input.GameSettings;
-import main.MainGameLoop;
 
 public class DisplayManager {
 
@@ -138,7 +137,7 @@ public class DisplayManager {
 	}
 
 	public static float getFrameTimeSeconds() {
-		return (float) MainGameLoop.TIME_PER_TICK;
+		return (float) Updater.TIME_PER_UPDATE;
 	}
 
 }

@@ -1,6 +1,12 @@
+#OS junk files
+[Tt]humbs.db
+*.DS_Store
+
+#Eclipse files
 /bin/
 /.classpath
 /.project
 /.settings
-/.git
 *.class
+
+/.git

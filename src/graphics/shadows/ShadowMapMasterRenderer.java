@@ -6,7 +6,6 @@ import org.lwjgl.opengl.GL11;
 import com.troy.troyberry.math.Matrix4f;
 import com.troy.troyberry.math.Vector2f;
 import com.troy.troyberry.math.Vector3f;
-import entity.Camera;
 import entity.Entity;
 import entity.Light;
 import graphics.TexturedModel;
@@ -42,13 +41,10 @@ public class ShadowMapMasterRenderer {
 	 * shader program that are used to render objects to the shadow map, and the
 	 * {@link ShadowFrameBuffer} to which the scene is rendered. The size of the
 	 * shadow map is determined here.
-	 * 
-	 * @param camera
-	 *            - the camera being used in the scene.
 	 */
-	public ShadowMapMasterRenderer(Camera camera) {
+	public ShadowMapMasterRenderer() {
 		shader = new ShadowShader();
-		shadowBox = new ShadowBox(lightViewMatrix, camera);
+		shadowBox = new ShadowBox(lightViewMatrix);
 		shadowFbo = new ShadowFrameBuffer(SHADOW_MAP_SIZE, SHADOW_MAP_SIZE);
 		entityRenderer = new ShadowMapEntityRenderer(shader, projectionViewMatrix);
 	}

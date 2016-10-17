@@ -35,11 +35,11 @@ public class EntityRenderer {
 		shader.stop();
 	}
 
-	public void render(Map<TexturedModel, List<Entity>> entities, Matrix4f toShadowSpace, MasterRenderer renderer) {
+	public void render(Map<TexturedModel, List<Entity>> entities, Matrix4f toShadowSpace) {
 		shader.loadToShadowSpace(toShadowSpace);
 		shader.enableShadows(GameSettings.SHAWODS_ENABLED);
 		for (TexturedModel model : entities.keySet()) {
-			prepareTexturedModel(model, renderer);
+			prepareTexturedModel(model);
 			List<Entity> batch = entities.get(model);
 			for (Entity entity : batch) {
 				if (entity instanceof EntityLiving) {
@@ -58,7 +58,7 @@ public class EntityRenderer {
 		}
 	}
 
-	private void prepareTexturedModel(TexturedModel model, MasterRenderer renderer) {
+	private void prepareTexturedModel(TexturedModel model) {
 		Mesh mesh = model.getRawModel();
 		GL30.glBindVertexArray(mesh.getVaoID());
 		GL20.glEnableVertexAttribArray(0);
@@ -74,7 +74,7 @@ public class EntityRenderer {
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getID());
 		GL13.glActiveTexture(GL13.GL_TEXTURE1);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, renderer.getShadowMapTexture());
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, MasterRenderer.getShadowMapTexture());
 	}
 
 	private void unbindTexturedModel() {

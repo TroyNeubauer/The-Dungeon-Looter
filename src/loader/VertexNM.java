@@ -1,4 +1,4 @@
-package normalMappingObjConverter;
+package loader;
 
 import java.util.ArrayList;
 import java.util.List;

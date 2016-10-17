@@ -7,17 +7,15 @@ import java.util.Map;
 import fontMeshCreator.FontType;
 import fontMeshCreator.GUIText;
 import fontMeshCreator.TextMeshData;
-import renderEngine.Loader;
+import loader.Loader;
 
 public class TextMaster {
 
-	private static Loader loader;
 	private static Map<FontType, List<GUIText>> texts = new HashMap<FontType, List<GUIText>>();
 	private static FontRenderer renderer;
 
-	public static void init(Loader theLoader) {
+	public static void init() {
 		renderer = new FontRenderer();
-		loader = theLoader;
 	}
 
 	public static void render() {
@@ -31,7 +29,7 @@ public class TextMaster {
 	public static void loadText(GUIText text) {
 		FontType font = text.getFont();
 		TextMeshData data = font.loadText(text);
-		int vao = loader.loadToVAO(data.getVertexPositions(), data.getTextureCoords());
+		int vao = Loader.getLoader().loadToVAO(data.getVertexPositions(), data.getTextureCoords());
 		text.setMeshInfo(vao, data.getVertexCount());
 		List<GUIText> textBatch = texts.get(font);
 		if (textBatch == null) {

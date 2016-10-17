@@ -1,4 +1,4 @@
-package normalMappingRenderer;
+package renderEngine;
 
 import java.util.List;
 import java.util.Map;
@@ -14,10 +14,10 @@ import entity.Light;
 import graphics.Mesh;
 import graphics.Texture;
 import graphics.TexturedModel;
+import graphics.shader.NormalMappingShader;
 import graphics.shadows.ShadowBox;
 import graphics.shadows.ShadowMapMasterRenderer;
 import input.GameSettings;
-import renderEngine.MasterRenderer;
 import toolbox.Maths;
 
 public class NormalMappingRenderer {
@@ -36,15 +36,14 @@ public class NormalMappingRenderer {
 		shader.stop();
 	}
 
-	public void render(Map<TexturedModel, List<Entity>> entities, Vector4f clipPlane, List<Light> lights, Camera camera, Matrix4f toShadowSpace,
-		MasterRenderer renderer) {
+	public void render(Map<TexturedModel, List<Entity>> entities, Vector4f clipPlane, List<Light> lights, Camera camera, Matrix4f toShadowSpace) {
 
 		shader.start();
 		shader.loadToShadowSpace(toShadowSpace);
 		shader.enableShadows(GameSettings.SHAWODS_ENABLED);
 		prepare(clipPlane, lights, camera);
 		for (TexturedModel model : entities.keySet()) {
-			prepareTexturedModel(model, renderer);
+			prepareTexturedModel(model);
 			List<Entity> batch = entities.get(model);
 			for (Entity entity : batch) {
 				prepareInstance(entity);
@@ -59,7 +58,7 @@ public class NormalMappingRenderer {
 		shader.cleanUp();
 	}
 
-	private void prepareTexturedModel(TexturedModel model, MasterRenderer renderer) {
+	private void prepareTexturedModel(TexturedModel model) {
 		Mesh mesh = model.getRawModel();
 		GL30.glBindVertexArray(mesh.getVaoID());
 		GL20.glEnableVertexAttribArray(0);
@@ -77,7 +76,7 @@ public class NormalMappingRenderer {
 		GL13.glActiveTexture(GL13.GL_TEXTURE1);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getNormalMap());
 		GL13.glActiveTexture(GL13.GL_TEXTURE2);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, renderer.getShadowMapTexture());
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, MasterRenderer.getShadowMapTexture());
 	}
 
 	private void unbindTexturedModel() {

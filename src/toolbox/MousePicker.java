@@ -16,10 +16,8 @@ public class MousePicker {
 	private Vector3f currentRay = new Vector3f();
 
 	private Matrix4f projectionMatrix;
-	private Camera camera;
 
-	public MousePicker(Camera cam, Matrix4f projection) {
-		camera = cam;
+	public MousePicker(Matrix4f projection) {
 		projectionMatrix = projection;
 	}
 
@@ -42,7 +40,7 @@ public class MousePicker {
 	}
 
 	private Vector3f toWorldCoords(Vector4f eyeCoords) {
-		Matrix4f invertedView = Matrix4f.invert(camera.getViewMatrix(), null);
+		Matrix4f invertedView = Matrix4f.invert(Camera.getCamera().getViewMatrix(), null);
 		Vector4f rayWorld = Matrix4f.transform(invertedView, eyeCoords, null);
 		Vector3f mouseRay = new Vector3f(rayWorld.x, rayWorld.y, rayWorld.z);
 		mouseRay.normalised();

@@ -1,4 +1,4 @@
-package renderEngine;
+package main;
 
 /** Represents the version of the game **/
 public class Version {

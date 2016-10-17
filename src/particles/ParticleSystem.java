@@ -1,7 +1,7 @@
 package particles;
 
 import com.troy.troyberry.math.Vector3f;
-import renderEngine.DisplayManager;
+import main.DisplayManager;
 
 public class ParticleSystem {
 

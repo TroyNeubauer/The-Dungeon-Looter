@@ -8,6 +8,7 @@ import java.nio.IntBuffer;
 import javax.imageio.ImageIO;
 import org.lwjgl.opengl.GL14;
 import org.lwjgl.opengl.GL30;
+import input.GameSettings;
 import toolbox.BufferUtils;
 
 public class Texture {
@@ -46,7 +47,7 @@ public class Texture {
 			height = image.getHeight();
 			pixels = new int[width * height];
 			image.getRGB(0, 0, width, height, pixels, 0, width);
-			System.out.println("loading texture " + path);
+			if (GameSettings.DEBUG) System.out.println("loading texture " + path);
 		} catch (IOException e) {
 			System.err.println("Unable to load texture " + path);
 			e.printStackTrace();

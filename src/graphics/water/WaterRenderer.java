@@ -12,7 +12,7 @@ import entity.Camera;
 import entity.Light;
 import graphics.Mesh;
 import graphics.Texture;
-import renderEngine.Loader;
+import loader.Loader;
 import toolbox.Maths;
 
 public class WaterRenderer {
@@ -30,7 +30,7 @@ public class WaterRenderer {
 	private int dudvTexture;
 	private int normalMap;
 
-	public WaterRenderer(Loader loader, WaterShader shader, Matrix4f projectionMatrix, WaterFrameBuffers fbos) {
+	public WaterRenderer(WaterShader shader, Matrix4f projectionMatrix, WaterFrameBuffers fbos) {
 		this.shader = shader;
 		this.fbos = fbos;
 		try {
@@ -43,11 +43,11 @@ public class WaterRenderer {
 		shader.connectTextureUnits();
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.stop();
-		setUpVAO(loader);
+		setUpVAO();
 	}
 
-	public void render(List<WaterTile> water, Camera camera, Light sun) {
-		prepareRender(camera, sun);
+	public void render(List<WaterTile> water, Light sun) {
+		prepareRender(sun);
 		for (WaterTile tile : water) {
 			Matrix4f modelMatrix = Maths.createTransformationMatrix(new Vector3f(tile.x, tile.height, tile.z), 0, 0, 0, tile.size);
 			shader.loadModelMatrix(modelMatrix);
@@ -60,9 +60,9 @@ public class WaterRenderer {
 		moveFactor += 0.0004f;
 	}
 
-	private void prepareRender(Camera camera, Light sun) {
+	private void prepareRender(Light sun) {
 		shader.start();
-		shader.loadViewMatrix(camera);
+		shader.loadViewMatrix(Camera.getCamera());
 		moveFactor %= 1;
 		shader.loadMoveFactor(moveFactor);
 		shader.loadLight(sun);
@@ -89,10 +89,10 @@ public class WaterRenderer {
 		shader.stop();
 	}
 
-	private void setUpVAO(Loader loader) {
+	private void setUpVAO() {
 		// Just x and z vectex positions here, y is set to 0 in v.shader
 		float[] vertices = { -1, -1, -1, 1, 1, -1, 1, -1, -1, 1, 1, 1 };
-		quad = loader.loadToVAO(vertices, 2);
+		quad = Loader.getLoader().loadToVAO(vertices, 2);
 	}
 
 }

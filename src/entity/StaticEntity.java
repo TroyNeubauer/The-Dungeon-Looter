@@ -2,7 +2,6 @@ package entity;
 
 import com.troy.troyberry.math.Vector3f;
 import graphics.TexturedModel;
-import world.World;
 
 public class StaticEntity extends Entity {
 
@@ -15,7 +14,7 @@ public class StaticEntity extends Entity {
 	}
 
 	@Override
-	public void update(World world) {
+	public void update() {
 	}
 
 }

@@ -1,4 +1,4 @@
-package renderEngine;
+package loader;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -16,6 +16,8 @@ import graphics.Texture;
 import graphics.TextureData;
 
 public class Loader {
+
+	private static final Loader loader = new Loader();
 
 	private List<Integer> vaos = new ArrayList<Integer>();
 	private List<Integer> vbos = new ArrayList<Integer>();
@@ -138,5 +140,9 @@ public class Loader {
 		buffer.put(data);
 		buffer.flip();
 		return buffer;
+	}
+
+	public static synchronized Loader getLoader() {
+		return loader;
 	}
 }

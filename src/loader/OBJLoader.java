@@ -1,4 +1,4 @@
-package renderEngine;
+package loader;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -9,6 +9,7 @@ import java.util.List;
 import com.troy.troyberry.math.Vector2f;
 import com.troy.troyberry.math.Vector3f;
 import graphics.Mesh;
+import input.GameSettings;
 
 public class OBJLoader {
 
@@ -24,7 +25,7 @@ public class OBJLoader {
 			System.err.println("Couldn't load file!");
 			e.printStackTrace();
 		}
-		System.out.println("Loading model " + path);
+		if (GameSettings.DEBUG) System.out.println("Loading model " + path);
 		BufferedReader reader = new BufferedReader(fr);
 		String line;
 		List<Vector3f> vertices = new ArrayList<Vector3f>();

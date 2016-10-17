@@ -28,7 +28,7 @@ public abstract class Entity {
 		this(model, position, new Vector3f(0, 0, 0), 1f, false);
 	}
 
-	public abstract void update(World world);
+	public abstract void update();
 
 	public float getTextureXOffset() {
 		int column = textureIndex % model.getTexture().getNumberOfRows();

@@ -7,7 +7,7 @@ import org.lwjgl.opengl.GL30;
 import com.troy.troyberry.math.Matrix4f;
 import entity.Camera;
 import graphics.Mesh;
-import renderEngine.Loader;
+import loader.Loader;
 import world.World;
 
 public class SkyboxRenderer {
@@ -36,10 +36,10 @@ public class SkyboxRenderer {
 	private SkyboxShader shader;
 	public World world;
 
-	public SkyboxRenderer(Loader loader, Matrix4f projectionMatrix) {
-		cube = loader.loadToVAO(VERTICES, 3);
-		texture = loader.loadCubeMap(TEXTURE_FILES);
-		nightTexture = loader.loadCubeMap(NIGHT_TEXTURE_FILES);
+	public SkyboxRenderer(Matrix4f projectionMatrix) {
+		cube = Loader.getLoader().loadToVAO(VERTICES, 3);
+		texture = Loader.getLoader().loadCubeMap(TEXTURE_FILES);
+		nightTexture = Loader.getLoader().loadCubeMap(NIGHT_TEXTURE_FILES);
 		shader = new SkyboxShader();
 		shader.start();
 		shader.connectTextureUnits();

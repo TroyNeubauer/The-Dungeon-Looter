@@ -6,6 +6,8 @@ import toolbox.Maths;
 
 public class Camera {
 
+	private static final Camera currentCamera = new Camera();
+
 	public Vector3f position = new Vector3f(0, 0, 0);
 	public float pitch = 0, yaw = 0, roll = 0;
 	private static final float CAMERA_HEIGHT = 1.5f;
@@ -54,5 +56,9 @@ public class Camera {
 		this.player = player;
 		move();
 		viewMatrix = Maths.createViewMatrix(this);
+	}
+
+	public static synchronized Camera getCamera() {
+		return currentCamera;
 	}
 }

@@ -1,4 +1,4 @@
-package normalMappingRenderer;
+package graphics.shader;
 
 import java.util.List;
 import com.troy.troyberry.math.Matrix4f;
@@ -6,14 +6,13 @@ import com.troy.troyberry.math.Vector2f;
 import com.troy.troyberry.math.Vector3f;
 import com.troy.troyberry.math.Vector4f;
 import entity.Light;
-import graphics.shader.ShaderProgram;
 
 public class NormalMappingShader extends ShaderProgram {
 
 	private static final int MAX_LIGHTS = 4;
 
-	private static final String VERTEX_FILE = "src/normalMappingRenderer/normalMapVShader.txt";
-	private static final String FRAGMENT_FILE = "src/normalMappingRenderer/normalMapFShader.txt";
+	private static final String VERTEX_FILE = "src/graphics/shader/normalMap.vert";
+	private static final String FRAGMENT_FILE = "src/graphics/shader/normalMap.frag";
 
 	private int location_transformationMatrix;
 	private int location_projectionMatrix;
@@ -82,7 +81,7 @@ public class NormalMappingShader extends ShaderProgram {
 		}
 	}
 
-	protected void connectTextureUnits() {
+	public void connectTextureUnits() {
 		super.loadInt(location_modelTexture, 0);
 		super.loadInt(location_normalMap, 1);
 		super.loadInt(location_shadowMap, 2);
@@ -113,32 +112,32 @@ public class NormalMappingShader extends ShaderProgram {
 		super.loadMatrix(location_toShadowMapSpace, matrix);
 	}
 
-	protected void loadClipPlane(Vector4f plane) {
+	public void loadClipPlane(Vector4f plane) {
 		super.loadVector(location_plane, plane);
 	}
 
-	protected void loadNumberOfRows(int numberOfRows) {
+	public void loadNumberOfRows(int numberOfRows) {
 		super.loadFloat(location_numberOfRows, numberOfRows);
 	}
 
-	protected void loadOffset(float x, float y) {
+	public void loadOffset(float x, float y) {
 		super.load2DVector(location_offset, new Vector2f(x, y));
 	}
 
-	protected void loadSkyColour(float r, float g, float b) {
+	public void loadSkyColour(float r, float g, float b) {
 		super.loadVector(location_skyColour, new Vector3f(r, g, b));
 	}
 
-	protected void loadShineVariables(float damper, float reflectivity) {
+	public void loadShineVariables(float damper, float reflectivity) {
 		super.loadFloat(location_shineDamper, damper);
 		super.loadFloat(location_reflectivity, reflectivity);
 	}
 
-	protected void loadTransformationMatrix(Matrix4f matrix) {
+	public void loadTransformationMatrix(Matrix4f matrix) {
 		super.loadMatrix(location_transformationMatrix, matrix);
 	}
 
-	protected void loadLights(List<Light> lights, Matrix4f viewMatrix) {
+	public void loadLights(List<Light> lights, Matrix4f viewMatrix) {
 		for (int i = 0; i < MAX_LIGHTS; i++) {
 			if (i < lights.size()) {
 				super.loadVector(location_lightPositionEyeSpace[i], getEyeSpacePosition(lights.get(i), viewMatrix));
@@ -152,11 +151,11 @@ public class NormalMappingShader extends ShaderProgram {
 		}
 	}
 
-	protected void loadViewMatrix(Matrix4f viewMatrix) {
+	public void loadViewMatrix(Matrix4f viewMatrix) {
 		super.loadMatrix(location_viewMatrix, viewMatrix);
 	}
 
-	protected void loadProjectionMatrix(Matrix4f projection) {
+	public void loadProjectionMatrix(Matrix4f projection) {
 		super.loadMatrix(location_projectionMatrix, projection);
 	}
 

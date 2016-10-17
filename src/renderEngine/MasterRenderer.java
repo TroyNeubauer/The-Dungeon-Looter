@@ -13,13 +13,11 @@ import com.troy.troyberry.math.Vector4f;
 import entity.Camera;
 import entity.Entity;
 import entity.Light;
-import fontMeshCreator.GUIText;
 import graphics.TexturedModel;
 import graphics.shader.StaticShader;
 import graphics.shader.TerrainShader;
 import graphics.shadows.ShadowMapMasterRenderer;
 import graphics.skybox.SkyboxRenderer;
-import normalMappingRenderer.NormalMappingRenderer;
 import world.Terrain;
 import world.World;
 
@@ -32,45 +30,40 @@ public class MasterRenderer {
 	public static final float RED = 119f / 256f;
 	public static final float GREEN = 169f / 256f;
 	public static final float BLUE = 254f / 256f;
-	private GUIText loadingPercent;
 
-	private Matrix4f projectionMatrix;
+	public static Matrix4f projectionMatrix;
 
-	private StaticShader shader = new StaticShader();
-	private EntityRenderer renderer;
+	private static StaticShader shader = new StaticShader();
+	private static EntityRenderer renderer;
 
-	private TerrainRenderer terrainRenderer;
-	private TerrainShader terrainShader = new TerrainShader();
+	private static TerrainRenderer terrainRenderer;
+	private static TerrainShader terrainShader = new TerrainShader();
 
-	private ShadowMapMasterRenderer shadowMapRenderer;
+	private static ShadowMapMasterRenderer shadowMapRenderer;
 
-	private NormalMappingRenderer normalMapRenderer;
+	private static NormalMappingRenderer normalMapRenderer;
 
-	private SkyboxRenderer skyboxRenderer;
+	private static SkyboxRenderer skyboxRenderer;
 
-	private Map<TexturedModel, List<Entity>> entities = new HashMap<TexturedModel, List<Entity>>();
-	private Map<TexturedModel, List<Entity>> normalMapEntities = new HashMap<TexturedModel, List<Entity>>();
-	private List<Terrain> terrains = new ArrayList<Terrain>();
+	private static Map<TexturedModel, List<Entity>> entities = new HashMap<TexturedModel, List<Entity>>();
+	private static Map<TexturedModel, List<Entity>> normalMapEntities = new HashMap<TexturedModel, List<Entity>>();
+	private static List<Terrain> terrains = new ArrayList<Terrain>();
 
-	public MasterRenderer(Loader loader, Camera camera) {
+	public static void init() {
 		enableCulling();
 		createProjectionMatrix();
-		shadowMapRenderer = new ShadowMapMasterRenderer(camera);
+		shadowMapRenderer = new ShadowMapMasterRenderer();
 		renderer = new EntityRenderer(shader, projectionMatrix);
 		terrainRenderer = new TerrainRenderer(terrainShader, projectionMatrix);
-		skyboxRenderer = new SkyboxRenderer(loader, projectionMatrix);
+		skyboxRenderer = new SkyboxRenderer(projectionMatrix);
 		normalMapRenderer = new NormalMappingRenderer(projectionMatrix);
 	}
 
-	public void setWorld(World world) {
+	public static void setWorld(World world) {
 		skyboxRenderer.world = world;
 	}
 
-	public Matrix4f getProjectionMatrix() {
-		return this.projectionMatrix;
-	}
-
-	public void renderScene(List<Entity> entities, List<Entity> normalEntities, List<Terrain> terrains, List<Light> lights, Camera camera,
+	public static void renderScene(List<Entity> entities, List<Entity> normalEntities, List<Terrain> terrains, List<Light> lights, Camera camera,
 		Vector4f clipPlane, double renderDistance) {
 		for (Terrain terrain : terrains) {
 			if (Maths.approximateDistanceBetweenPoints(terrain.x + Terrain.SIZE / 2.0, terrain.z + Terrain.SIZE / 2.0, camera.position.x,
@@ -90,7 +83,7 @@ public class MasterRenderer {
 		render(lights, camera, clipPlane);
 	}
 
-	public void render(List<Light> lights, Camera camera, Vector4f clipPlane) {
+	public static void render(List<Light> lights, Camera camera, Vector4f clipPlane) {
 		prepare();
 		disableCulling();
 		shader.start();
@@ -98,9 +91,9 @@ public class MasterRenderer {
 		shader.loadSkyColour(RED, GREEN, BLUE);
 		shader.loadLights(lights);
 		shader.loadViewMatrix(camera);
-		renderer.render(entities, shadowMapRenderer.getToShadowMapSpaceMatrix(), this);
+		renderer.render(entities, shadowMapRenderer.getToShadowMapSpaceMatrix());
 		shader.stop();
-		normalMapRenderer.render(normalMapEntities, clipPlane, lights, camera, shadowMapRenderer.getToShadowMapSpaceMatrix(), this);
+		normalMapRenderer.render(normalMapEntities, clipPlane, lights, camera, shadowMapRenderer.getToShadowMapSpaceMatrix());
 		terrainShader.start();
 		terrainShader.loadClipPlane(clipPlane);
 		terrainShader.loadSkyColor(RED, GREEN, BLUE);
@@ -125,7 +118,7 @@ public class MasterRenderer {
 		GL11.glDisable(GL11.GL_CULL_FACE);
 	}
 
-	public void processEntity(Entity entity) {
+	public static void processEntity(Entity entity) {
 		TexturedModel entityModel = entity.model;
 		List<Entity> batch = entities.get(entityModel);
 		if (batch != null) {
@@ -137,11 +130,11 @@ public class MasterRenderer {
 		}
 	}
 
-	public void processTerrain(Terrain terrain) {
+	public static void processTerrain(Terrain terrain) {
 		terrains.add(terrain);
 	}
 
-	public void processNormalMapEntity(Entity entity) {
+	public static void processNormalMapEntity(Entity entity) {
 		TexturedModel entityModel = entity.model;
 		List<Entity> batch = normalMapEntities.get(entityModel);
 		if (batch != null) {
@@ -153,7 +146,7 @@ public class MasterRenderer {
 		}
 	}
 
-	public void renderShadowMap(List<Entity> entitList, List<Entity> normalEntities, Light sun) {
+	public static void renderShadowMap(List<Entity> entitList, List<Entity> normalEntities, Light sun) {
 		for (Entity entity : entitList) {
 			processEntity(entity);
 		}
@@ -165,18 +158,18 @@ public class MasterRenderer {
 		normalMapEntities.clear();
 	}
 
-	public int getShadowMapTexture() {
+	public static int getShadowMapTexture() {
 		return shadowMapRenderer.getShadowMap();
 	}
 
-	public void cleanUp() {
+	public static void cleanUp() {
 		shadowMapRenderer.cleanUp();
 		shader.cleanUp();
 		terrainShader.cleanUp();
 		normalMapRenderer.cleanUp();
 	}
 
-	public void prepare() {
+	public static void prepare() {
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 		GL11.glClearColor(RED, GREEN, BLUE, 1);
@@ -184,7 +177,7 @@ public class MasterRenderer {
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, getShadowMapTexture());
 	}
 
-	private void createProjectionMatrix() {
+	private static void createProjectionMatrix() {
 		projectionMatrix = new Matrix4f();
 		float aspectRatio = (float) Display.getWidth() / (float) Display.getHeight();
 		float y_scale = (float) ((1f / Math.tan(Math.toRadians(FOV / 2f))));

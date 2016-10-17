@@ -31,7 +31,6 @@ public class ShadowBox {
 	private float minY, maxY;
 	private float minZ, maxZ;
 	private Matrix4f lightViewMatrix;
-	private Camera cam;
 
 	private float farHeight, farWidth, nearHeight, nearWidth;
 
@@ -45,12 +44,9 @@ public class ShadowBox {
 	 *            transform a point from world space into "light" space (i.e.
 	 *            changes a point's coordinates from being in relation to the
 	 *            world's axis to being in terms of the light's local axis).
-	 * @param camera
-	 *            - the in-game camera.
 	 */
-	protected ShadowBox(Matrix4f lightViewMatrix, Camera camera) {
+	protected ShadowBox(Matrix4f lightViewMatrix) {
 		this.lightViewMatrix = lightViewMatrix;
-		this.cam = camera;
 		calculateWidthsAndHeights();
 	}
 
@@ -68,8 +64,8 @@ public class ShadowBox {
 		toFar.scale(SHADOW_DISTANCE);
 		Vector3f toNear = new Vector3f(forwardVector);
 		toNear.scale(MasterRenderer.NEAR_PLANE);
-		Vector3f centerNear = Vector3f.add(toNear, cam.position, null);
-		Vector3f centerFar = Vector3f.add(toFar, cam.position, null);
+		Vector3f centerNear = Vector3f.add(toNear, Camera.getCamera().position, null);
+		Vector3f centerFar = Vector3f.add(toFar, Camera.getCamera().position, null);
 
 		Vector4f[] points = calculateFrustumVertices(rotation, forwardVector, centerNear, centerFar);
 
@@ -205,8 +201,8 @@ public class ShadowBox {
 	 */
 	private Matrix4f calculateCameraRotationMatrix() {
 		Matrix4f rotation = new Matrix4f();
-		rotation.rotate((float) Math.toRadians(-cam.yaw), new Vector3f(0, 1, 0));
-		rotation.rotate((float) Math.toRadians(-cam.pitch), new Vector3f(1, 0, 0));
+		rotation.rotate((float) Math.toRadians(-Camera.getCamera().yaw), new Vector3f(0, 1, 0));
+		rotation.rotate((float) Math.toRadians(-Camera.getCamera().pitch), new Vector3f(1, 0, 0));
 		return rotation;
 	}
 
