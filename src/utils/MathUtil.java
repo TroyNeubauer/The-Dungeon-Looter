@@ -1,11 +1,11 @@
-package toolbox;
+package utils;
 
 import com.troy.troyberry.math.Matrix4f;
 import com.troy.troyberry.math.Vector2f;
 import com.troy.troyberry.math.Vector3f;
 import entity.Camera;
 
-public class Maths {
+public class MathUtil {
 
 	public static Matrix4f createTransformationMatrix(Vector2f translation, Vector2f scale) {
 		Matrix4f matrix = new Matrix4f();

@@ -27,6 +27,7 @@ public class Main implements Runnable {
 		//*********Clean Up Below**************
 		GameManager.cleanUp();
 		DisplayManager.closeDisplay();
+		System.exit(0);
 	}
 
 }

@@ -9,7 +9,7 @@ import javax.imageio.ImageIO;
 import org.lwjgl.opengl.GL14;
 import org.lwjgl.opengl.GL30;
 import input.GameSettings;
-import toolbox.BufferUtils;
+import utils.BufferUtils;
 
 public class Texture {
 
@@ -22,6 +22,7 @@ public class Texture {
 	private boolean useFakeLighting = false;
 
 	private int numberOfRows = 1;
+	public boolean hasNormalMap = false;
 
 	private int width, height;
 	public final int id;
@@ -97,6 +98,7 @@ public class Texture {
 
 	public void setNormalMap(Texture normalMap) {
 		this.normalMap = normalMap.id;
+		this.hasNormalMap = true;
 	}
 
 	public void setNumberOfRows(int numberOfRows) {

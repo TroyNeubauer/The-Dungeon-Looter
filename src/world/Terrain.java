@@ -1,17 +1,25 @@
 package world;
 
+import java.util.HashMap;
+import java.util.Random;
+import com.troy.troyberry.math.Maths;
 import com.troy.troyberry.math.Vector2f;
 import com.troy.troyberry.math.Vector3f;
+import entity.Entity;
+import entity.EntityManager;
+import entity.StaticEntity;
+import graphics.Assets;
 import graphics.Mesh;
 import graphics.TerrainTexture;
 import graphics.TerrainTexturePack;
 import loader.Loader;
-import toolbox.Maths;
+import utils.MathUtil;
 
 public class Terrain {
 
 	public static final float SIZE = 200;
 	public static final int VERTEX_COUNT = 256;
+	public HashMap<Entity, Boolean> entitiesInTerrain = new HashMap<Entity, Boolean>();
 
 	public TerrainTexture blendMap;
 	private HeightGenerator generator;
@@ -19,6 +27,7 @@ public class Terrain {
 	public final float x, z;
 	public final Mesh model;
 	public TerrainTexturePack texturePack;
+	private EntityCreator entityCreator;
 
 	private final double divideFactor, persistence;
 	private final int largestFeature;
@@ -28,7 +37,7 @@ public class Terrain {
 	private int[] indices;
 
 	public Terrain(int gridX, int gridZ, TerrainTexturePack texturePack, TerrainTexture blendMap, double divideFactor, double persistence,
-		int largestFeature, long seed) {
+		int largestFeature, long seed, EntityCreator entityCreator) {
 		this.texturePack = texturePack;
 		this.blendMap = blendMap;
 		this.x = gridX * SIZE;
@@ -36,6 +45,7 @@ public class Terrain {
 		this.divideFactor = divideFactor;
 		this.persistence = persistence;
 		this.largestFeature = largestFeature;
+		this.entityCreator = entityCreator;
 		this.generator = new HeightGenerator(gridX, gridZ, divideFactor, persistence, largestFeature, seed);
 		this.model = generateTerrain();
 	}
@@ -56,10 +66,10 @@ public class Terrain {
 		float answer;
 
 		if (xCoord <= (1 - zCoord)) {
-			answer = Maths.barryCentric(new Vector3f(0, heights[gridX][gridZ], 0), new Vector3f(1, heights[gridX + 1][gridZ], 0),
+			answer = MathUtil.barryCentric(new Vector3f(0, heights[gridX][gridZ], 0), new Vector3f(1, heights[gridX + 1][gridZ], 0),
 				new Vector3f(0, heights[gridX][gridZ + 1], 1), new Vector2f(xCoord, zCoord));
 		} else {
-			answer = Maths.barryCentric(new Vector3f(1, heights[gridX + 1][gridZ], 0), new Vector3f(1, heights[gridX + 1][gridZ + 1], 1),
+			answer = MathUtil.barryCentric(new Vector3f(1, heights[gridX + 1][gridZ], 0), new Vector3f(1, heights[gridX + 1][gridZ + 1], 1),
 				new Vector3f(0, heights[gridX][gridZ + 1], 1), new Vector2f(xCoord, zCoord));
 		}
 
@@ -111,7 +121,34 @@ public class Terrain {
 				indices[pointer++] = bottomRight;
 			}
 		}
+		populate();
 		return Loader.getLoader().loadToVAO(vertices, textureCoords, normals, indices);
+	}
+
+	private void populate() {
+		Random random = new Random();
+		for (int i = 0; i < SIZE / 10; i++) {
+			float x = com.troy.troyberry.math.Maths.randRange(this.x, this.x + SIZE);
+			float z = com.troy.troyberry.math.Maths.randRange(this.z, this.z + SIZE);
+			StaticEntity e = new StaticEntity(Assets.tree, new Vector3f(x, getHeightOfTerrain(x, z), z));
+			e.skipRenderMethod = true;
+			EntityManager.addEntity(e);
+		}
+		for (int i = 0; i < SIZE / 30; i++) {
+			float x = com.troy.troyberry.math.Maths.randRange(this.x, this.x + SIZE);
+			float z = com.troy.troyberry.math.Maths.randRange(this.z, this.z + SIZE);
+			float scale = (float) com.troy.troyberry.math.Maths.gaussian(0.002, 2.0, 0.15, 5.0);
+
+			float rotX = random.nextBoolean() ? Maths.randRange(-90, -30) : Maths.randRange(30, 90);
+			float rotY = Maths.randRange(-180, 180);
+			float rotZ = random.nextBoolean() ? Maths.randRange(-90, -30) : Maths.randRange(30, 90);
+
+			StaticEntity e = new StaticEntity(Assets.rock, new Vector3f(x, getHeightOfTerrain(x, z), z), new Vector3f(rotX, rotY, rotZ), scale);
+			System.out.println(scale);
+			e.skipRenderMethod = true;
+			e.hasNormalMap = true;
+			EntityManager.addEntity(e);
+		}
 	}
 
 	private Vector3f calculateNormal(int x, int z) {

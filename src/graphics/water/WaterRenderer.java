@@ -13,7 +13,7 @@ import entity.Light;
 import graphics.Mesh;
 import graphics.Texture;
 import loader.Loader;
-import toolbox.Maths;
+import utils.MathUtil;
 
 public class WaterRenderer {
 
@@ -49,7 +49,7 @@ public class WaterRenderer {
 	public void render(List<WaterTile> water, Light sun) {
 		prepareRender(sun);
 		for (WaterTile tile : water) {
-			Matrix4f modelMatrix = Maths.createTransformationMatrix(new Vector3f(tile.x, tile.height, tile.z), 0, 0, 0, tile.size);
+			Matrix4f modelMatrix = MathUtil.createTransformationMatrix(new Vector3f(tile.x, tile.height, tile.z), 0, 0, 0, tile.size);
 			shader.loadModelMatrix(modelMatrix);
 			GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, quad.getVertexCount());
 		}

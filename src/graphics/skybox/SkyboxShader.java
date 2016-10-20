@@ -4,20 +4,18 @@ import com.troy.troyberry.math.Matrix4f;
 import com.troy.troyberry.math.Vector3f;
 import entity.Camera;
 import graphics.shader.ShaderProgram;
-import toolbox.Maths;
+import utils.MathUtil;
 
 public class SkyboxShader extends ShaderProgram {
 
-	private static final String VERTEX_FILE = "src/graphics/skybox/skyboxVertexShader.txt";
-	private static final String FRAGMENT_FILE = "src/graphics/skybox/skyboxFragmentShader.txt";
+	private static final String VERTEX_FILE = "src/graphics/skybox/skybox.vert";
+	private static final String FRAGMENT_FILE = "src/graphics/skybox/skybox.frag";
 
 	private static final float ROTATE_SPEED = 1f;
 
 	private int location_projectionMatrix;
 	private int location_viewMatrix;
-	private int location_fogColour;
-	private int location_cubeMap;
-	private int location_cubeMap2;
+	private int location_night;
 	private int location_blendFactor;
 
 	private float rotation = 0;
@@ -31,7 +29,7 @@ public class SkyboxShader extends ShaderProgram {
 	}
 
 	public void loadViewMatrix(Camera camera) {
-		Matrix4f matrix = Maths.createViewMatrix(camera);
+		Matrix4f matrix = MathUtil.createViewMatrix(camera);
 		matrix.m30 = 0;
 		matrix.m31 = 0;
 		matrix.m32 = 0;
@@ -39,13 +37,8 @@ public class SkyboxShader extends ShaderProgram {
 		super.loadMatrix(location_viewMatrix, matrix);
 	}
 
-	public void loadFogColour(float r, float g, float b) {
-		super.loadVector(location_fogColour, new Vector3f(r, g, b));
-	}
-
 	public void connectTextureUnits() {
-		super.loadInt(location_cubeMap, 0);
-		super.loadInt(location_cubeMap2, 1);
+		super.loadInt(location_night, 0);
 	}
 
 	public void loadBlendFactor(float blend) {
@@ -56,10 +49,8 @@ public class SkyboxShader extends ShaderProgram {
 	protected void getAllUniformLocations() {
 		location_projectionMatrix = super.getUniformLocation("projectionMatrix");
 		location_viewMatrix = super.getUniformLocation("viewMatrix");
-		location_fogColour = super.getUniformLocation("fogColour");
 		location_blendFactor = super.getUniformLocation("blendFactor");
-		location_cubeMap = super.getUniformLocation("cubeMap");
-		location_cubeMap2 = super.getUniformLocation("cubeMap2");
+		location_night = super.getUniformLocation("night");
 	}
 
 	@Override

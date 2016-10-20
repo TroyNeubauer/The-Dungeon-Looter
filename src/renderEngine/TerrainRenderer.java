@@ -13,7 +13,7 @@ import graphics.shader.TerrainShader;
 import graphics.shadows.ShadowBox;
 import graphics.shadows.ShadowMapMasterRenderer;
 import input.GameSettings;
-import toolbox.Maths;
+import utils.MathUtil;
 import world.Terrain;
 
 public class TerrainRenderer {
@@ -75,7 +75,7 @@ public class TerrainRenderer {
 	}
 
 	private void loadModelMatrix(Terrain terrain) {
-		shader.loadTransformationMatrix(Maths.createTransformationMatrix(new Vector3f(terrain.x, 0, terrain.z), 0f, 0f, 0f, 1f));
+		shader.loadTransformationMatrix(MathUtil.createTransformationMatrix(new Vector3f(terrain.x, 0, terrain.z), 0f, 0f, 0f, 1f));
 	}
 
 }

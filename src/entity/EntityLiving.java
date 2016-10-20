@@ -8,8 +8,8 @@ public abstract class EntityLiving extends Entity {
 	protected boolean isInAir = false, isDead = false;
 	protected float health;
 
-	public EntityLiving(TexturedModel model, Vector3f position, Vector3f rotation, float scale, boolean normalMapped) {
-		super(model, position, rotation, scale, normalMapped);
+	public EntityLiving(TexturedModel model, Vector3f position, Vector3f rotation, float scale) {
+		super(model, position, rotation, scale);
 		this.health = 100f;
 	}
 

@@ -8,8 +8,6 @@ import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import com.troy.troyberry.math.Matrix4f;
 import entity.Entity;
-import entity.EntityLiving;
-import entity.EntityPlayer;
 import graphics.Mesh;
 import graphics.Texture;
 import graphics.TexturedModel;
@@ -17,7 +15,7 @@ import graphics.shader.StaticShader;
 import graphics.shadows.ShadowBox;
 import graphics.shadows.ShadowMapMasterRenderer;
 import input.GameSettings;
-import toolbox.Maths;
+import utils.MathUtil;
 
 public class EntityRenderer {
 
@@ -42,14 +40,7 @@ public class EntityRenderer {
 			prepareTexturedModel(model);
 			List<Entity> batch = entities.get(model);
 			for (Entity entity : batch) {
-				if (entity instanceof EntityLiving) {
-					EntityLiving living = (EntityLiving) entity;
-					if (entity instanceof EntityPlayer) {
-						EntityPlayer player = (EntityPlayer) entity;
-						player.render();
-					}
-					if (living.isDead()) continue;
-				}
+				if (!entity.skipRenderMethod) entity.render();
 				if (entity.skipRender) continue;
 				prepareInstance(entity);
 				GL11.glDrawElements(GL11.GL_TRIANGLES, model.getRawModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
@@ -86,7 +77,7 @@ public class EntityRenderer {
 	}
 
 	private void prepareInstance(Entity entity) {
-		Matrix4f transformationMatrix = Maths.createTransformationMatrix(entity.position, entity.rotation.x, entity.rotation.y, entity.rotation.z,
+		Matrix4f transformationMatrix = MathUtil.createTransformationMatrix(entity.position, entity.rotation.x, entity.rotation.y, entity.rotation.z,
 			entity.scale);
 		shader.loadTransformationMatrix(transformationMatrix);
 		shader.loadOffset(entity.getTextureXOffset(), entity.getTextureYOffset());

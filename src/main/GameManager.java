@@ -8,7 +8,7 @@ import org.lwjgl.opengl.GL30;
 import com.troy.troyberry.logging.Timer;
 import com.troy.troyberry.math.Vector3f;
 import entity.Camera;
-import entity.Entity;
+import entity.EntityManager;
 import entity.EntityPlayer;
 import fontRendering.TextMaster;
 import graphics.Assets;
@@ -23,8 +23,9 @@ import postProcessing.Fbo;
 import postProcessing.PostProcessing;
 import renderEngine.MasterRenderer;
 import renderEngine.SplashRenderer;
-import toolbox.MousePicker;
+import utils.MousePicker;
 import world.World;
+import world.WorldLoader;
 
 public class GameManager {
 
@@ -33,7 +34,7 @@ public class GameManager {
 	private static MousePicker picker;
 	private static GuiRenderer guiRenderer;
 
-	private static World world;
+	public static World world;
 	private static EntityPlayer player;
 
 	private static Fbo multisampleFbo, outputFbo;
@@ -52,7 +53,7 @@ public class GameManager {
 	public static void render() {
 		ParticleMaster.update();
 		GL11.glEnable(GL30.GL_CLIP_DISTANCE0);
-		if (GameSettings.SHAWODS_ENABLED) MasterRenderer.renderShadowMap(world.entities, world.normalMapEntities, world.sun);
+		if (GameSettings.SHAWODS_ENABLED) MasterRenderer.renderShadowMap(world.entities, world.sun);
 
 		world.render(multisampleFbo);
 		multisampleFbo.resolveTo(outputFbo);
@@ -79,9 +80,10 @@ public class GameManager {
 	}
 
 	public static void init() {
+
 		System.out.println("Starting " + Version.getWindowTitle() + "\n");
 		Timer t = new Timer();
-		DisplayManager.createDisplay(1440, 810, true);
+		DisplayManager.createDisplay(1440, 810, false);
 		Assets.loadCoreAssets(Loader.getLoader());
 		SplashRenderer.init();
 
@@ -92,12 +94,11 @@ public class GameManager {
 
 		world = new World();
 		MasterRenderer.setWorld(world);
-		Entity.setWorld(world);
-		world.populate();
 
 		float playerX = 50, playerZ = 50;
-		player = new EntityPlayer(Assets.person, new Vector3f(playerX, world.getHeight(playerX, playerZ), playerZ), new Vector3f(12, 0, 0), 0.6f);
-		player.hide();
+		player = new EntityPlayer(Assets.tree, new Vector3f(playerX, world.getSlowHeight(playerX, playerZ), playerZ), new Vector3f(12, 0, 0), 0.6f);
+		player.skipRender = true;
+		EntityManager.addEntity(player);
 		Camera.getCamera().setPlayer(player);
 
 		if (GameSettings.DEBUG) System.out.println("Creating Fbos");
@@ -112,6 +113,7 @@ public class GameManager {
 
 		if (GameSettings.DEBUG) world.printGenStats();
 		Updater.init();
+		WorldLoader.update();
 	}
 
 }

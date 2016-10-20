@@ -2,7 +2,7 @@ package entity;
 
 import com.troy.troyberry.math.Matrix4f;
 import com.troy.troyberry.math.Vector3f;
-import toolbox.Maths;
+import utils.MathUtil;
 
 public class Camera {
 
@@ -20,18 +20,20 @@ public class Camera {
 	}
 
 	public void update() {
-		this.viewMatrix = Maths.createViewMatrix(this);
+		this.viewMatrix = MathUtil.createViewMatrix(this);
 		move();
 	}
 
 	public void move() {
-		this.position.x = player.position.x;
-		this.position.y = player.position.y + CAMERA_HEIGHT;
-		this.position.z = player.position.z;
+		if (player.isAlive()) {
+			this.position.x = player.position.x;
+			this.position.y = player.position.y + CAMERA_HEIGHT;
+			this.position.z = player.position.z;
 
-		this.pitch = player.rotation.x;
-		this.yaw = player.rotation.y;
-		this.roll = player.rotation.z;
+			this.pitch = player.rotation.x;
+			this.yaw = player.rotation.y;
+			this.roll = player.rotation.z;
+		}
 	}
 
 	public void invertPitch() {
@@ -55,7 +57,7 @@ public class Camera {
 	public void setPlayer(EntityPlayer player) {
 		this.player = player;
 		move();
-		viewMatrix = Maths.createViewMatrix(this);
+		viewMatrix = MathUtil.createViewMatrix(this);
 	}
 
 	public static synchronized Camera getCamera() {

@@ -11,22 +11,22 @@ import graphics.Assets;
 import graphics.TexturedModel;
 import input.Controls;
 import input.GameSettings;
+import main.GameManager;
 import world.World;
 
 public class EntityPlayer extends EntityLiving {
 
 	private boolean grabbed = true;
-	private static final float RUN_SPEED = 0.05f, JUMP_POWER = 0.05f;
+	private static final float RUN_SPEED = 0.05f * 2f, JUMP_POWER = 0.05f;
 	private float slope = 0f;
-	private GUIText healthText;
+	private GUIText healthText, positionText;
 
 	public EntityPlayer(TexturedModel model, Vector3f position, Vector3f rotation, float scale) {
-		super(model, position, rotation, scale, false);
+		super(model, position, rotation, scale);
 		this.scale = 0.25f;
 	}
 
 	public void update() {
-		if (isDead) return;
 		move();
 		this.position.add(velocity);
 	}
@@ -36,6 +36,10 @@ public class EntityPlayer extends EntityLiving {
 		healthText = new GUIText((Maths.round(health)) + "HP", GameSettings.FONT_SIZE + 0.3f, Assets.debugFont, new Vector2f(0.001f, 0.96f), 1f,
 			false);
 		TextMaster.loadText(healthText);
+
+		TextMaster.removeText(positionText);
+		positionText = new GUIText(this.position.clip(1), GameSettings.FONT_SIZE + 0.3f, Assets.debugFont, new Vector2f(0.5f, 0.96f), 1f, false);
+		TextMaster.loadText(positionText);
 	}
 
 	private void move() {
@@ -53,7 +57,7 @@ public class EntityPlayer extends EntityLiving {
 		Vector2f forward = checkInputs(new Vector2f(dx, dz));
 		velocity.y -= World.GRAVITY;
 
-		float terrainHeight = world.getHeight(position.x, position.z);
+		float terrainHeight = GameManager.world.getHeight(position.x, position.z);
 
 		this.velocity.x = forward.x;
 		this.velocity.z = forward.y;
@@ -110,7 +114,7 @@ public class EntityPlayer extends EntityLiving {
 
 	@Override
 	public void onDeath() {
-
+		System.out.println("PLAYER DIED!!!!!!!!!!");
 	}
 
 }

@@ -5,8 +5,8 @@ import graphics.TexturedModel;
 
 public class StaticEntity extends Entity {
 
-	public StaticEntity(TexturedModel model, Vector3f position, Vector3f rotation, float scale, boolean normalMapped) {
-		super(model, position, rotation, scale, normalMapped);
+	public StaticEntity(TexturedModel model, Vector3f position, Vector3f rotation, float scale) {
+		super(model, position, rotation, scale);
 	}
 
 	public StaticEntity(TexturedModel model, Vector3f position) {
@@ -15,6 +15,11 @@ public class StaticEntity extends Entity {
 
 	@Override
 	public void update() {
+	}
+
+	@Override
+	public void render() {
+		System.out.println("calling static render");
 	}
 
 }

@@ -18,7 +18,7 @@ import graphics.shader.NormalMappingShader;
 import graphics.shadows.ShadowBox;
 import graphics.shadows.ShadowMapMasterRenderer;
 import input.GameSettings;
-import toolbox.Maths;
+import utils.MathUtil;
 
 public class NormalMappingRenderer {
 
@@ -89,7 +89,7 @@ public class NormalMappingRenderer {
 	}
 
 	private void prepareInstance(Entity entity) {
-		Matrix4f transformationMatrix = Maths.createTransformationMatrix(entity.position, entity.rotation.x, entity.rotation.y, entity.rotation.z,
+		Matrix4f transformationMatrix = MathUtil.createTransformationMatrix(entity.position, entity.rotation.x, entity.rotation.y, entity.rotation.z,
 			entity.scale);
 		shader.loadTransformationMatrix(transformationMatrix);
 		shader.loadOffset(entity.getTextureXOffset(), entity.getTextureYOffset());

@@ -13,7 +13,7 @@ import graphics.Mesh;
 import graphics.TexturedModel;
 import input.GameSettings;
 import renderEngine.MasterRenderer;
-import toolbox.Maths;
+import utils.MathUtil;
 
 public class ShadowMapEntityRenderer {
 
@@ -87,7 +87,7 @@ public class ShadowMapEntityRenderer {
 	 *            - the entity to be prepared for rendering.
 	 */
 	private void prepareInstance(Entity entity) {
-		Matrix4f modelMatrix = Maths.createTransformationMatrix(entity.position, entity.rotation.x, entity.rotation.y, entity.rotation.z,
+		Matrix4f modelMatrix = MathUtil.createTransformationMatrix(entity.position, entity.rotation.x, entity.rotation.y, entity.rotation.z,
 			entity.scale);
 		Matrix4f mvpMatrix = Matrix4f.mul(projectionViewMatrix, modelMatrix, null);
 		shader.loadMvpMatrix(mvpMatrix);

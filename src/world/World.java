@@ -2,11 +2,7 @@ package world;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Random;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
@@ -17,8 +13,8 @@ import com.troy.troyberry.math.Vector3f;
 import com.troy.troyberry.math.Vector4f;
 import entity.Camera;
 import entity.Entity;
+import entity.EntityManager;
 import entity.Light;
-import entity.StaticEntity;
 import fontMeshCreator.GUIText;
 import fontRendering.TextMaster;
 import graphics.Assets;
@@ -33,12 +29,12 @@ import renderEngine.SplashRenderer;
 
 public class World {
 
-	private Map<Entity, Boolean> entitiesToAdd = new HashMap<Entity, Boolean>();
 	private DecimalFormat df = new DecimalFormat("00.0");
 
 	public static final float GRAVITY = 0.0017f;
 	private final long seed;
 	private final int largestFeature;
+	private EntityCreator entityCreator;
 	private final double divideFactor, persistence;
 
 	private WaterFrameBuffers buffers;
@@ -50,10 +46,9 @@ public class World {
 
 	public float time = 12000f;
 
-	public List<Terrain> terrains;
+	public List<Terrain> allTerrains, loadedTerrains;
 	public List<Entity> entities;
 	public List<Light> lights;
-	public List<Entity> normalMapEntities;
 	public Light sun;
 
 	public World() {
@@ -61,10 +56,10 @@ public class World {
 		Timer t = new Timer();
 		timeText = new GUIText("" + time, 1, Assets.debugFont, new Vector2f(0.9f, 0.001f), 1f, false);
 		this.seed = new Random().nextLong();
-		terrains = new ArrayList<Terrain>();
+		allTerrains = new ArrayList<Terrain>();
+		loadedTerrains = new ArrayList<Terrain>();
 
 		entities = new ArrayList<Entity>();
-		normalMapEntities = new ArrayList<Entity>();
 
 		lights = new ArrayList<Light>();
 		sun = new Light(new Vector3f(1000000, 1500000, -1000000), new Vector3f(1.3f, 1.3f, 1.3f));
@@ -77,7 +72,7 @@ public class World {
 
 		Maths.setSeed(new Random(this.seed).nextLong());
 		this.divideFactor = Maths.randRange(20.0, 140.0);
-		this.persistence = Maths.randRange(0.8, 1.5);
+		this.persistence = Maths.randRange(0.8, 1.6);
 		this.largestFeature = Maths.randRange(20, 150);
 
 		int raduis = 1;
@@ -92,44 +87,14 @@ public class World {
 		for (int z = -raduis; z <= raduis; z++) {
 			for (int x = -raduis; x <= raduis; x++) {
 				SplashRenderer.render();
-				terrains
-					.add(new Terrain(x, z, Assets.texturePack, Assets.blendMap, this.divideFactor, this.persistence, this.largestFeature, this.seed));
+				allTerrains.add(new Terrain(x, z, Assets.texturePack, Assets.blendMap, this.divideFactor, this.persistence, this.largestFeature,
+					this.seed, entityCreator));
 				counter++;
 				System.out.println("generating world " + df.format(((double) counter / (double) terrainsToGen) * 100.0) + "%");
 			}
 		}
 		System.out.println("Generating world done!  Took " + t.getTime());
-	}
-
-	public void populate() {
-		for (int loop = 0; loop < terrains.size(); loop++) {
-			Terrain chunk = terrains.get(loop);
-			Random random = new Random();
-			for (int i = 0; i < Terrain.SIZE / 10; i++) {
-				float x = Maths.randRange(0, Terrain.SIZE), z = Maths.randRange(0, Terrain.SIZE);
-				x += chunk.x;
-				z += chunk.z;
-				float y = this.getHeight(x, z);
-				if (y < 0) {
-					i--;
-					continue;
-				}
-				new StaticEntity(Assets.rock, new Vector3f(x, y, z), new Vector3f(Maths.randRange(-75, 75), Maths.randRange(0, 360), 0),
-					Maths.randRange(0.05f, 0.45f), true);
-			}
-			for (int i = 0; i < Terrain.SIZE / 10; i++) {
-				float x = Maths.randRange(0, Terrain.SIZE), z = Maths.randRange(0, Terrain.SIZE);
-				x += chunk.x;
-				z += chunk.z;
-				float y = this.getHeight(x, z);
-				if (y < 0) {
-					i--;
-					continue;
-				}
-				new StaticEntity(Assets.tree, new Vector3f(x, y, z), new Vector3f(0, Maths.randRange(0, 360), 0), Maths.randRange(0.25f, 1.3f),
-					false);
-			}
-		}
+		flushEntityQuoe();
 	}
 
 	public Terrain getTerrain(Entity e) {
@@ -137,7 +102,7 @@ public class World {
 	}
 
 	public Terrain getTerrain(float x, float z) {
-		for (Terrain terrain : terrains) {
+		for (Terrain terrain : allTerrains) {
 			if (Maths.inRange(x, terrain.x, terrain.x + Terrain.SIZE) && Maths.inRange(z, terrain.z, terrain.z + Terrain.SIZE)) {
 				return terrain;
 			}
@@ -146,21 +111,17 @@ public class World {
 	}
 
 	public void update() {
-		time += 0.33333333f;
-		waterRenderer.update();
-		Iterator<Entry<Entity, Boolean>> iterator = entitiesToAdd.entrySet().iterator();
-		while (iterator.hasNext()) {
-			Entry<Entity, Boolean> pair = (Map.Entry<Entity, Boolean>) iterator.next();
-			Entity e = (Entity) pair.getKey();
-			boolean normalMapped = (boolean) pair.getValue();
-			if (normalMapped) {
-				normalMapEntities.add(e);
-			} else {
-				entities.add(e);
+		if (WorldLoader.hasUpdate()) {
+			try {
+				this.loadedTerrains = WorldLoader.getUpdate();
+				WorldLoader.completedRequest();
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
-			iterator.remove();
 		}
-		entitiesToAdd.clear();
+		time += 7.33333333f;
+		waterRenderer.update();
+		flushEntityQuoe();
 		for (int i = 0; i < entities.size(); i++) {
 			entities.get(i).update();
 		}
@@ -171,6 +132,7 @@ public class World {
 		timeText = new GUIText(getTime(), GameSettings.FONT_SIZE + 0.2f, Assets.debugFont, new Vector2f(0.91f, 0.96f), 1f, false);
 		TextMaster.loadText(timeText);
 		double renderDistance = GameSettings.RENDER_DISTANCE;
+		List<Entity> coppiedEntities = new ArrayList<Entity>(entities);
 
 		for (WaterTile water : waters) {
 			if (Maths.getDistanceBetweenPoints(water.x, water.z, Camera.getCamera().position.x, Camera.getCamera().position.z) > renderDistance)
@@ -180,20 +142,18 @@ public class World {
 			Camera dumyCamera = Camera.copyCamera(Camera.getCamera());
 			dumyCamera.position.y -= distance;
 			dumyCamera.invertPitch();
-			MasterRenderer.renderScene(new ArrayList<Entity>(entities), new ArrayList<Entity>(normalMapEntities), terrains, lights, dumyCamera,
-				new Vector4f(0, 1, 0, -water.height + 1), renderDistance);
+			MasterRenderer.renderScene(coppiedEntities, loadedTerrains, lights, dumyCamera, new Vector4f(0, 1, 0, -water.height + 1), renderDistance);
 
 			buffers.bindRefractionFrameBuffer();
-			MasterRenderer.renderScene(new ArrayList<Entity>(entities), new ArrayList<Entity>(normalMapEntities), terrains, lights,
-				Camera.getCamera(), new Vector4f(0, -1, 0, water.height), renderDistance);
+			MasterRenderer.renderScene(coppiedEntities, loadedTerrains, lights, Camera.getCamera(), new Vector4f(0, -1, 0, water.height),
+				renderDistance);
 
 		}
 		GL11.glDisable(GL30.GL_CLIP_DISTANCE0);
 		buffers.unbindCurrentFrameBuffer();
 		postProcessingFbo.bindFrameBuffer();
 
-		MasterRenderer.renderScene(new ArrayList<Entity>(entities), new ArrayList<Entity>(normalMapEntities), terrains, lights, Camera.getCamera(),
-			new Vector4f(0, -1, 0, 100000), renderDistance);
+		MasterRenderer.renderScene(coppiedEntities, loadedTerrains, lights, Camera.getCamera(), new Vector4f(0, -1, 0, 100000), renderDistance);
 		waterRenderer.render(waters, sun);
 		postProcessingFbo.unbindFrameBuffer();
 	}
@@ -203,23 +163,26 @@ public class World {
 		waterShader.cleanUp();
 	}
 
-	public void addEntity(Entity entity, boolean normalMapped) {
-
-		entitiesToAdd.put(entity, normalMapped);
-	}
-
 	public String getTime() {
 		String minuites = df.format((int) time % 1000 * 60 / 1000);
 		return ((int) time / 1000 % 13) + ":" + minuites.substring(0, minuites.lastIndexOf('.')) + " " + ((time >= 12000) ? "PM" : "AM");
 	}
 
 	public float getHeight(float x, float z) {
-		for (Terrain terrain : terrains) {
+		for (Terrain terrain : loadedTerrains) {
 			if (Maths.inRange(x, terrain.x, terrain.x + Terrain.SIZE) && Maths.inRange(z, terrain.z, terrain.z + Terrain.SIZE)) {
 				return terrain.getHeightOfTerrain(x, z);
 			}
 		}
+		return 0;
+	}
 
+	public float getSlowHeight(float x, float z) {
+		for (Terrain terrain : allTerrains) {
+			if (Maths.inRange(x, terrain.x, terrain.x + Terrain.SIZE) && Maths.inRange(z, terrain.z, terrain.z + Terrain.SIZE)) {
+				return terrain.getHeightOfTerrain(x, z);
+			}
+		}
 		return 0;
 	}
 
@@ -228,6 +191,19 @@ public class World {
 		System.out.println("World divide factor is " + this.divideFactor);
 		System.out.println("World presistence is " + this.persistence);
 		System.out.println("World's largest feature is " + this.largestFeature);
+	}
+
+	public void flushEntityQuoe() {
+		for (Entity entity : EntityManager.getEntitiesToAdd()) {
+			entities.add(entity);
+		}
+		EntityManager.clear();
+	}
+
+	public static int highestPoint(double persistence) {
+		double y = ((2380625 * persistence * persistence) / 20601 - (3170525 * persistence) / 27468 + (353135 / 164808));
+
+		return (int) Maths.clamp(1.0, 999999.0, y);
 	}
 
 }

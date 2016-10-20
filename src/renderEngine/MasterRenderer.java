@@ -63,22 +63,19 @@ public class MasterRenderer {
 		skyboxRenderer.world = world;
 	}
 
-	public static void renderScene(List<Entity> entities, List<Entity> normalEntities, List<Terrain> terrains, List<Light> lights, Camera camera,
-		Vector4f clipPlane, double renderDistance) {
+	public static void renderScene(List<Entity> entities, List<Terrain> terrains, List<Light> lights, Camera camera, Vector4f clipPlane,
+		double renderDistance) {
 		for (Terrain terrain : terrains) {
-			if (Maths.approximateDistanceBetweenPoints(terrain.x + Terrain.SIZE / 2.0, terrain.z + Terrain.SIZE / 2.0, camera.position.x,
-				camera.position.z) > renderDistance + 50.0) continue;
 			processTerrain(terrain);
 		}
 		for (Entity entity : entities) {
 			if (Maths.approximateDistanceBetweenPoints(entity.position.x, entity.position.z, camera.position.x, camera.position.z) > renderDistance)
 				continue;
-			processEntity(entity);
-		}
-		for (Entity entity : normalEntities) {
-			if (Maths.approximateDistanceBetweenPoints(entity.position.x, entity.position.z, camera.position.x, camera.position.z) > renderDistance)
-				continue;
-			processNormalMapEntity(entity);
+			if (entity.hasNormalMap) {
+				processNormalMapEntity(entity);
+			} else {
+				processEntity(entity);
+			}
 		}
 		render(lights, camera, clipPlane);
 	}
@@ -146,12 +143,13 @@ public class MasterRenderer {
 		}
 	}
 
-	public static void renderShadowMap(List<Entity> entitList, List<Entity> normalEntities, Light sun) {
+	public static void renderShadowMap(List<Entity> entitList, Light sun) {
 		for (Entity entity : entitList) {
-			processEntity(entity);
-		}
-		for (Entity entity : normalEntities) {
-			processEntity(entity);
+			if (entity.hasNormalMap) {
+				processNormalMapEntity(entity);
+			} else {
+				processEntity(entity);
+			}
 		}
 		shadowMapRenderer.render(entities, sun);
 		entities.clear();
