@@ -19,10 +19,10 @@ import world.World;
 
 public class EntityPlayer extends EntityLiving {
 
-	private boolean grabbed = true;
+	private boolean grabbed = false;
 	private static final float RUN_SPEED = 0.05f * 2f, JUMP_POWER = 0.05f;
 	private float slope = 0f;
-	private GUIText healthText, positionText, deadText;
+	private GUIText healthText, deadText;
 	private DeathAnimation deathAnimation;
 
 	public EntityPlayer(TexturedModel model, Vector3f position, Vector3f rotation, float scale) {
@@ -44,18 +44,15 @@ public class EntityPlayer extends EntityLiving {
 
 	public void render() {
 		TextMaster.removeText(healthText);
-		healthText = new GUIText((Math.max(Maths.round(getHealth()), 0)) + "HP", GameSettings.FONT_SIZE + 0.3f, Assets.debugFont,
+		healthText = new GUIText((Math.max(Maths.round(getHealth()), 0)) + "HP", GameSettings.FONT_SIZE + 0.3f, Assets.font,
 			new Vector2f(0.91f, 0.96f), 1f, false);
 		TextMaster.loadText(healthText);
 
-		TextMaster.removeText(positionText);
-		positionText = new GUIText(this.position.clip(1), GameSettings.FONT_SIZE + 0.3f, Assets.debugFont, new Vector2f(0.5f, 0.96f), 1f, false);
-		TextMaster.loadText(positionText);
 		if (isDead() && deathAnimation != null) {
 			Camera.getCamera().cameraHeight = (float) (1 + Math.sin(Math.toRadians((0.3 - Math.min(deathAnimation.redFactor * 3, 0.3)) * 90.0)));
 			ContrastChanger.add.x = deathAnimation.redFactor;
 			ContrastChanger.add.y = -deathAnimation.redFactor / 2;
-			ContrastChanger.add.z = -deathAnimation.redFactor / 2;
+			ContrastChanger.add.z = -deathAnimation.redFactor;
 		}
 
 	}
@@ -133,7 +130,7 @@ public class EntityPlayer extends EntityLiving {
 	@Override
 	public void onDeath() {
 		deathAnimation = new DeathAnimation(0.0007f);
-		deadText = new GUIText("YOU DIED ", 5f, Assets.debugFont, new Vector2f(0f, 0.4f), 1f, true);
+		deadText = new GUIText("YOU DIED ", 5f, Assets.font, new Vector2f(0f, 0.4f), 1f, true);
 		TextMaster.loadText(deadText);
 	}
 

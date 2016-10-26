@@ -6,12 +6,14 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
+import com.troy.troyberry.math.Vector2f;
 import graphics.font.loader.FontType;
 import graphics.font.loader.GUIText;
 
 public class FontRenderer {
 
 	private FontShader shader;
+	private static final Vector2f NO_OFFSET = new Vector2f(0, 0);
 
 	public FontRenderer() {
 		shader = new FontShader();
@@ -44,8 +46,17 @@ public class FontRenderer {
 		GL30.glBindVertexArray(text.getMesh());
 		GL20.glEnableVertexAttribArray(0);
 		GL20.glEnableVertexAttribArray(1);
-		shader.loadColour(text.getColour());
+		shader.loadColour(text.getColor());
 		shader.loadTranslation(text.getPosition());
+		shader.loadXSpread(1);
+		shader.loadWidth(text.width, text.edge);
+		if (text.hasOutline) {
+			shader.loadShadow(text.boarderWidth, text.boarderEdge, text.outlineColor);
+			shader.loadOffset(text.offset);
+		} else {
+			shader.loadShadow(0f, text.boarderEdge, text.outlineColor);
+			shader.loadOffset(NO_OFFSET);
+		}
 		GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, text.getVertexCount());
 		GL20.glDisableVertexAttribArray(0);
 		GL20.glDisableVertexAttribArray(1);

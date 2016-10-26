@@ -1,5 +1,6 @@
 package graphics.font.loader;
 
+import com.troy.troyberry.math.Maths;
 import com.troy.troyberry.math.Vector2f;
 import com.troy.troyberry.math.Vector3f;
 import graphics.font.renderer.TextMaster;
@@ -22,6 +23,16 @@ public class GUIText {
 	private Vector2f position;
 	private float lineMaxSize;
 	private int numberOfLines;
+	public boolean hasOutline = false;
+
+	public float width;
+	public float edge;
+
+	public float boarderWidth = 0f;
+	public float boarderEdge = 0.2f;
+	public Vector3f outlineColor = new Vector3f(0, 0, 0);
+
+	public Vector2f offset;
 
 	private FontType font;
 
@@ -59,7 +70,27 @@ public class GUIText {
 		this.position = vector2f;
 		this.lineMaxSize = maxLineLength;
 		this.centerText = centered;
-		;
+		this.offset = new Vector2f(0, 0);
+
+		this.width = Maths.clamp(0.2f, 0.8f, (-0.01511f * (fontSize * fontSize) + 0.1178f * fontSize + 0.3573f));
+		this.edge = Maths.clamp(0.02f, 0.2f, (-0.03244f * (fontSize * fontSize) - 0.2611f * fontSize + 0.4187f));
+		this.hasOutline = false;
+
+	}
+
+	public void enableOutline(float boarderWidth, float boarderEdge, Vector3f outlineColor) {
+		hasOutline = true;
+		this.boarderWidth = boarderWidth;
+		this.boarderEdge = boarderEdge;
+		this.outlineColor = outlineColor;
+	}
+
+	public void enableOutline(float boarderEdge, Vector3f outlineColor) {
+		enableOutline(this.width, boarderEdge, outlineColor);
+	}
+
+	public void setOffset(Vector2f newOffset) {
+		this.offset = newOffset;
 	}
 
 	/**
@@ -86,14 +117,14 @@ public class GUIText {
 	 * @param b
 	 *            - blue value, between 0 and 1.
 	 */
-	public void setColour(float r, float g, float b) {
+	public void setColor(float r, float g, float b) {
 		color.set(r, g, b);
 	}
 
 	/**
 	 * @return the colour of the text.
 	 */
-	public Vector3f getColour() {
+	public Vector3f getColor() {
 		return color;
 	}
 
@@ -180,6 +211,10 @@ public class GUIText {
 	 */
 	protected String getTextString() {
 		return textString;
+	}
+
+	public void setColor(Vector3f color) {
+		this.color = color;
 	}
 
 }

@@ -22,13 +22,10 @@ public class TextMaster {
 		renderer.render(texts);
 	}
 
-	public static void clear() {
-		texts.clear();
-	}
-
 	public static void loadText(GUIText text) {
 		if (text == null) return;
 		FontType font = text.getFont();
+		if (font == null) return;
 		TextMeshData data = font.loadText(text);
 		int vao = Loader.getLoader().loadToVAO(data.getVertexPositions(), data.getTextureCoords());
 		text.setMeshInfo(vao, data.getVertexCount());

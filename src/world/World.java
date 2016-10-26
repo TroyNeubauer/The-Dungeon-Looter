@@ -44,7 +44,7 @@ public class World {
 	private WaterRenderer waterRenderer;
 	private List<WaterTile> waters;
 
-	private static GUIText timeText;
+	private static GUIText timeText, pmText, test, test2;
 
 	public float time = 12000f;
 
@@ -56,7 +56,7 @@ public class World {
 	public World() {
 		System.out.println("Loading world");
 		Timer t = new Timer();
-		timeText = new GUIText("" + time, 1, Assets.debugFont, new Vector2f(0.9f, 0.001f), 1f, false);
+		timeText = new GUIText("" + time, 1, Assets.font, new Vector2f(0.9f, 0.001f), 1f, false);
 		this.seed = new Random().nextLong();
 		allTerrains = new ArrayList<Terrain>();
 		loadedTerrains = new ArrayList<Terrain>();
@@ -71,6 +71,17 @@ public class World {
 		waterShader = new WaterShader();
 		waterRenderer = new WaterRenderer(waterShader, MasterRenderer.projectionMatrix, buffers);
 		waters = new ArrayList<WaterTile>();
+
+		test = new GUIText("Test Text", 6f, Assets.font, new Vector2f(0f, 0.2f), 1f, true);
+		test.setColor(new Vector3f(0.5f, 0.5f, 0.5f));
+		test.enableOutline(0.2f, new Vector3f(0.8f, 0.2f, 0.2f));
+
+		test2 = new GUIText("Test 2", 5f, Assets.font, new Vector2f(0f, 0.7f), 1f, true);
+		test2.setColor(0.9f, 0.2f, 0.3f);
+		test2.enableOutline(0.2f, new Vector3f(0.3f, 0.8f, 0.2f));
+
+		TextMaster.loadText(test);
+		TextMaster.loadText(test2);
 
 		Maths.setSeed(new Random(this.seed).nextLong());
 		//this.divideFactor = Maths.randRange(20.0, 140.0);
@@ -116,7 +127,14 @@ public class World {
 		return null;
 	}
 
+	double angle = 0.0;
+
 	public void update() {
+		float dx = (float) (Math.cos(Math.toRadians(angle))) / 200;
+		float dz = (float) (Math.sin(Math.toRadians(angle))) / 200;
+		test.setOffset(new Vector2f(dx, dz));
+		test2.boarderWidth = (float) (0.2 + (Math.PI + Math.sin(angle / 30.0)) / 7);
+		angle += 0.5;
 		if (Controls.TOGGLE_HOUR.hasBeenPressed()) {
 			GameSettings.CLOCK_24_HOUR = !GameSettings.CLOCK_24_HOUR;
 		}
@@ -139,8 +157,11 @@ public class World {
 	public void render(Fbo postProcessingFbo) {
 		flushDeadEntityQuoe();
 		TextMaster.removeText(timeText);
-		timeText = new GUIText(getTime(), GameSettings.FONT_SIZE + 0.2f, Assets.debugFont, new Vector2f(0.001f, 0.96f), 1f, false);
+		TextMaster.removeText(pmText);
+		timeText = new GUIText(getTime(), GameSettings.FONT_SIZE + 0.2f, Assets.font, new Vector2f(0.001f, 0.96f), 1f, false);
+		pmText = new GUIText(getPM(), GameSettings.FONT_SIZE + 0.2f, Assets.font, new Vector2f(0.045f, 0.96f), 1f, false);
 		TextMaster.loadText(timeText);
+		TextMaster.loadText(pmText);
 		double renderDistance = GameSettings.RENDER_DISTANCE;
 		List<Entity> coppiedEntities = new ArrayList<Entity>(entities);
 
@@ -185,8 +206,15 @@ public class World {
 			if (hour >= 13) {
 				hour -= 12;
 			}
-			return (hour) + ":" + minuites.substring(0, minuites.lastIndexOf('.')) + " " + ((time >= 13000) ? "PM" : "AM");
+			return (hour) + ":" + minuites.substring(0, minuites.lastIndexOf('.'));
 		}
+	}
+
+	public String getPM() {
+		if (GameSettings.CLOCK_24_HOUR) {
+			return "";
+		}
+		return ((time >= 13000) ? "PM" : "AM");
 	}
 
 	public float getHeight(float x, float z) {

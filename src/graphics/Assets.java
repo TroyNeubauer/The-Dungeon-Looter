@@ -40,8 +40,7 @@ public class Assets {
 			rock.getTexture().setShineDamper(10);
 			rock.getTexture().setReflectivity(0.5f);
 
-			font = new FontType(new Texture("./res/fonts/harrington.png").id, new File("res/fonts/harrington.fnt"));
-			debugFont = new FontType(new Texture("./res/fonts/verdana.png").id, new File("./res/fonts/verdana.fnt"));
+			font = new FontType(new Texture("./res/fonts/verdana.png").id, new File("./res/fonts/verdana.fnt"));
 			SplashRenderer.render();
 
 			person = new TexturedModel(personMesh, new Texture("playerTexture", true));

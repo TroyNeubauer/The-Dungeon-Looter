@@ -6,7 +6,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.lwjgl.opengl.Display;
 
 /**
@@ -22,7 +21,7 @@ public class MetaFile {
 	private static final int PAD_BOTTOM = 2;
 	private static final int PAD_RIGHT = 3;
 
-	private static final int DESIRED_PADDING = 3;
+	private static final int DESIRED_PADDING = 11;
 
 	private static final String SPLITTER = " ";
 	private static final String NUMBER_SEPARATOR = ",";
@@ -98,7 +97,14 @@ public class MetaFile {
 	 * @return The value of the variable.
 	 */
 	private int getValueOfVariable(String variable) {
-		return Integer.parseInt(values.get(variable));
+		if (values.get(variable) == null) return 0;
+		try {
+			return Integer.parseInt(values.get(variable));
+		} catch (Exception e) {
+			System.err.println("Could not parse String " + values.get(variable) + "!!");
+			e.printStackTrace();
+		}
+		return 0;
 	}
 
 	/**
