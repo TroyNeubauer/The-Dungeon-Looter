@@ -1,5 +1,5 @@
 
-package postProcessing;
+package graphics.postprocessing;
 
 import java.nio.ByteBuffer;
 import org.lwjgl.opengl.Display;

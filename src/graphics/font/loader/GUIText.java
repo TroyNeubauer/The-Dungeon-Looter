@@ -1,8 +1,8 @@
-package fontMeshCreator;
+package graphics.font.loader;
 
 import com.troy.troyberry.math.Vector2f;
 import com.troy.troyberry.math.Vector3f;
-import fontRendering.TextMaster;
+import graphics.font.renderer.TextMaster;
 
 /**
  * Represents a piece of text in the game.
@@ -59,7 +59,6 @@ public class GUIText {
 		this.position = vector2f;
 		this.lineMaxSize = maxLineLength;
 		this.centerText = centered;
-		TextMaster.loadText(this);
 		;
 	}
 

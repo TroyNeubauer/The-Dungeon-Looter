@@ -1,14 +1,17 @@
-package entity;
+package entity.player;
 
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import com.troy.troyberry.math.Maths;
 import com.troy.troyberry.math.Vector2f;
 import com.troy.troyberry.math.Vector3f;
-import fontMeshCreator.GUIText;
-import fontRendering.TextMaster;
+import entity.Camera;
+import entity.EntityLiving;
 import graphics.Assets;
 import graphics.TexturedModel;
+import graphics.font.loader.GUIText;
+import graphics.font.renderer.TextMaster;
+import graphics.postprocessing.ContrastChanger;
 import input.Controls;
 import input.GameSettings;
 import main.GameManager;
@@ -19,33 +22,48 @@ public class EntityPlayer extends EntityLiving {
 	private boolean grabbed = true;
 	private static final float RUN_SPEED = 0.05f * 2f, JUMP_POWER = 0.05f;
 	private float slope = 0f;
-	private GUIText healthText, positionText;
+	private GUIText healthText, positionText, deadText;
+	private DeathAnimation deathAnimation;
 
 	public EntityPlayer(TexturedModel model, Vector3f position, Vector3f rotation, float scale) {
-		super(model, position, rotation, scale);
+		super(model, position, rotation, scale, 100f);
 		this.scale = 0.25f;
 	}
 
 	public void update() {
+		if (Controls.KILL_PLAYER.hasBeenPressed()) {
+			this.kill();
+		}
 		move();
 		this.position.add(velocity);
+		if (isDead) {
+			deathAnimation.update();
+			Camera.getCamera().roll = (deathAnimation.redFactor * 60f);
+		}
 	}
 
 	public void render() {
 		TextMaster.removeText(healthText);
-		healthText = new GUIText((Maths.round(health)) + "HP", GameSettings.FONT_SIZE + 0.3f, Assets.debugFont, new Vector2f(0.001f, 0.96f), 1f,
-			false);
+		healthText = new GUIText((Math.max(Maths.round(getHealth()), 0)) + "HP", GameSettings.FONT_SIZE + 0.3f, Assets.debugFont,
+			new Vector2f(0.91f, 0.96f), 1f, false);
 		TextMaster.loadText(healthText);
 
 		TextMaster.removeText(positionText);
 		positionText = new GUIText(this.position.clip(1), GameSettings.FONT_SIZE + 0.3f, Assets.debugFont, new Vector2f(0.5f, 0.96f), 1f, false);
 		TextMaster.loadText(positionText);
+		if (isDead() && deathAnimation != null) {
+			Camera.getCamera().cameraHeight = (float) (1 + Math.sin(Math.toRadians((0.3 - Math.min(deathAnimation.redFactor * 3, 0.3)) * 90.0)));
+			ContrastChanger.add.x = deathAnimation.redFactor;
+			ContrastChanger.add.y = -deathAnimation.redFactor / 2;
+			ContrastChanger.add.z = -deathAnimation.redFactor / 2;
+		}
+
 	}
 
 	private void move() {
 		Mouse.setGrabbed(grabbed);
 
-		if (grabbed) {
+		if (grabbed && isAlive()) {
 			int x = Mouse.getX() - Display.getWidth() / 2, y = Mouse.getY() - Display.getHeight() / 2;
 			rotation.y += (x / 10.0);
 			rotation.x -= (y / 10.0);
@@ -114,7 +132,9 @@ public class EntityPlayer extends EntityLiving {
 
 	@Override
 	public void onDeath() {
-		System.out.println("PLAYER DIED!!!!!!!!!!");
+		deathAnimation = new DeathAnimation(0.0007f);
+		deadText = new GUIText("YOU DIED ", 5f, Assets.debugFont, new Vector2f(0f, 0.4f), 1f, true);
+		TextMaster.loadText(deadText);
 	}
 
 }

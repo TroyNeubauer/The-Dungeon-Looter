@@ -8,7 +8,7 @@ import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import com.troy.troyberry.math.Matrix4f;
 import entity.Entity;
-import entity.EntityPlayer;
+import entity.player.EntityPlayer;
 import graphics.Mesh;
 import graphics.TexturedModel;
 import input.GameSettings;

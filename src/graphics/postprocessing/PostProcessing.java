@@ -1,4 +1,4 @@
-package postProcessing;
+package graphics.postprocessing;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;

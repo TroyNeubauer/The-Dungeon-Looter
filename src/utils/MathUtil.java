@@ -41,7 +41,7 @@ public class MathUtil {
 		Matrix4f.rotate((float) Math.toRadians(camera.yaw), new Vector3f(0, 1, 0), viewMatrix, viewMatrix);
 		Matrix4f.rotate((float) Math.toRadians(camera.roll), new Vector3f(0, 0, 1), viewMatrix, viewMatrix);
 		Vector3f cameraPos = camera.position;
-		Vector3f negativeCameraPos = new Vector3f(-cameraPos.x, -cameraPos.y, -cameraPos.z);
+		Vector3f negativeCameraPos = Vector3f.negate(cameraPos);
 		Matrix4f.translate(negativeCameraPos, viewMatrix, viewMatrix);
 		return viewMatrix;
 	}

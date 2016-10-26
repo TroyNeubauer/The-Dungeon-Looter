@@ -2,15 +2,16 @@ package entity;
 
 import com.troy.troyberry.math.Matrix4f;
 import com.troy.troyberry.math.Vector3f;
+import entity.player.EntityPlayer;
 import utils.MathUtil;
 
 public class Camera {
 
-	private static final Camera currentCamera = new Camera();
+	private static final Camera CURRENT_CAMERA = new Camera();
 
-	public Vector3f position = new Vector3f(0, 0, 0);
-	public float pitch = 0, yaw = 0, roll = 0;
-	private static final float CAMERA_HEIGHT = 1.5f;
+	public volatile Vector3f position = new Vector3f(0, 0, 0);
+	public volatile float pitch = 0, yaw = 0, roll = 0;
+	public volatile float cameraHeight = 1.5f;
 	private Matrix4f viewMatrix;
 
 	private EntityPlayer player;
@@ -25,15 +26,13 @@ public class Camera {
 	}
 
 	public void move() {
-		if (player.isAlive()) {
-			this.position.x = player.position.x;
-			this.position.y = player.position.y + CAMERA_HEIGHT;
-			this.position.z = player.position.z;
+		this.position.x = player.position.x;
+		this.position.y = player.position.y + cameraHeight;
+		this.position.z = player.position.z;
 
-			this.pitch = player.rotation.x;
-			this.yaw = player.rotation.y;
-			this.roll = player.rotation.z;
-		}
+		this.pitch = player.rotation.x;
+		this.yaw = player.rotation.y;
+
 	}
 
 	public void invertPitch() {
@@ -61,6 +60,6 @@ public class Camera {
 	}
 
 	public static synchronized Camera getCamera() {
-		return currentCamera;
+		return CURRENT_CAMERA;
 	}
 }

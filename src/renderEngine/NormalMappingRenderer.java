@@ -46,6 +46,8 @@ public class NormalMappingRenderer {
 			prepareTexturedModel(model);
 			List<Entity> batch = entities.get(model);
 			for (Entity entity : batch) {
+				if (!entity.skipRenderMethod) entity.render();
+				if (entity.skipRender) continue;
 				prepareInstance(entity);
 				GL11.glDrawElements(GL11.GL_TRIANGLES, model.getRawModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
 			}

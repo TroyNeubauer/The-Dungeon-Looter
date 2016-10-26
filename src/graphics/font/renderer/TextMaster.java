@@ -1,12 +1,12 @@
-package fontRendering;
+package graphics.font.renderer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import fontMeshCreator.FontType;
-import fontMeshCreator.GUIText;
-import fontMeshCreator.TextMeshData;
+import graphics.font.loader.FontType;
+import graphics.font.loader.GUIText;
+import graphics.font.loader.TextMeshData;
 import loader.Loader;
 
 public class TextMaster {
@@ -27,6 +27,7 @@ public class TextMaster {
 	}
 
 	public static void loadText(GUIText text) {
+		if (text == null) return;
 		FontType font = text.getFont();
 		TextMeshData data = font.loadText(text);
 		int vao = Loader.getLoader().loadToVAO(data.getVertexPositions(), data.getTextureCoords());
@@ -46,6 +47,7 @@ public class TextMaster {
 	public static void removeText(GUIText text) {
 		if (text == null) return;
 		List<GUIText> textBatch = texts.get(text.getFont());
+		if (textBatch == null) return;
 		textBatch.remove(text);
 		if (textBatch.isEmpty()) {
 			texts.remove(texts.get(text.getFont()));

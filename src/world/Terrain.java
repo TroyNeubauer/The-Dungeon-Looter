@@ -144,7 +144,6 @@ public class Terrain {
 			float rotZ = random.nextBoolean() ? Maths.randRange(-90, -30) : Maths.randRange(30, 90);
 
 			StaticEntity e = new StaticEntity(Assets.rock, new Vector3f(x, getHeightOfTerrain(x, z), z), new Vector3f(rotX, rotY, rotZ), scale);
-			System.out.println(scale);
 			e.skipRenderMethod = true;
 			e.hasNormalMap = true;
 			EntityManager.addEntity(e);

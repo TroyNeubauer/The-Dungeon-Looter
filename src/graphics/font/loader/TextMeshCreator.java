@@ -1,4 +1,4 @@
-package fontMeshCreator;
+package graphics.font.loader;
 
 import java.io.File;
 import java.util.ArrayList;

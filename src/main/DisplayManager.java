@@ -10,9 +10,9 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.PixelFormat;
 import com.troy.troyberry.math.Vector2f;
-import fontMeshCreator.GUIText;
-import fontRendering.TextMaster;
 import graphics.Assets;
+import graphics.font.loader.GUIText;
+import graphics.font.renderer.TextMaster;
 import input.GameSettings;
 
 public class DisplayManager {

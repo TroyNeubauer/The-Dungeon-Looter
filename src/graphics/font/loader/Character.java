@@ -1,4 +1,4 @@
-package fontMeshCreator;
+package graphics.font.loader;
 
 /**
  * Simple data structure class holding information about a certain glyph in the

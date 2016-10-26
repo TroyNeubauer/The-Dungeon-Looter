@@ -28,31 +28,18 @@ public class Texture {
 	public final int id;
 
 	public Texture(String path) {
-		id = load(path, GL_LINEAR, -1);
+		id = create(read(path), GL_LINEAR, -1);
 	}
 
 	public Texture(String name, boolean b) {
 		this("./res/textures/" + name + ".png");
 	}
 
-	public TextureData getTextureData() {
-
-		return new TextureData(null, width, height);
-	}
-
-	private int load(String path, int filter, float mipMappingBias) {
-		int[] pixels = null;
-		try {
-			BufferedImage image = ImageIO.read(new FileInputStream(path));
-			width = image.getWidth();
-			height = image.getHeight();
-			pixels = new int[width * height];
-			image.getRGB(0, 0, width, height, pixels, 0, width);
-			if (GameSettings.DEBUG) System.out.println("loading texture " + path);
-		} catch (IOException e) {
-			System.err.println("Unable to load texture " + path);
-			e.printStackTrace();
-		}
+	private int create(BufferedImage image, int filter, float mipMappingBias) {
+		width = image.getWidth();
+		height = image.getHeight();
+		int[] pixels = new int[width * height];
+		image.getRGB(0, 0, width, height, pixels, 0, width);
 
 		int[] data = new int[width * height];
 		for (int i = 0; i < width * height; i++) {
@@ -74,6 +61,29 @@ public class Texture {
 		glTexParameterf(GL_TEXTURE_2D, GL14.GL_TEXTURE_LOD_BIAS, mipMappingBias);
 		glBindTexture(GL_TEXTURE_2D, 0);
 		return result;
+	}
+
+	public Texture(BufferedImage image) {
+		id = create(image, GL_LINEAR, -1);
+	}
+
+	public BufferedImage read(String path) {
+		BufferedImage image = null;
+		try {
+			image = ImageIO.read(new FileInputStream(path));
+			width = image.getWidth();
+			height = image.getHeight();
+			if (GameSettings.DEBUG) System.out.println("loading texture " + path);
+		} catch (IOException e) {
+			System.err.println("Unable to load texture " + path);
+			e.printStackTrace();
+		}
+		return image;
+	}
+
+	public TextureData getTextureData() {
+
+		return new TextureData(null, width, height);
 	}
 
 	public void bind() {

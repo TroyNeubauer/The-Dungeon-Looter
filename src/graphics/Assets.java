@@ -3,7 +3,7 @@ package graphics;
 import java.io.File;
 import com.troy.troyberry.logging.Timer;
 import com.troy.troyberry.utils.CrashReport;
-import fontMeshCreator.FontType;
+import graphics.font.loader.FontType;
 import loader.Loader;
 import loader.NormalMappedObjLoader;
 import loader.OBJLoader;

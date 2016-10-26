@@ -13,17 +13,19 @@ import com.troy.troyberry.math.Vector3f;
 import com.troy.troyberry.math.Vector4f;
 import entity.Camera;
 import entity.Entity;
+import entity.EntityLiving;
 import entity.EntityManager;
 import entity.Light;
-import fontMeshCreator.GUIText;
-import fontRendering.TextMaster;
 import graphics.Assets;
+import graphics.font.loader.GUIText;
+import graphics.font.renderer.TextMaster;
+import graphics.postprocessing.Fbo;
 import graphics.water.WaterFrameBuffers;
 import graphics.water.WaterRenderer;
 import graphics.water.WaterShader;
 import graphics.water.WaterTile;
+import input.Controls;
 import input.GameSettings;
-import postProcessing.Fbo;
 import renderEngine.MasterRenderer;
 import renderEngine.SplashRenderer;
 
@@ -71,11 +73,15 @@ public class World {
 		waters = new ArrayList<WaterTile>();
 
 		Maths.setSeed(new Random(this.seed).nextLong());
-		this.divideFactor = Maths.randRange(20.0, 140.0);
-		this.persistence = Maths.randRange(0.8, 1.6);
-		this.largestFeature = Maths.randRange(20, 150);
+		//this.divideFactor = Maths.randRange(20.0, 140.0);
+		//this.persistence = Maths.randRange(0.8, 1.6);
+		//this.largestFeature = Maths.randRange(20, 150);
 
-		int raduis = 1;
+		this.divideFactor = WorldPreset.GIANT_HILLS.divideFactor;
+		this.persistence = WorldPreset.GIANT_HILLS.persistence + 0.1;
+		this.largestFeature = WorldPreset.GIANT_HILLS.largestFeature;
+
+		int raduis = 0;
 		int terrainsToGen = 0;
 		for (int z = -raduis; z <= raduis; z++) {
 			for (int x = -raduis; x <= raduis; x++) {
@@ -111,6 +117,9 @@ public class World {
 	}
 
 	public void update() {
+		if (Controls.TOGGLE_HOUR.hasBeenPressed()) {
+			GameSettings.CLOCK_24_HOUR = !GameSettings.CLOCK_24_HOUR;
+		}
 		if (WorldLoader.hasUpdate()) {
 			try {
 				this.loadedTerrains = WorldLoader.getUpdate();
@@ -119,7 +128,7 @@ public class World {
 				e.printStackTrace();
 			}
 		}
-		time += 7.33333333f;
+		time += 8.33333333f;
 		waterRenderer.update();
 		flushEntityQuoe();
 		for (int i = 0; i < entities.size(); i++) {
@@ -128,8 +137,9 @@ public class World {
 	}
 
 	public void render(Fbo postProcessingFbo) {
+		flushDeadEntityQuoe();
 		TextMaster.removeText(timeText);
-		timeText = new GUIText(getTime(), GameSettings.FONT_SIZE + 0.2f, Assets.debugFont, new Vector2f(0.91f, 0.96f), 1f, false);
+		timeText = new GUIText(getTime(), GameSettings.FONT_SIZE + 0.2f, Assets.debugFont, new Vector2f(0.001f, 0.96f), 1f, false);
 		TextMaster.loadText(timeText);
 		double renderDistance = GameSettings.RENDER_DISTANCE;
 		List<Entity> coppiedEntities = new ArrayList<Entity>(entities);
@@ -164,8 +174,19 @@ public class World {
 	}
 
 	public String getTime() {
-		String minuites = df.format((int) time % 1000 * 60 / 1000);
-		return ((int) time / 1000 % 13) + ":" + minuites.substring(0, minuites.lastIndexOf('.')) + " " + ((time >= 12000) ? "PM" : "AM");
+		if (GameSettings.CLOCK_24_HOUR) {
+			int hour = (int) (time / 1000);
+			String minuites = df.format((int) time % 1000 * 60 / 1000);
+			return (hour) + ":" + minuites.substring(0, minuites.lastIndexOf('.'));
+		} else {
+			int hour = (int) (time / 1000);
+			String minuites = df.format((int) time % 1000 * 60 / 1000);
+			if (hour == 0) hour = 12;
+			if (hour >= 13) {
+				hour -= 12;
+			}
+			return (hour) + ":" + minuites.substring(0, minuites.lastIndexOf('.')) + " " + ((time >= 13000) ? "PM" : "AM");
+		}
 	}
 
 	public float getHeight(float x, float z) {
@@ -198,6 +219,14 @@ public class World {
 			entities.add(entity);
 		}
 		EntityManager.clear();
+	}
+
+	public void flushDeadEntityQuoe() {
+		for (EntityLiving entity : EntityLiving.onDead) {
+			entity.onDeath();
+			entity.isDead = true;
+		}
+		EntityLiving.onDead.clear();
 	}
 
 	public static int highestPoint(double persistence) {

@@ -8,7 +8,8 @@ public class Controls {
 	/** A keybinding that is used to control movements **/
 	public static final KeyBinding FORWARD = new KeyBinding(Keyboard.KEY_W), BACKWARD = new KeyBinding(Keyboard.KEY_S),
 		LEFT = new KeyBinding(Keyboard.KEY_A), RIGHT = new KeyBinding(Keyboard.KEY_D), TOGGLE_FULLSCREEN = new KeyBinding(Keyboard.KEY_BACKSLASH),
-		UP = new KeyBinding(Keyboard.KEY_SPACE), DOWN = new KeyBinding(Keyboard.KEY_LSHIFT);
+		UP = new KeyBinding(Keyboard.KEY_SPACE), DOWN = new KeyBinding(Keyboard.KEY_LSHIFT), KILL_PLAYER = new KeyBinding(Keyboard.KEY_HOME),
+		TOGGLE_HOUR = new KeyBinding(Keyboard.KEY_P);
 
 	public static void init() {
 

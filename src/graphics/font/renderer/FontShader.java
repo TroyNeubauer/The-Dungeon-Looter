@@ -1,4 +1,4 @@
-package fontRendering;
+package graphics.font.renderer;
 
 import com.troy.troyberry.math.Vector2f;
 import com.troy.troyberry.math.Vector3f;
@@ -6,8 +6,8 @@ import graphics.shader.ShaderProgram;
 
 public class FontShader extends ShaderProgram {
 
-	private static final String VERTEX_FILE = "src/fontRendering/fontVertex.txt";
-	private static final String FRAGMENT_FILE = "src/fontRendering/fontFragment.txt";
+	private static final String VERTEX_FILE = "src/graphics/font/renderer/fontVertex.txt";
+	private static final String FRAGMENT_FILE = "src/graphics/font/renderer/fontFragment.txt";
 
 	private int location_colour;
 	private int location_translation;

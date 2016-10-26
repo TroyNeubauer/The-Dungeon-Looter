@@ -9,18 +9,18 @@ import com.troy.troyberry.logging.Timer;
 import com.troy.troyberry.math.Vector3f;
 import entity.Camera;
 import entity.EntityManager;
-import entity.EntityPlayer;
-import fontRendering.TextMaster;
+import entity.player.EntityPlayer;
 import graphics.Assets;
+import graphics.font.renderer.TextMaster;
 import graphics.gui.GuiRenderer;
 import graphics.gui.GuiTexture;
+import graphics.postprocessing.Fbo;
+import graphics.postprocessing.PostProcessing;
 import graphics.water.WaterRenderer;
 import input.GameSettings;
 import input.KeyHandler;
 import loader.Loader;
 import particles.ParticleMaster;
-import postProcessing.Fbo;
-import postProcessing.PostProcessing;
 import renderEngine.MasterRenderer;
 import renderEngine.SplashRenderer;
 import utils.MousePicker;
@@ -60,11 +60,11 @@ public class GameManager {
 		PostProcessing.doPostProcessing(outputFbo.getColorTexture());
 
 		ParticleMaster.render();
-
 		guiRenderer.render(guiTextures);
 		TextMaster.render();
 
 		DisplayManager.updateDisplay(true);
+		guiTextures.clear();
 	}
 
 	public static void cleanUp() {
@@ -96,7 +96,7 @@ public class GameManager {
 		MasterRenderer.setWorld(world);
 
 		float playerX = 50, playerZ = 50;
-		player = new EntityPlayer(Assets.tree, new Vector3f(playerX, world.getSlowHeight(playerX, playerZ), playerZ), new Vector3f(12, 0, 0), 0.6f);
+		player = new EntityPlayer(Assets.tree, new Vector3f(playerX, -1000, playerZ), new Vector3f(12, 0, 0), 0.6f);
 		player.skipRender = true;
 		EntityManager.addEntity(player);
 		Camera.getCamera().setPlayer(player);

@@ -1,4 +1,4 @@
-package fontRendering;
+package graphics.font.renderer;
 
 import java.util.List;
 import java.util.Map;
@@ -6,8 +6,8 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
-import fontMeshCreator.FontType;
-import fontMeshCreator.GUIText;
+import graphics.font.loader.FontType;
+import graphics.font.loader.GUIText;
 
 public class FontRenderer {
 
