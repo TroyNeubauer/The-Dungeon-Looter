@@ -37,6 +37,7 @@ public class StaticShader extends ShaderProgram {
 	private int location_density;
 	private int location_gradient;
 	private int location_shadowsEnabled;
+	private int location_skyBlend;
 
 	public StaticShader() {
 		super(VERTEX_FILE, FRAGMENT_FILE);
@@ -71,6 +72,8 @@ public class StaticShader extends ShaderProgram {
 		location_gradient = super.getUniformLocation("gradient");
 		location_shadowsEnabled = super.getUniformLocation("shadowsEnabled");
 
+		location_skyBlend = super.getUniformLocation("skyBlend");
+
 		location_lightPosition = new int[MAX_LIGHTS];
 		location_lightColour = new int[MAX_LIGHTS];
 		location_attenuation = new int[MAX_LIGHTS];
@@ -79,6 +82,10 @@ public class StaticShader extends ShaderProgram {
 			location_lightColour[i] = super.getUniformLocation("lightColour[" + i + "]");
 			location_attenuation[i] = super.getUniformLocation("attenuation[" + i + "]");
 		}
+	}
+
+	public void loadSkyBlendFactor(float blend) {
+		super.loadFloat(location_skyBlend, blend);
 	}
 
 	public void enableShadows(boolean enabled) {
@@ -123,7 +130,7 @@ public class StaticShader extends ShaderProgram {
 		super.loadVector(location_offset, new Vector2f(x, y));
 	}
 
-	public void loadSkyColour(float r, float g, float b) {
+	public void loadSkyColor(float r, float g, float b) {
 		super.loadVector(location_skyColour, new Vector3f(r, g, b));
 	}
 

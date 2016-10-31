@@ -36,6 +36,7 @@ public class TerrainShader extends ShaderProgram {
 	private int location_density;
 	private int location_gradient;
 	private int location_shadowsEnabled;
+	private int location_skyBlend;
 
 	public TerrainShader() {
 		super(VERTEX_FILE, FRAGMENT_FILE);
@@ -70,6 +71,8 @@ public class TerrainShader extends ShaderProgram {
 		location_density = super.getUniformLocation("density");
 		location_gradient = super.getUniformLocation("gradient");
 		location_shadowsEnabled = super.getUniformLocation("shadowsEnabled");
+
+		location_skyBlend = super.getUniformLocation("skyBlend");
 
 		location_lightPosition = new int[MAX_LIGHTS];
 		location_lightColour = new int[MAX_LIGHTS];
@@ -109,6 +112,10 @@ public class TerrainShader extends ShaderProgram {
 
 	public void loadToShadowSpace(Matrix4f matrix) {
 		super.loadMatrix(location_toShadowMapSpace, matrix);
+	}
+
+	public void loadSkyBlendFactor(float blend) {
+		super.loadFloat(location_skyBlend, blend);
 	}
 
 	public void loadClipPlane(Vector4f clipPlane) {

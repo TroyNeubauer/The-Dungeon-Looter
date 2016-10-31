@@ -1,4 +1,4 @@
-package renderEngine;
+package graphics.renderer;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;

@@ -12,7 +12,6 @@ public class Main implements Runnable {
 		thread = new Thread(new Main(), "Open Gl Thread");
 		thread.setPriority(Thread.MAX_PRIORITY);
 		thread.start();
-
 	}
 
 	@Override

@@ -118,7 +118,7 @@ public class DisplayManager {
 			lastFrameTime = now;
 			if (timer > 1000000000l) {
 				TextMaster.removeText(FPSText);
-				FPSText = new GUIText("fps " + frames, GameSettings.FONT_SIZE, Assets.debugFont, new Vector2f(0.001f, 0.001f), 1f, false);
+				FPSText = new GUIText("fps " + frames, GameSettings.FONT_SIZE, Assets.font, new Vector2f(0.001f, 0.001f), 1f, false);
 				TextMaster.loadText(FPSText);
 				timer = 0;
 				frames = 0;

@@ -13,6 +13,7 @@ import world.World;
 public class SkyboxRenderer {
 
 	private static final float SIZE = 500f;
+	public float blendFactor = 0f;
 
 	private static final float[] VERTICES = { -SIZE, SIZE, -SIZE, -SIZE, -SIZE, -SIZE, SIZE, -SIZE, -SIZE, SIZE, -SIZE, -SIZE, SIZE, SIZE, -SIZE,
 		-SIZE, SIZE, -SIZE,
@@ -60,7 +61,6 @@ public class SkyboxRenderer {
 		world.time %= 24000;
 		int texture1;
 		int texture2;
-		float blendFactor;
 		if (world.time >= 8000 && world.time < 19500) {
 			blendFactor = 0;
 		} else if (world.time >= 19500 && world.time < 21000) {

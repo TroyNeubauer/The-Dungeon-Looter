@@ -1,4 +1,4 @@
-package particles;
+package particle;
 
 import com.troy.troyberry.math.Matrix4f;
 import com.troy.troyberry.math.Vector2f;
@@ -6,8 +6,8 @@ import graphics.shader.ShaderProgram;
 
 public class ParticleShader extends ShaderProgram {
 
-	private static final String VERTEX_FILE = "src/particles/particleVShader.txt";
-	private static final String FRAGMENT_FILE = "src/particles/particleFShader.txt";
+	private static final String VERTEX_FILE = "src/particle/particleVShader.txt";
+	private static final String FRAGMENT_FILE = "src/particle/particleFShader.txt";
 
 	private int location_modelViewMatrix;
 	private int location_projectionMatrix;

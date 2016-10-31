@@ -1,4 +1,4 @@
-package particles;
+package particle;
 
 import com.troy.troyberry.math.Vector3f;
 import main.DisplayManager;

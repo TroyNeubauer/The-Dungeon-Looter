@@ -1,4 +1,4 @@
-package renderEngine;
+package graphics.renderer;
 
 import java.util.List;
 import org.lwjgl.opengl.GL11;
@@ -35,6 +35,7 @@ public class TerrainRenderer {
 		shader.loadFogValues(GameSettings.FOG_DENSITY, GameSettings.FOG_GRADIENT);
 		shader.loadToShadowSpace(toShadowSpace);
 		shader.enableShadows(GameSettings.SHAWODS_ENABLED);
+		shader.loadSkyBlendFactor(MasterRenderer.skyboxRenderer.blendFactor);
 		for (Terrain terrain : terrains) {
 			prepareTerrain(terrain);
 			loadModelMatrix(terrain);

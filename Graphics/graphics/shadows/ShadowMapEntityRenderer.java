@@ -11,8 +11,8 @@ import entity.Entity;
 import entity.player.EntityPlayer;
 import graphics.Mesh;
 import graphics.TexturedModel;
+import graphics.renderer.MasterRenderer;
 import input.GameSettings;
-import renderEngine.MasterRenderer;
 import utils.MathUtil;
 
 public class ShadowMapEntityRenderer {

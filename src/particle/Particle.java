@@ -1,4 +1,4 @@
-package particles;
+package particle;
 
 import com.troy.troyberry.math.Maths;
 import com.troy.troyberry.math.Vector2f;

@@ -4,11 +4,11 @@ import java.io.File;
 import com.troy.troyberry.logging.Timer;
 import com.troy.troyberry.utils.CrashReport;
 import graphics.font.loader.FontType;
+import graphics.renderer.SplashRenderer;
 import loader.Loader;
 import loader.NormalMappedObjLoader;
 import loader.OBJLoader;
-import particles.ParticleTexture;
-import renderEngine.SplashRenderer;
+import particle.ParticleTexture;
 
 public class Assets {
 

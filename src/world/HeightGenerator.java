@@ -12,8 +12,6 @@ public class HeightGenerator {
 
 	private final double divideFactor, persistence;
 
-	//only works with POSITIVE gridX and gridZ values!
-
 	public HeightGenerator(int gridX, int gridZ, double divideFactor, double persistence, int largestFeature, long seed) {
 		this.xOffset = gridX * (Terrain.VERTEX_COUNT - 1);
 		this.zOffset = gridZ * (Terrain.VERTEX_COUNT - 1);

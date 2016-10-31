@@ -19,8 +19,8 @@ import world.World;
 
 public class EntityPlayer extends EntityLiving {
 
-	private boolean grabbed = false;
-	private static final float RUN_SPEED = 0.05f * 2f, JUMP_POWER = 0.05f;
+	private boolean grabbed = true;
+	private static final float RUN_SPEED = 0.05f, JUMP_POWER = 0.05f;
 	private float slope = 0f;
 	private GUIText healthText, deadText;
 	private DeathAnimation deathAnimation;
@@ -28,6 +28,7 @@ public class EntityPlayer extends EntityLiving {
 	public EntityPlayer(TexturedModel model, Vector3f position, Vector3f rotation, float scale) {
 		super(model, position, rotation, scale, 100f);
 		this.scale = 0.25f;
+		this.invincible = true;
 	}
 
 	public void update() {
@@ -100,23 +101,24 @@ public class EntityPlayer extends EntityLiving {
 
 	private Vector2f checkInputs(Vector2f forward) {
 		Vector2f total = new Vector2f(0f, 0f);
-
-		if (Controls.FORWARD.isPressedUpdateThread()) {
-			total.add(forward);
+		if (isAlive()) {
+			if (Controls.FORWARD.isPressedUpdateThread()) {
+				total.add(forward);
+			}
+			if (Controls.BACKWARD.isPressedUpdateThread()) {
+				total.add(Vector2f.negate(forward));
+			}
+			if (Controls.LEFT.isPressedUpdateThread()) {
+				total.add(forward.rotate(-90));
+			}
+			if (Controls.RIGHT.isPressedUpdateThread()) {
+				total.add(forward.rotate(90));
+			}
+			if (Controls.UP.hasBeenPressed()) {
+				jump();
+			}
+			total.setLength(RUN_SPEED);
 		}
-		if (Controls.BACKWARD.isPressedUpdateThread()) {
-			total.add(Vector2f.negate(forward));
-		}
-		if (Controls.LEFT.isPressedUpdateThread()) {
-			total.add(forward.rotate(-90));
-		}
-		if (Controls.RIGHT.isPressedUpdateThread()) {
-			total.add(forward.rotate(90));
-		}
-		if (Controls.UP.hasBeenPressed()) {
-			jump();
-		}
-		total.setLength(RUN_SPEED);
 		return total;
 	}
 

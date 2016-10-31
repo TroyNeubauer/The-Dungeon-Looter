@@ -24,6 +24,7 @@ uniform vec3 skyColour;
 uniform int pcfCount;
 uniform int mapSize;
 uniform float shadowsEnabled;
+uniform float skyBlend;
 
 void main(void){
 	float lightFactor = 1.0;
@@ -90,5 +91,6 @@ void main(void){
 	
 
 	out_Color = vec4(totalDiffuse,1.0) * totalColour + vec4(totalSpecular, 1.0);
-	out_Color = mix(vec4(skyColour,1.0),out_Color, visibility);
+	vec4 sky = mix(vec4(skyColour,1.0), vec4(0.0, 0.0, 0.0, 1.0), skyBlend);
+	out_Color = mix(sky,out_Color, visibility);
 }

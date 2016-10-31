@@ -7,7 +7,7 @@ import graphics.TexturedModel;
 
 public abstract class EntityLiving extends Entity {
 
-	protected boolean isInAir = false;
+	protected boolean isInAir = false, invincible = false;
 	public boolean isDead = false;
 	private float health;
 	public static List<EntityLiving> onDead = new ArrayList<EntityLiving>();
@@ -22,10 +22,13 @@ public abstract class EntityLiving extends Entity {
 	}
 
 	public void kill() {
+		if (invincible) return;
 		this.setHealth(0f);
+		checkDead();
 	}
 
 	public void setHealth(float health) {
+		if (invincible) return;
 		this.health = health;
 		checkDead();
 	}
@@ -35,11 +38,13 @@ public abstract class EntityLiving extends Entity {
 	}
 
 	public void damage(float amount) {
+		if (invincible) return;
 		this.health -= amount;
 		checkDead();
 	}
 
 	public void increaseHealth(float amount) {
+		if (invincible) return;
 		this.health += amount;
 		checkDead();
 	}

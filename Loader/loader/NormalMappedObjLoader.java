@@ -4,27 +4,28 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+
 import com.troy.troyberry.math.Vector2f;
 import com.troy.troyberry.math.Vector3f;
+
 import graphics.Mesh;
 import input.GameSettings;
 
 public class NormalMappedObjLoader {
 
-	private static final String RES_LOC = "./res/objects/";
+	private static final String RES_LOC = "/objects/";
 
 	public static Mesh loadOBJ(String objFileName, Loader loader) {
-		FileReader isr = null;
+		InputStreamReader isr = null;
 		String path = RES_LOC + objFileName + ".obj";
-		File objFile = new File(path);
 		if (GameSettings.DEBUG) System.out.println("Loading model " + path);
 		BufferedReader reader = null;
 		try {
-			isr = new FileReader(objFile);
+			isr = new InputStreamReader(Class.class.getResourceAsStream(path));
 			reader = new BufferedReader(isr);
-			if (reader == null) throw new NullPointerException("reader is null!");
 		} catch (Exception e) {
 			System.err.println("Could not load obj file " + path);
 		}

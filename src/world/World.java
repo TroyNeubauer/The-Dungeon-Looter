@@ -20,14 +20,14 @@ import graphics.Assets;
 import graphics.font.loader.GUIText;
 import graphics.font.renderer.TextMaster;
 import graphics.postprocessing.Fbo;
+import graphics.renderer.MasterRenderer;
+import graphics.renderer.SplashRenderer;
 import graphics.water.WaterFrameBuffers;
 import graphics.water.WaterRenderer;
 import graphics.water.WaterShader;
 import graphics.water.WaterTile;
 import input.Controls;
 import input.GameSettings;
-import renderEngine.MasterRenderer;
-import renderEngine.SplashRenderer;
 
 public class World {
 
@@ -44,7 +44,7 @@ public class World {
 	private WaterRenderer waterRenderer;
 	private List<WaterTile> waters;
 
-	private static GUIText timeText, pmText, test, test2;
+	private static GUIText timeText, pmText;
 
 	public float time = 12000f;
 
@@ -72,37 +72,23 @@ public class World {
 		waterRenderer = new WaterRenderer(waterShader, MasterRenderer.projectionMatrix, buffers);
 		waters = new ArrayList<WaterTile>();
 
-		test = new GUIText("Test Text", 6f, Assets.font, new Vector2f(0f, 0.2f), 1f, true);
-		test.setColor(new Vector3f(0.5f, 0.5f, 0.5f));
-		test.enableOutline(0.2f, new Vector3f(0.8f, 0.2f, 0.2f));
-
-		test2 = new GUIText("Test 2", 5f, Assets.font, new Vector2f(0f, 0.7f), 1f, true);
-		test2.setColor(0.9f, 0.2f, 0.3f);
-		test2.enableOutline(0.2f, new Vector3f(0.3f, 0.8f, 0.2f));
-
-		TextMaster.loadText(test);
-		TextMaster.loadText(test2);
-
 		Maths.setSeed(new Random(this.seed).nextLong());
-		//this.divideFactor = Maths.randRange(20.0, 140.0);
-		//this.persistence = Maths.randRange(0.8, 1.6);
-		//this.largestFeature = Maths.randRange(20, 150);
 
-		this.divideFactor = WorldPreset.GIANT_HILLS.divideFactor;
-		this.persistence = WorldPreset.GIANT_HILLS.persistence + 0.1;
-		this.largestFeature = WorldPreset.GIANT_HILLS.largestFeature;
+		this.divideFactor = WorldPreset.SMALL_HILLS.divideFactor;
+		this.persistence = WorldPreset.SMALL_HILLS.persistence;
+		this.largestFeature = WorldPreset.SMALL_HILLS.largestFeature;
 
-		int raduis = 0;
+		int radius = 3;
 		int terrainsToGen = 0;
-		for (int z = -raduis; z <= raduis; z++) {
-			for (int x = -raduis; x <= raduis; x++) {
+		for (int z = -radius; z <= radius; z++) {
+			for (int x = -radius; x <= radius; x++) {
 				terrainsToGen++;
 			}
 		}
 		if (GameSettings.DEBUG) System.out.println("World going to generate " + terrainsToGen + " terrains");
 		int counter = 0;
-		for (int z = -raduis; z <= raduis; z++) {
-			for (int x = -raduis; x <= raduis; x++) {
+		for (int z = -radius; z <= radius; z++) {
+			for (int x = -radius; x <= radius; x++) {
 				SplashRenderer.render();
 				allTerrains.add(new Terrain(x, z, Assets.texturePack, Assets.blendMap, this.divideFactor, this.persistence, this.largestFeature,
 					this.seed, entityCreator));
@@ -132,8 +118,6 @@ public class World {
 	public void update() {
 		float dx = (float) (Math.cos(Math.toRadians(angle))) / 200;
 		float dz = (float) (Math.sin(Math.toRadians(angle))) / 200;
-		test.setOffset(new Vector2f(dx, dz));
-		test2.boarderWidth = (float) (0.2 + (Math.PI + Math.sin(angle / 30.0)) / 7);
 		angle += 0.5;
 		if (Controls.TOGGLE_HOUR.hasBeenPressed()) {
 			GameSettings.CLOCK_24_HOUR = !GameSettings.CLOCK_24_HOUR;
@@ -159,7 +143,7 @@ public class World {
 		TextMaster.removeText(timeText);
 		TextMaster.removeText(pmText);
 		timeText = new GUIText(getTime(), GameSettings.FONT_SIZE + 0.2f, Assets.font, new Vector2f(0.001f, 0.96f), 1f, false);
-		pmText = new GUIText(getPM(), GameSettings.FONT_SIZE + 0.2f, Assets.font, new Vector2f(0.045f, 0.96f), 1f, false);
+		pmText = new GUIText(getPM(), GameSettings.FONT_SIZE + 0.2f, Assets.font, new Vector2f(0.05f, 0.96f), 1f, false);
 		TextMaster.loadText(timeText);
 		TextMaster.loadText(pmText);
 		double renderDistance = GameSettings.RENDER_DISTANCE;

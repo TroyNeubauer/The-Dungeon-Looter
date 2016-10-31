@@ -9,7 +9,7 @@ public class GameSettings {
 	public static volatile double RENDER_DISTANCE;
 
 	static {
-		setRenderDistance(500.0);
+		setRenderDistance(700.0);
 	}
 
 	private GameSettings() {

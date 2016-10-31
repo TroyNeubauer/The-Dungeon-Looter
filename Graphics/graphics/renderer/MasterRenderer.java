@@ -1,4 +1,4 @@
-package renderEngine;
+package graphics.renderer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,7 +43,7 @@ public class MasterRenderer {
 
 	private static NormalMappingRenderer normalMapRenderer;
 
-	private static SkyboxRenderer skyboxRenderer;
+	public static SkyboxRenderer skyboxRenderer;
 
 	private static Map<TexturedModel, List<Entity>> entities = new HashMap<TexturedModel, List<Entity>>();
 	private static Map<TexturedModel, List<Entity>> normalMapEntities = new HashMap<TexturedModel, List<Entity>>();
@@ -85,7 +85,7 @@ public class MasterRenderer {
 		disableCulling();
 		shader.start();
 		shader.loadClipPlane(clipPlane);
-		shader.loadSkyColour(RED, GREEN, BLUE);
+		shader.loadSkyColor(RED, GREEN, BLUE);
 		shader.loadLights(lights);
 		shader.loadViewMatrix(camera);
 		renderer.render(entities, shadowMapRenderer.getToShadowMapSpaceMatrix());

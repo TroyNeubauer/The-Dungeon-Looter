@@ -1,4 +1,4 @@
-package particles;
+package particle;
 
 import java.util.List;
 

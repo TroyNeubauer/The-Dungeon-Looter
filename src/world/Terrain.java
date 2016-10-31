@@ -1,6 +1,7 @@
 package world;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import com.troy.troyberry.math.Maths;
 import com.troy.troyberry.math.Vector2f;
@@ -19,10 +20,10 @@ public class Terrain {
 
 	public static final float SIZE = 200;
 	public static final int VERTEX_COUNT = 256;
-	public HashMap<Entity, Boolean> entitiesInTerrain = new HashMap<Entity, Boolean>();
+	public List<Entity> entitiesInTerrain = new ArrayList<Entity>();
 
 	public TerrainTexture blendMap;
-	private HeightGenerator generator;
+	private HeightGenerator generator, bassGenerator;
 
 	public final float x, z;
 	public final Mesh model;
@@ -47,6 +48,7 @@ public class Terrain {
 		this.largestFeature = largestFeature;
 		this.entityCreator = entityCreator;
 		this.generator = new HeightGenerator(gridX, gridZ, divideFactor, persistence, largestFeature, seed);
+		this.bassGenerator = new HeightGenerator(gridX, gridZ, 2000.0, 1.9, 100, seed / 2l);
 		this.model = generateTerrain();
 	}
 
@@ -77,7 +79,6 @@ public class Terrain {
 	}
 
 	private Mesh generateTerrain() {
-
 		int count = VERTEX_COUNT * VERTEX_COUNT;
 		heights = new float[VERTEX_COUNT][VERTEX_COUNT];
 		vertices = new float[count * 3];
@@ -122,7 +123,8 @@ public class Terrain {
 			}
 		}
 		populate();
-		return Loader.getLoader().loadToVAO(vertices, textureCoords, normals, indices);
+		Mesh mesh = Loader.getLoader().loadToVAO(vertices, textureCoords, normals, indices);
+		return mesh;
 	}
 
 	private void populate() {
@@ -166,7 +168,7 @@ public class Terrain {
 	}
 
 	private float getHeight(int x, int z) {
-		return generator.generateHeight(x, z);
+		return generator.generateHeight(x, z) + bassGenerator.generateHeight(x, z);
 	}
 
 }

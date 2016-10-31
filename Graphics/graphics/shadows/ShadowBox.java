@@ -5,7 +5,7 @@ import com.troy.troyberry.math.Matrix4f;
 import com.troy.troyberry.math.Vector3f;
 import com.troy.troyberry.math.Vector4f;
 import entity.Camera;
-import renderEngine.MasterRenderer;
+import graphics.renderer.MasterRenderer;
 
 /**
  * Represents the 3D cuboidal area of the world in which objects will cast
