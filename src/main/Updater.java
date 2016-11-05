@@ -1,5 +1,7 @@
 package main;
 
+import gamestate.GameStateManager;
+
 public class Updater extends Thread {
 
 	public static volatile int updateCount = 0;
@@ -14,8 +16,9 @@ public class Updater extends Thread {
 		}
 	}
 
-	private void update() {
+	private void update(int updateCount) {
 		GameManager.update();
+		GameStateManager.update(updateCount);
 	}
 
 	public void run() {
@@ -35,7 +38,7 @@ public class Updater extends Thread {
 			lastTime = now;
 
 			while (delta >= 1) {
-				update();
+				update(updateCount);
 				updateCount++;
 				updates++;
 				delta--;

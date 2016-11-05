@@ -2,14 +2,20 @@ package particle;
 
 import java.util.List;
 import java.util.Map;
+
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
+
+import com.troy.troyberry.math.Maths;
 import com.troy.troyberry.math.Matrix4f;
 import com.troy.troyberry.math.Vector3f;
+
 import entity.Camera;
 import graphics.Mesh;
+import graphics.Texture;
+import input.GameSettings;
 import loader.Loader;
 
 public class ParticleRenderer {
@@ -27,15 +33,18 @@ public class ParticleRenderer {
 		shader.stop();
 	}
 
-	protected void render(Map<ParticleTexture, List<Particle>> particles) {
+	protected void render(Map<Texture, List<Particle>> particles) {
 		Matrix4f viewMatrix = Camera.getCamera().getViewMatrix();
 		prepare();
-		for (ParticleTexture texture : particles.keySet()) {
+		for (Texture texture : particles.keySet()) {
 			GL13.glActiveTexture(GL13.GL_TEXTURE0);
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.texture.id);
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.id);
 			for (Particle particle : particles.get(texture)) {
+				if(Maths.approximateDistanceBetweenPoints(particle.position, Camera.getCamera().position) > GameSettings.RENDER_DISTANCE / 4f){
+					continue;
+				}
 				updateModelViewMatrix(particle.position, particle.rotation, particle.scale, viewMatrix);
-				shader.loadTextureCoordInfo(particle.textureOffset1, particle.textureOffset2, texture.numberOfRows, particle.blend);
+				shader.loadTextureCoordInfo(particle.textureOffset1, particle.textureOffset2, texture.getNumberOfRows(), particle.blend);
 				GL11.glDrawArrays(GL11.GL_TRIANGLE_STRIP, 0, quad.getVertexCount());
 			}
 		}

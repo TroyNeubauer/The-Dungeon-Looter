@@ -6,11 +6,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
 import com.troy.troyberry.math.Matrix4f;
+
+import graphics.Texture;
 
 public class ParticleMaster {
 
-	private static Map<ParticleTexture, List<Particle>> particles = new HashMap<ParticleTexture, List<Particle>>();
+	private static Map<Texture, List<Particle>> particles = new HashMap<Texture, List<Particle>>();
 	private static ParticleRenderer renderer;
 
 	public static void init(Matrix4f projectionMatrix) {
@@ -19,7 +22,7 @@ public class ParticleMaster {
 
 	public static void update() {
 
-		Iterator<Entry<ParticleTexture, List<Particle>>> mapIterator = particles.entrySet().iterator();
+		Iterator<Entry<Texture, List<Particle>>> mapIterator = particles.entrySet().iterator();
 		while (mapIterator.hasNext()) {
 			List<Particle> list = mapIterator.next().getValue();
 			Iterator<Particle> i = list.iterator();
@@ -56,7 +59,7 @@ public class ParticleMaster {
 
 	public static int getParticleCount() {
 		int counter = 0;
-		for (ParticleTexture key : particles.keySet()) {
+		for (Texture key : particles.keySet()) {
 			counter += particles.get(key).size();
 		}
 

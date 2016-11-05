@@ -1,6 +1,10 @@
 package main;
 
+import java.awt.Canvas;
 import java.awt.GraphicsEnvironment;
+
+import javax.swing.JFrame;
+
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
 import org.lwjgl.opengl.ContextAttribs;
@@ -9,8 +13,10 @@ import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.PixelFormat;
+
 import com.troy.troyberry.math.Vector2f;
-import graphics.Assets;
+
+import assets.Assets;
 import graphics.font.loader.GUIText;
 import graphics.font.renderer.TextMaster;
 import input.GameSettings;
@@ -37,9 +43,11 @@ public class DisplayManager {
 		ContextAttribs attribs = new ContextAttribs(3, 3).withForwardCompatible(true).withProfileCore(true);
 
 		try {
+			
 			setDisplayMode(width, height, fullscreen);
 			Display.create(new PixelFormat(), attribs);
 			Display.setTitle(Version.getWindowTitle());
+			
 			GL11.glEnable(GL13.GL_MULTISAMPLE);
 		} catch (LWJGLException e) {
 			e.printStackTrace();

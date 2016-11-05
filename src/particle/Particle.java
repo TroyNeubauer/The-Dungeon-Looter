@@ -3,7 +3,9 @@ package particle;
 import com.troy.troyberry.math.Maths;
 import com.troy.troyberry.math.Vector2f;
 import com.troy.troyberry.math.Vector3f;
+
 import entity.Camera;
+import graphics.Texture;
 import main.DisplayManager;
 import world.World;
 
@@ -11,14 +13,14 @@ public class Particle {
 
 	public Vector3f position, velocity;
 	public float gravityEffect, lifeLength, rotation, scale, distance;
-	public ParticleTexture texture;
+	public Texture texture;
 
 	public Vector2f textureOffset1 = new Vector2f(), textureOffset2 = new Vector2f();
 	public float blend;
 
 	private float age;
 
-	public Particle(Vector3f position, Vector3f velocity, ParticleTexture texture, float gravityEffect, float lifeLength, float rotation,
+	public Particle(Vector3f position, Vector3f velocity, Texture texture, float gravityEffect, float lifeLength, float rotation,
 		float scale) {
 
 		this.position = position;
@@ -48,7 +50,7 @@ public class Particle {
 
 	private void updateTextureCoordInfo() {
 		float lifeFactor = age / lifeLength;
-		int stageCount = texture.numberOfRows * texture.numberOfRows;
+		int stageCount = texture.getNumberOfRows() * texture.getNumberOfRows();
 		float atlasProgression = lifeFactor * stageCount;
 		int index1 = Maths.floor(atlasProgression);
 		int index2 = (index1 < stageCount - 1) ? index1 + 1 : index1;
@@ -58,10 +60,10 @@ public class Particle {
 	}
 
 	private void setTextureOffset(Vector2f offset, int index) {
-		int colum = index % texture.numberOfRows;
-		int row = index / texture.numberOfRows;
-		offset.x = (float) colum / texture.numberOfRows;
-		offset.y = (float) row / texture.numberOfRows;
+		int colum = index % texture.getNumberOfRows();
+		int row = index / texture.getNumberOfRows();
+		offset.x = (float) colum / texture.getNumberOfRows();
+		offset.y = (float) row / texture.getNumberOfRows();
 	}
 
 }

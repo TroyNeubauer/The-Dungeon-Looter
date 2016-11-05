@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import com.troy.troyberry.math.Maths;
 import entity.Camera;
+import gamestate.WorldState;
 import input.GameSettings;
 import main.GameManager;
 
@@ -60,7 +61,7 @@ public class WorldLoader extends Thread {
 				Camera camera = Camera.getCamera();
 
 				loadedTerrains.clear();
-				List<Terrain> coppiedFromWorld = new ArrayList<Terrain>(GameManager.world.allTerrains);
+				List<Terrain> coppiedFromWorld = new ArrayList<Terrain>(WorldState.world.allTerrains);
 				for (Terrain terrain : coppiedFromWorld) {
 					if (Maths.approximateDistanceBetweenPoints(terrain.x + Terrain.SIZE / 2.0, terrain.z + Terrain.SIZE / 2.0, camera.position.x,
 						camera.position.z) < GameSettings.RENDER_DISTANCE + Terrain.SIZE * 0.75) {

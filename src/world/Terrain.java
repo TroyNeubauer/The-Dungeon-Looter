@@ -3,16 +3,18 @@ package world;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
 import com.troy.troyberry.math.Maths;
 import com.troy.troyberry.math.Vector2f;
 import com.troy.troyberry.math.Vector3f;
+
+import assets.Assets;
 import entity.Entity;
 import entity.EntityManager;
 import entity.StaticEntity;
-import graphics.Assets;
 import graphics.Mesh;
-import graphics.TerrainTexture;
 import graphics.TerrainTexturePack;
+import graphics.Texture;
 import loader.Loader;
 import utils.MathUtil;
 
@@ -22,7 +24,7 @@ public class Terrain {
 	public static final int VERTEX_COUNT = 256;
 	public List<Entity> entitiesInTerrain = new ArrayList<Entity>();
 
-	public TerrainTexture blendMap;
+	public Texture blendMap;
 	private HeightGenerator generator, bassGenerator;
 
 	public final float x, z;
@@ -37,7 +39,7 @@ public class Terrain {
 	private float[] vertices;
 	private int[] indices;
 
-	public Terrain(int gridX, int gridZ, TerrainTexturePack texturePack, TerrainTexture blendMap, double divideFactor, double persistence,
+	public Terrain(int gridX, int gridZ, TerrainTexturePack texturePack, Texture blendMap, double divideFactor, double persistence,
 		int largestFeature, long seed, EntityCreator entityCreator) {
 		this.texturePack = texturePack;
 		this.blendMap = blendMap;
@@ -123,7 +125,7 @@ public class Terrain {
 			}
 		}
 		populate();
-		Mesh mesh = Loader.getLoader().loadToVAO(vertices, textureCoords, normals, indices);
+		Mesh mesh = new Mesh(Loader.getLoader().loadToVAO(vertices, textureCoords, normals, indices));
 		return mesh;
 	}
 

@@ -20,7 +20,7 @@ public class Main implements Runnable {
 		//****************Game Loop Below*********************
 		while (running.get()) {
 			GameManager.render();
-			if (Display.isCloseRequested()) running.set(false);
+			if (Display.isCloseRequested()) break;
 		}
 
 		//*********Clean Up Below**************

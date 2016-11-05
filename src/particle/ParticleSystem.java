@@ -1,6 +1,8 @@
 package particle;
 
 import com.troy.troyberry.math.Vector3f;
+
+import graphics.Texture;
 import main.DisplayManager;
 
 public class ParticleSystem {
@@ -9,9 +11,9 @@ public class ParticleSystem {
 	private float speed;
 	private float gravityComplient;
 	private float lifeLength;
-	private ParticleTexture texture;
+	private Texture texture;
 
-	public ParticleSystem(ParticleTexture texture, float pps, float speed, float gravityComplient, float lifeLength) {
+	public ParticleSystem(Texture texture, float pps, float speed, float gravityComplient, float lifeLength) {
 		this.texture = texture;
 		this.pps = pps;
 		this.speed = speed;

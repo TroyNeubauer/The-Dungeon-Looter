@@ -2,6 +2,7 @@ package particle;
 
 import com.troy.troyberry.math.Matrix4f;
 import com.troy.troyberry.math.Vector2f;
+
 import graphics.shader.ShaderProgram;
 
 public class ParticleShader extends ShaderProgram {

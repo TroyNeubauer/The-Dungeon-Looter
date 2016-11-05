@@ -2,25 +2,29 @@ package entity.player;
 
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
+
 import com.troy.troyberry.math.Maths;
 import com.troy.troyberry.math.Vector2f;
 import com.troy.troyberry.math.Vector3f;
+
+import assets.Assets;
 import entity.Camera;
 import entity.EntityLiving;
-import graphics.Assets;
+import gamestate.WorldState;
 import graphics.TexturedModel;
 import graphics.font.loader.GUIText;
 import graphics.font.renderer.TextMaster;
 import graphics.postprocessing.ContrastChanger;
+import graphics.renderer.MasterRenderer;
 import input.Controls;
 import input.GameSettings;
-import main.GameManager;
 import world.World;
 
 public class EntityPlayer extends EntityLiving {
 
-	private boolean grabbed = true;
-	private static final float RUN_SPEED = 0.05f, JUMP_POWER = 0.05f;
+	private boolean grabbed = true, sprinting = false;
+	private static final float ORIGIONAL_RUN_SPEED = 0.05f, ORIGIONAL_JUMP_POWER = 0.05f;
+	private float runSpeed = ORIGIONAL_RUN_SPEED, jumpPower = ORIGIONAL_JUMP_POWER;
 	private float slope = 0f;
 	private GUIText healthText, deadText;
 	private DeathAnimation deathAnimation;
@@ -32,6 +36,7 @@ public class EntityPlayer extends EntityLiving {
 	}
 
 	public void update() {
+		updateStats();
 		if (Controls.KILL_PLAYER.hasBeenPressed()) {
 			this.kill();
 		}
@@ -43,14 +48,31 @@ public class EntityPlayer extends EntityLiving {
 		}
 	}
 
+	private void updateStats() {
+		if(((Controls.SPRINT.isPressedUpdateThread() || Controls.MOSUE_SPRINT.isPressed()) && Controls.isPressingMoreThenAmount(Controls.DIRECT_MOVEMENT, 0)) || sprinting){
+			runSpeed = 1.5f * ORIGIONAL_RUN_SPEED;
+			jumpPower = 1.5f * ORIGIONAL_JUMP_POWER;
+			sprinting = true;
+			if(!Controls.isPressingMoreThenAmount(Controls.DIRECT_MOVEMENT, 0)){
+				sprinting = false;
+			}
+		}else{
+			runSpeed = ORIGIONAL_RUN_SPEED;
+			jumpPower = ORIGIONAL_JUMP_POWER;
+			sprinting = false;
+		}
+		
+	}
+
 	public void render() {
 		TextMaster.removeText(healthText);
-		healthText = new GUIText((Math.max(Maths.round(getHealth()), 0)) + "HP", GameSettings.FONT_SIZE + 0.3f, Assets.font,
-			new Vector2f(0.91f, 0.96f), 1f, false);
+		healthText = new GUIText((Math.max(Maths.round(getHealth()), 0)) + "HP", GameSettings.FONT_SIZE + 0.3f,
+				Assets.font, new Vector2f(0.91f, 0.96f), 1f, false);
 		TextMaster.loadText(healthText);
 
 		if (isDead() && deathAnimation != null) {
-			Camera.getCamera().cameraHeight = (float) (1 + Math.sin(Math.toRadians((0.3 - Math.min(deathAnimation.redFactor * 3, 0.3)) * 90.0)));
+			Camera.getCamera().cameraHeight = (float) (1
+					+ Math.sin(Math.toRadians((0.3 - Math.min(deathAnimation.redFactor * 3, 0.3)) * 90.0)));
 			ContrastChanger.add.x = deathAnimation.redFactor;
 			ContrastChanger.add.y = -deathAnimation.redFactor / 2;
 			ContrastChanger.add.z = -deathAnimation.redFactor;
@@ -73,15 +95,17 @@ public class EntityPlayer extends EntityLiving {
 		Vector2f forward = checkInputs(new Vector2f(dx, dz));
 		velocity.y -= World.GRAVITY;
 
-		float terrainHeight = GameManager.world.getHeight(position.x, position.z);
+		float terrainHeight = WorldState.world.getHeight(position.x, position.z);
 
 		this.velocity.x = forward.x;
 		this.velocity.z = forward.y;
-		if (this.rotation.x > 90) this.rotation.x = 90;
-		if (this.rotation.x < -90) this.rotation.x = -90;
+		if (this.rotation.x > 90)
+			this.rotation.x = 90;
+		if (this.rotation.x < -90)
+			this.rotation.x = -90;
 		this.rotation.modulus(180f, 360f, 180f);
 
-		if (position.y - (JUMP_POWER * 0.9f) <= terrainHeight) {
+		if (position.y - (jumpPower * 0.9f) <= terrainHeight) {
 			if (isInAir && velocity.y < -0.2f) {
 				float damage = (Math.abs(velocity.y) - 0.2f) * 250f;
 				this.damage(damage);
@@ -117,14 +141,15 @@ public class EntityPlayer extends EntityLiving {
 			if (Controls.UP.hasBeenPressed()) {
 				jump();
 			}
-			total.setLength(RUN_SPEED);
+			total.setLength(runSpeed);
 		}
 		return total;
 	}
 
 	private void jump() {
 		if (!isInAir) {
-			velocity.y += JUMP_POWER;
+			velocity.y += jumpPower;
+			position.y += (float)Math.cbrt(jumpPower) / 3f;
 			isInAir = true;
 		}
 	}

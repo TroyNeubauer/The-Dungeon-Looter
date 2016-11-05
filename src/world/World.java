@@ -4,19 +4,22 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
+
 import com.troy.troyberry.logging.Timer;
 import com.troy.troyberry.math.Maths;
 import com.troy.troyberry.math.Vector2f;
 import com.troy.troyberry.math.Vector3f;
 import com.troy.troyberry.math.Vector4f;
+
+import assets.Assets;
 import entity.Camera;
 import entity.Entity;
 import entity.EntityLiving;
 import entity.EntityManager;
 import entity.Light;
-import graphics.Assets;
 import graphics.font.loader.GUIText;
 import graphics.font.renderer.TextMaster;
 import graphics.postprocessing.Fbo;
@@ -78,7 +81,7 @@ public class World {
 		this.persistence = WorldPreset.SMALL_HILLS.persistence;
 		this.largestFeature = WorldPreset.SMALL_HILLS.largestFeature;
 
-		int radius = 3;
+		int radius = 1;
 		int terrainsToGen = 0;
 		for (int z = -radius; z <= radius; z++) {
 			for (int x = -radius; x <= radius; x++) {
@@ -143,7 +146,7 @@ public class World {
 		TextMaster.removeText(timeText);
 		TextMaster.removeText(pmText);
 		timeText = new GUIText(getTime(), GameSettings.FONT_SIZE + 0.2f, Assets.font, new Vector2f(0.001f, 0.96f), 1f, false);
-		pmText = new GUIText(getPM(), GameSettings.FONT_SIZE + 0.2f, Assets.font, new Vector2f(0.05f, 0.96f), 1f, false);
+		pmText = new GUIText(getPM(), GameSettings.FONT_SIZE + 0.2f, Assets.font, new Vector2f(0.056f, 0.96f), 1f, false);
 		TextMaster.loadText(timeText);
 		TextMaster.loadText(pmText);
 		double renderDistance = GameSettings.RENDER_DISTANCE;

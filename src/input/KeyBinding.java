@@ -6,16 +6,16 @@ import org.lwjgl.input.Keyboard;
 public class KeyBinding {
 
 	/** The current key code of this keybinding **/
-	public int keyId;
+	public volatile int keyId;
 
 	/** The default key code of this keybinding **/
 	public final int defaultKeyId;
 
 	/** weather or not the key has just been presses **/
-	protected boolean pressed, isPressedNow;
+	protected volatile boolean pressed, isPressedNow;
 
 	/** Was this key pressed last update **/
-	protected boolean lastPress;
+	protected volatile boolean lastPress;
 
 	public KeyBinding(int id) {
 		this.keyId = id;
