@@ -1,6 +1,6 @@
 package graphics.shader;
 
-import java.io.*;
+import java.io.BufferedReader;
 import java.nio.FloatBuffer;
 
 import org.lwjgl.BufferUtils;
@@ -8,6 +8,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 
 import com.troy.troyberry.math.*;
+import com.troy.troyberry.util.MyFile;
 
 public abstract class ShaderProgram {
 
@@ -92,20 +93,18 @@ public abstract class ShaderProgram {
 		GL20.glUniformMatrix4fv(location, false, matrixBuffer);
 	}
 
-	private static int loadShader(String file, int type) {
+	private static int loadShader(String path, int type) {
 		StringBuilder shaderSource = new StringBuilder();
 		try {
-			if (file.startsWith("src")) {
-				file = file.substring(3);
-			}
-			InputStream in = Class.class.getResourceAsStream(file);
-			BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+			MyFile file = new MyFile(path);
 			String line;
+			BufferedReader reader = file.getReader();
 			while ((line = reader.readLine()) != null) {
 				shaderSource.append(line).append("//\n");
 			}
 			reader.close();
-		} catch (IOException e) {
+		} catch (Exception e) {
+			System.err.println("Unable to compile shader! " + path);
 			e.printStackTrace();
 			System.exit(-1);
 		}

@@ -4,11 +4,11 @@ import com.troy.troyberry.math.*;
 import com.troy.troyberry.opengl.input.Mouse;
 import com.troy.troyberry.opengl.util.Window;
 
-import assets.Assets;
+import asset.Assets;
+import asset.TexturedModel;
 import entity.Camera;
 import entity.EntityLiving;
 import gamestate.WorldState;
-import graphics.TexturedModel;
 import graphics.postprocessing.ContrastChanger;
 import input.Controls;
 import input.GameSettings;
@@ -73,8 +73,8 @@ public class EntityPlayer extends EntityLiving {
 
 		if (grabbed && isAlive()) {
 			Mouse.setGrabbed(grabbed);
-			this.rotation.x += Mouse.getDY() / -10.0f;
-			this.rotation.y += Mouse.getDX() / 10.0f;
+			this.rotation.x += Mouse.getDY() / -10.0f * GameSettings.MOUSE_SENSITIVITY;
+			this.rotation.y += Mouse.getDX() / 10.0f * GameSettings.MOUSE_SENSITIVITY;
 			
 			Mouse.setCursorPosition(Window.getInstance().getWidth() / 2.0, Window.getInstance().getHeight() / 2.0);
 		}

@@ -8,8 +8,8 @@ import org.lwjgl.opengl.GL13;
 import com.troy.troyberry.math.*;
 import com.troy.troyberry.opengl.util.Window;
 
+import asset.TexturedModel;
 import entity.*;
-import graphics.TexturedModel;
 import graphics.shader.StaticShader;
 import graphics.shader.TerrainShader;
 import graphics.shadows.ShadowMapMasterRenderer;

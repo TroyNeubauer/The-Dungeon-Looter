@@ -1,10 +1,10 @@
-package particle;
+package graphics.particle;
 
 import com.troy.troyberry.math.*;
 import com.troy.troyberry.opengl.util.Window;
 
+import asset.Texture;
 import entity.Camera;
-import graphics.Texture;
 import world.World;
 
 public class Particle {

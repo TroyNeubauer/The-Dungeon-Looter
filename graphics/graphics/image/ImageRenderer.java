@@ -7,7 +7,8 @@ import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import com.troy.troyberry.math.Matrix4f;
-import graphics.Mesh;
+
+import asset.Mesh;
 import loader.Loader;
 import utils.MathUtil;
 
@@ -19,7 +20,7 @@ public class ImageRenderer {
 
 	public static void render() {
 		shader.start();
-		GL30.glBindVertexArray(QUAD.getVaoID());
+		GL30.glBindVertexArray(QUAD.getID());
 		GL20.glEnableVertexAttribArray(0);
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
@@ -41,7 +42,7 @@ public class ImageRenderer {
 
 	public static void render(SizeableTexture texture) {
 		shader.start();
-		GL30.glBindVertexArray(QUAD.getVaoID());
+		GL30.glBindVertexArray(QUAD.getID());
 		GL20.glEnableVertexAttribArray(0);
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);

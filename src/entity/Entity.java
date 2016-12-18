@@ -1,7 +1,8 @@
 package entity;
 
 import com.troy.troyberry.math.Vector3f;
-import graphics.TexturedModel;
+
+import asset.TexturedModel;
 
 public abstract class Entity {
 

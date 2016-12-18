@@ -3,7 +3,8 @@ package entity;
 import java.util.ArrayList;
 import java.util.List;
 import com.troy.troyberry.math.Vector3f;
-import graphics.TexturedModel;
+
+import asset.TexturedModel;
 
 public abstract class EntityLiving extends Entity {
 

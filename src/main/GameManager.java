@@ -12,18 +12,18 @@ import com.troy.troyberry.opengl.input.Mouse;
 import com.troy.troyberry.opengl.util.Window;
 import com.troy.troyberry.utils.graphics.ResolutionUtil;
 
-import assets.Assets;
+import asset.Assets;
 import gamestate.GameStateManager;
 import gamestate.TitleScreenState;
 import graphics.image.ImageRenderer;
 import graphics.image.SizeableTexture;
+import graphics.particle.ParticleMaster;
 import graphics.postprocessing.PostProcessing;
 import graphics.renderer.MasterRenderer;
 import graphics.renderer.SplashRenderer;
 import input.KeyHandler;
 import input.MouseHandler;
 import loader.Loader;
-import particle.ParticleMaster;
 
 public class GameManager {
 
@@ -54,7 +54,7 @@ public class GameManager {
 		PostProcessing.cleanUp();
 		ImageRenderer.cleanUp();
 		MasterRenderer.cleanUp();
-		Loader.getLoader().cleanUp();
+		Assets.cleanUp();
 	}
 
 	public static void init() {

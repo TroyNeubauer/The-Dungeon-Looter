@@ -7,6 +7,7 @@ public class GameSettings {
 	public static int SHADOW_BUFFER_SIZE = 1024, MULTISAMPLE_COUNT = 4;
 	public static float FOG_DENSITY, FOG_GRADIENT = 20.0f, FONT_SIZE = 1.1f;
 	public static volatile double RENDER_DISTANCE;
+	public static float MOUSE_SENSITIVITY = 2.0f;
 
 	static {
 		setRenderDistance(700.0);

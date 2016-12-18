@@ -1,4 +1,4 @@
-package particle;
+package graphics.particle;
 
 import java.util.List;
 import java.util.Map;
@@ -12,9 +12,9 @@ import com.troy.troyberry.math.Maths;
 import com.troy.troyberry.math.Matrix4f;
 import com.troy.troyberry.math.Vector3f;
 
+import asset.Mesh;
+import asset.Texture;
 import entity.Camera;
-import graphics.Mesh;
-import graphics.Texture;
 import input.GameSettings;
 import loader.Loader;
 
@@ -38,7 +38,7 @@ public class ParticleRenderer {
 		prepare();
 		for (Texture texture : particles.keySet()) {
 			GL13.glActiveTexture(GL13.GL_TEXTURE0);
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.id);
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getID());
 			for (Particle particle : particles.get(texture)) {
 				if(Maths.approximateDistanceBetweenPoints(particle.position, Camera.getCamera().position) > GameSettings.RENDER_DISTANCE / 4f){
 					continue;
@@ -75,7 +75,7 @@ public class ParticleRenderer {
 
 	private void prepare() {
 		shader.start();
-		GL30.glBindVertexArray(quad.getVaoID());
+		GL30.glBindVertexArray(quad.getID());
 		GL20.glEnableVertexAttribArray(0);
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);

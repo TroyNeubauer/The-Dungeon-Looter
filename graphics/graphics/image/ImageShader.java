@@ -5,8 +5,8 @@ import graphics.shader.ShaderProgram;
 
 public class ImageShader extends ShaderProgram {
 
-	private static final String VERTEX_FILE = "src/graphics/image/guiVertexShader.txt";
-	private static final String FRAGMENT_FILE = "src/graphics/image/guiFragmentShader.txt";
+	private static final String VERTEX_FILE = "/graphics/image/image.vert";
+	private static final String FRAGMENT_FILE = "/graphics/image/image.frag";
 
 	private int location_transformationMatrix;
 

@@ -1,6 +1,6 @@
 package gamestate;
 
-import assets.Assets;
+import asset.Assets;
 import input.Controls;
 
 public class TitleScreenState implements GameState {

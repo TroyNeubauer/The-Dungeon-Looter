@@ -7,10 +7,10 @@ import org.lwjgl.opengl.*;
 
 import com.troy.troyberry.math.Matrix4f;
 
+import asset.Mesh;
+import asset.TexturedModel;
 import entity.Entity;
 import entity.player.EntityPlayer;
-import graphics.Mesh;
-import graphics.TexturedModel;
 import graphics.renderer.MasterRenderer;
 import input.GameSettings;
 import utils.MathUtil;
@@ -45,7 +45,7 @@ public class ShadowMapEntityRenderer {
 			Mesh rawModel = model.getRawModel();
 			bindModel(rawModel);
 			GL13.glActiveTexture(GL13.GL_TEXTURE0);
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().id);
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getID());
 			if (model.getTexture().hasTransparency()) {
 				MasterRenderer.disableCulling();
 			}
@@ -72,7 +72,7 @@ public class ShadowMapEntityRenderer {
 	 *            - the model to be bound.
 	 */
 	private void bindModel(Mesh rawModel) {
-		GL30.glBindVertexArray(rawModel.getVaoID());
+		GL30.glBindVertexArray(rawModel.getID());
 		GL20.glEnableVertexAttribArray(0);
 		GL20.glEnableVertexAttribArray(1);
 	}

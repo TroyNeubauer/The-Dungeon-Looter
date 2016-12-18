@@ -14,10 +14,7 @@ import org.lwjgl.opengl.GL30;
 
 import com.troy.troyberry.logging.Log;
 
-import graphics.Mesh;
-import graphics.MeshData;
-import graphics.Texture;
-import graphics.TextureData;
+import asset.*;
 
 public class Loader {
 

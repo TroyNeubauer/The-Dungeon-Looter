@@ -8,12 +8,11 @@ import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import com.troy.troyberry.math.Matrix4f;
 import com.troy.troyberry.math.Vector4f;
+
+import asset.*;
 import entity.Camera;
 import entity.Entity;
 import entity.Light;
-import graphics.Mesh;
-import graphics.Texture;
-import graphics.TexturedModel;
 import graphics.shader.NormalMappingShader;
 import graphics.shadows.ShadowBox;
 import graphics.shadows.ShadowMapMasterRenderer;
@@ -62,7 +61,7 @@ public class NormalMappingRenderer {
 
 	private void prepareTexturedModel(TexturedModel model) {
 		Mesh mesh = model.getRawModel();
-		GL30.glBindVertexArray(mesh.getVaoID());
+		GL30.glBindVertexArray(mesh.getID());
 		GL20.glEnableVertexAttribArray(0);
 		GL20.glEnableVertexAttribArray(1);
 		GL20.glEnableVertexAttribArray(2);

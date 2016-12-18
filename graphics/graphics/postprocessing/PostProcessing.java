@@ -3,7 +3,8 @@ package graphics.postprocessing;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
-import graphics.Mesh;
+
+import asset.Mesh;
 import loader.Loader;
 
 public class PostProcessing {
@@ -28,7 +29,7 @@ public class PostProcessing {
 	}
 
 	private static void start() {
-		GL30.glBindVertexArray(quad.getVaoID());
+		GL30.glBindVertexArray(quad.getID());
 		GL20.glEnableVertexAttribArray(0);
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
 	}

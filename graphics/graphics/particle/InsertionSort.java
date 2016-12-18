@@ -1,4 +1,4 @@
-package particle;
+package graphics.particle;
 
 import java.util.List;
 

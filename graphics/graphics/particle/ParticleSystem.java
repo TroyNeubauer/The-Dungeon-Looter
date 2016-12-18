@@ -1,9 +1,9 @@
-package particle;
+package graphics.particle;
 
 import com.troy.troyberry.math.Vector3f;
 import com.troy.troyberry.opengl.util.Window;
 
-import graphics.Texture;
+import asset.Texture;
 
 public class ParticleSystem {
 

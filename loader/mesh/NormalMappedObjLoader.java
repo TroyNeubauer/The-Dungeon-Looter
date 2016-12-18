@@ -11,7 +11,7 @@ import java.util.List;
 import com.troy.troyberry.math.Vector2f;
 import com.troy.troyberry.math.Vector3f;
 
-import graphics.Mesh;
+import asset.Mesh;
 import input.GameSettings;
 import loader.Loader;
 

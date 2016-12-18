@@ -8,13 +8,10 @@ import com.troy.troyberry.math.Maths;
 import com.troy.troyberry.math.Vector2f;
 import com.troy.troyberry.math.Vector3f;
 
-import assets.Assets;
+import asset.*;
 import entity.Entity;
 import entity.EntityManager;
 import entity.StaticEntity;
-import graphics.Mesh;
-import graphics.TerrainTexturePack;
-import graphics.Texture;
 import loader.Loader;
 import utils.MathUtil;
 

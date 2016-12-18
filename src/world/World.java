@@ -9,7 +9,7 @@ import org.lwjgl.opengl.GL30;
 import com.troy.troyberry.logging.Timer;
 import com.troy.troyberry.math.*;
 
-import assets.Assets;
+import asset.Assets;
 import entity.*;
 import graphics.postprocessing.Fbo;
 import graphics.renderer.MasterRenderer;

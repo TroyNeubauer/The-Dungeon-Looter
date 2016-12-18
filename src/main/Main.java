@@ -27,6 +27,10 @@ public class Main implements Runnable {
 
 		//*********Clean Up Below**************
 		Window.getInstance().hide();
+		try {
+			Thread.sleep(300);
+		} catch (InterruptedException e) {
+		}
 		GameManager.cleanUp();
 		Window.getInstance().destroy();
 		System.exit(0);

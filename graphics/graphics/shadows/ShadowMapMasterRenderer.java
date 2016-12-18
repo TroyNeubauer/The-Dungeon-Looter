@@ -6,9 +6,10 @@ import org.lwjgl.opengl.GL11;
 import com.troy.troyberry.math.Matrix4f;
 import com.troy.troyberry.math.Vector2f;
 import com.troy.troyberry.math.Vector3f;
+
+import asset.TexturedModel;
 import entity.Entity;
 import entity.Light;
-import graphics.TexturedModel;
 import input.GameSettings;
 
 /**

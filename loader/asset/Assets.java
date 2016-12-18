@@ -1,4 +1,4 @@
-package assets;
+package asset;
 
 import java.util.LinkedList;
 
@@ -12,7 +12,7 @@ import mesh.NormalMappedObjLoader;
 
 public class Assets {
 
-	private static LinkedList<Asset> toLoad = new LinkedList<Asset>();
+	private static LinkedList<Asset> toLoad = new LinkedList<Asset>(), allAssets = new LinkedList<Asset>();
 	private static Object lock = new Object();
 
 	public static Texture backgroundTexture, rTexture, gTexture, bTexture;
@@ -30,8 +30,8 @@ public class Assets {
 			System.out.println("Loading assets  ");
 			Timer t = new Timer();
 
-			personMesh = new Mesh("person", loader);
-			treeMesh = new Mesh("pine", loader);
+			personMesh = new Mesh("person");
+			treeMesh = new Mesh("pine");
 			particleTexture = new Texture("particleAtlas", true);
 			particleTexture.setNumberOfRows(4);
 			particleTexture.load();
@@ -79,6 +79,7 @@ public class Assets {
 	public static void add(Asset a) {
 		synchronized (lock) {
 			toLoad.add(a);
+			allAssets.add(a);
 		}
 	}
 
@@ -90,6 +91,12 @@ public class Assets {
 	public static LinkedList<Asset> getToLoad() {
 		synchronized (lock) {
 			return toLoad;
+		}
+	}
+	
+	public static void cleanUp(){
+		for(Asset a : allAssets){
+			a.delete();
 		}
 	}
 

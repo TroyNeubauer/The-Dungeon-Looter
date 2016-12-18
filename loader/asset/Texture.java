@@ -1,4 +1,4 @@
-package graphics;
+package asset;
 
 import static org.lwjgl.opengl.GL11.*;
 import java.awt.image.BufferedImage;
@@ -16,8 +16,6 @@ import org.lwjgl.opengl.GL30;
 
 import com.troy.troyberry.logging.Log;
 
-import assets.Asset;
-import assets.Assets;
 import input.GameSettings;
 import utils.BufferUtils;
 
@@ -35,7 +33,6 @@ public class Texture extends Asset {
 	public boolean hasNormalMap = false;
 
 	private int width, height;
-	public int id;
 	private int filter;
 	private float mipMappingBias;
 
@@ -63,16 +60,14 @@ public class Texture extends Asset {
 		return image;
 	}
 
-	public Texture(int texture) {
-		super();
-		this.id = texture;
+	public Texture(int GLID) {
+		super(GLID);
 		loaded = true;
 	}
 
 	public Texture(BufferedImage image) {
 		super();
-		id = create(image, GL_LINEAR, -1, this);
-		loaded = true;
+		this.load();
 	}
 
 	private static int create(BufferedImage image, int filter, float mipMappingBias, Texture texture) {
@@ -123,7 +118,7 @@ public class Texture extends Asset {
 	}
 
 	public void bind() {
-		glBindTexture(GL_TEXTURE_2D, id);
+		glBindTexture(GL_TEXTURE_2D, GLID);
 	}
 
 	public void unbind() {
@@ -139,7 +134,7 @@ public class Texture extends Asset {
 	}
 
 	public void setNormalMap(Texture normalMap) {
-		this.normalMap = normalMap.id;
+		this.normalMap = normalMap.GLID;
 		this.hasNormalMap = true;
 	}
 
@@ -161,10 +156,6 @@ public class Texture extends Asset {
 
 	public void setHasTransparency(boolean hasTransparency) {
 		this.hasTransparency = hasTransparency;
-	}
-
-	public int getID() {
-		return id;
 	}
 
 	public float getShineDamper() {
@@ -213,10 +204,15 @@ public class Texture extends Asset {
 	public Asset load() {
 		if (!loaded) {
 			System.out.println("Loading texture " + path + "  to Open GL!");
-			id = create(read(path), filter, mipMappingBias, this);
+			GLID = create(read(path), filter, mipMappingBias, this);
 			loaded = true;
 		}
 		return this;
+	}
+
+	@Override
+	public void delete() {
+		GL11.glDeleteTextures(GLID);
 	}
 
 }

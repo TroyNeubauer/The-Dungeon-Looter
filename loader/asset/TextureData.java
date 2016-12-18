@@ -1,4 +1,4 @@
-package graphics;
+package asset;
 
 import java.nio.IntBuffer;
 

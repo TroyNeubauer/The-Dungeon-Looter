@@ -1,4 +1,4 @@
-package particle;
+package graphics.particle;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,7 +9,7 @@ import java.util.Map.Entry;
 
 import com.troy.troyberry.math.Matrix4f;
 
-import graphics.Texture;
+import asset.Texture;
 
 public class ParticleMaster {
 

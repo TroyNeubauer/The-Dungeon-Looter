@@ -5,8 +5,9 @@ import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import com.troy.troyberry.math.Matrix4f;
+
+import asset.Mesh;
 import entity.Camera;
-import graphics.Mesh;
 import loader.Loader;
 import world.World;
 
@@ -48,7 +49,7 @@ public class SkyboxRenderer {
 	public void render(Camera camera, float r, float g, float b) {
 		shader.start();
 		shader.loadViewMatrix(camera);
-		GL30.glBindVertexArray(cube.getVaoID());
+		GL30.glBindVertexArray(cube.getID());
 		GL20.glEnableVertexAttribArray(0);
 		bindTextures();
 		GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, cube.getVertexCount());

@@ -1,4 +1,4 @@
-package graphics;
+package asset;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -7,10 +7,11 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.lwjgl.opengl.GL30;
+
 import com.troy.troyberry.math.Vector2f;
 import com.troy.troyberry.math.Vector3f;
 
-import assets.Asset;
 import input.GameSettings;
 import loader.Loader;
 
@@ -18,37 +19,28 @@ public class Mesh extends Asset {
 
 	private static final String RES_LOC = "./res/objects/";
 
-	private int vaoID;
 	private int vertexCount;
-	private Loader loader;
 
-	public Mesh(int vaoID, int vertexCount) {
-		super();
-		this.vaoID = vaoID;
+	public Mesh(int GLID, int vertexCount) {
+		super(GLID);
 		this.vertexCount = vertexCount;
 	}
 
-	public Mesh(String path, Loader loader) {
+	public Mesh(String path) {
 		super(path);
-		this.loader = loader;
 	
 	}
 
 	public Mesh(MeshData data) {
-		super();
-		this.vaoID = data.vaoID;
+		super(data.vaoID);
 		this.vertexCount = data.vertexCount;
-	}
-
-	public int getVaoID() {
-		return vaoID;
 	}
 
 	public int getVertexCount() {
 		return vertexCount;
 	}
 
-	public static MeshData loadObjModel(String fileName, Loader loader) {
+	public static MeshData loadObjModel(String fileName) {
 		FileReader fr = null;
 		int lineNumber = 0;
 		String path = RES_LOC + fileName + ".obj";
@@ -128,7 +120,7 @@ public class Mesh extends Asset {
 			System.err.println("Error loading object file " + fileName + " on line " + lineNumber);
 		}
 		System.out.println("Loading model " + fileName);
-		return loader.loadToVAO(verticesArray, textureArray, normalsArray, indicesArray);
+		return Loader.getLoader().loadToVAO(verticesArray, textureArray, normalsArray, indicesArray);
 
 	}
 
@@ -148,11 +140,16 @@ public class Mesh extends Asset {
 	@Override
 	public Asset load() {
 		loaded = true;
-		MeshData mesh = loadObjModel(path, loader);
-		this.vaoID = mesh.vaoID;
+		MeshData mesh = loadObjModel(path);
+		this.GLID = mesh.vaoID;
 		this.vertexCount = mesh.vertexCount;
 
 		return this;
+	}
+
+	@Override
+	public void delete() {
+		GL30.glDeleteVertexArrays(GLID);
 	}
 
 }

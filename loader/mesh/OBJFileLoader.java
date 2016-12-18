@@ -9,7 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import com.troy.troyberry.math.Vector2f;
 import com.troy.troyberry.math.Vector3f;
-import graphics.Mesh;
+
+import asset.Mesh;
 import loader.Loader;
 
 public class OBJFileLoader {

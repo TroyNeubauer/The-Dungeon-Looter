@@ -8,8 +8,8 @@ import utils.MathUtil;
 
 public class SkyboxShader extends ShaderProgram {
 
-	private static final String VERTEX_FILE = "src/graphics/skybox/skybox.vert";
-	private static final String FRAGMENT_FILE = "src/graphics/skybox/skybox.frag";
+	private static final String VERTEX_FILE = "/graphics/skybox/skybox.vert";
+	private static final String FRAGMENT_FILE = "/graphics/skybox/skybox.frag";
 
 	private static final float ROTATE_SPEED = 1f;
 

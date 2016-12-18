@@ -1,4 +1,4 @@
-package graphics;
+package asset;
 
 public class TerrainTexturePack {
 	

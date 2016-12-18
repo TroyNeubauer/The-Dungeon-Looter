@@ -3,16 +3,16 @@ package gamestate;
 import com.troy.troyberry.math.Vector3f;
 import com.troy.troyberry.opengl.util.Window;
 
-import assets.Assets;
+import asset.Assets;
 import entity.Camera;
 import entity.EntityManager;
 import entity.player.EntityPlayer;
+import graphics.particle.ParticleSystem;
 import graphics.postprocessing.Fbo;
 import graphics.postprocessing.PostProcessing;
 import graphics.renderer.MasterRenderer;
 import input.Controls;
 import input.GameSettings;
-import particle.ParticleSystem;
 import utils.MousePicker;
 import world.World;
 import world.WorldLoader;
