@@ -1,7 +1,8 @@
 package main;
 
 import java.util.concurrent.atomic.AtomicBoolean;
-import org.lwjgl.opengl.Display;
+
+import com.troy.troyberry.opengl.util.Window;
 
 public class Main implements Runnable {
 
@@ -20,12 +21,14 @@ public class Main implements Runnable {
 		//****************Game Loop Below*********************
 		while (running.get()) {
 			GameManager.render();
-			if (Display.isCloseRequested()) break;
+			if (Window.getInstance().isCloseRequested()) break;
+			Window.getInstance().update();
 		}
 
 		//*********Clean Up Below**************
+		Window.getInstance().hide();
 		GameManager.cleanUp();
-		DisplayManager.closeDisplay();
+		Window.getInstance().destroy();
 		System.exit(0);
 	}
 

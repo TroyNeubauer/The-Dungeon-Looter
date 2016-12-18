@@ -1,15 +1,13 @@
 package graphics.renderer;
 
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL13;
-import org.lwjgl.opengl.GL20;
-import org.lwjgl.opengl.GL30;
+import org.lwjgl.opengl.*;
+
+import com.troy.troyberry.opengl.util.Window;
 
 import assets.Assets;
 import graphics.Mesh;
 import loader.Loader;
 import loader.LoadingScreenShader;
-import main.DisplayManager;
 
 public class SplashRenderer {
 
@@ -32,7 +30,7 @@ public class SplashRenderer {
 		GL11.glDrawArrays(GL11.GL_TRIANGLE_STRIP, 0, 4);
 		shader.start();
 		end();
-		DisplayManager.updateDisplay(false);
+		Window.getInstance().update();
 	}
 
 	private static void start() {

@@ -1,9 +1,9 @@
 package particle;
 
 import com.troy.troyberry.math.Vector3f;
+import com.troy.troyberry.opengl.util.Window;
 
 import graphics.Texture;
-import main.DisplayManager;
 
 public class ParticleSystem {
 
@@ -22,7 +22,7 @@ public class ParticleSystem {
 	}
 
 	public void generateParticles(Vector3f systemCenter) {
-		float delta = DisplayManager.getFrameTimeSeconds();
+		float delta = Window.getFrameTimeSeconds();
 		float particlesToCreate = pps * delta;
 		int count = (int) Math.floor(particlesToCreate);
 		float partialParticle = particlesToCreate % 1;

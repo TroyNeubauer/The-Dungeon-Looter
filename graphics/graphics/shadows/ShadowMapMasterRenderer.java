@@ -82,7 +82,7 @@ public class ShadowMapMasterRenderer {
 	 * @return The to-shadow-map-space matrix.
 	 */
 	public Matrix4f getToShadowMapSpaceMatrix() {
-		return Matrix4f.mul(offset, projectionViewMatrix, null);
+		return Matrix4f.multiply(offset, projectionViewMatrix, null);
 	}
 
 	/**
@@ -132,7 +132,7 @@ public class ShadowMapMasterRenderer {
 	private void prepare(Vector3f lightDirection, ShadowBox box) {
 		updateOrthoProjectionMatrix(box.getWidth(), box.getHeight(), box.getLength());
 		updateLightViewMatrix(lightDirection, box.getCenter());
-		Matrix4f.mul(projectionMatrix, lightViewMatrix, projectionViewMatrix);
+		Matrix4f.multiply(projectionMatrix, lightViewMatrix, projectionViewMatrix);
 		shadowFbo.bindFrameBuffer();
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);

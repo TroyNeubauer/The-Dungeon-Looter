@@ -141,7 +141,7 @@ public class Terrain {
 		for (int i = 0; i < SIZE / 30; i++) {
 			float x = com.troy.troyberry.math.Maths.randRange(this.x, this.x + SIZE);
 			float z = com.troy.troyberry.math.Maths.randRange(this.z, this.z + SIZE);
-			float scale = (float) com.troy.troyberry.math.Maths.gaussian(0.002, 2.0, 0.15, 5.0);
+			float scale = (float) Maths.gaussian(0.02, 1.0, 0.5);
 
 			float rotX = random.nextBoolean() ? Maths.randRange(-90, -30) : Maths.randRange(30, 90);
 			float rotY = Maths.randRange(-180, 180);

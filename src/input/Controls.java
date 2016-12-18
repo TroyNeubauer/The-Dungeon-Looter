@@ -1,8 +1,6 @@
 package input;
 
-import org.lwjgl.input.Keyboard;
-
-import com.troy.troyberry.math.Vector2f;
+import com.troy.troyberry.opengl.input.Keyboard;
 
 /** This class will contain all of the controls for the game **/
 public class Controls {
@@ -10,10 +8,9 @@ public class Controls {
 	/** A keybinding **/
 	public static final KeyBinding FORWARD = new KeyBinding(Keyboard.KEY_W), BACKWARD = new KeyBinding(Keyboard.KEY_S),
 			LEFT = new KeyBinding(Keyboard.KEY_A), RIGHT = new KeyBinding(Keyboard.KEY_D),
-			TOGGLE_FULLSCREEN = new KeyBinding(Keyboard.KEY_BACKSLASH), UP = new KeyBinding(Keyboard.KEY_SPACE),
-			DOWN = new KeyBinding(Keyboard.KEY_LSHIFT), KILL_PLAYER = new KeyBinding(Keyboard.KEY_HOME),
-			TOGGLE_HOUR = new KeyBinding(Keyboard.KEY_P), NEXT = new KeyBinding(Keyboard.KEY_RETURN),
-			ESCAPE = new KeyBinding(Keyboard.KEY_ESCAPE), SPRINT = new KeyBinding(Keyboard.KEY_LCONTROL);
+			TOGGLE_FULLSCREEN = new KeyBinding(Keyboard.KEY_BACKSLASH), UP = new KeyBinding(Keyboard.KEY_SPACE), KILL_PLAYER = new KeyBinding(Keyboard.KEY_HOME),
+			TOGGLE_HOUR = new KeyBinding(Keyboard.KEY_P), NEXT = new KeyBinding(Keyboard.KEY_ENTER),
+			ESCAPE = new KeyBinding(Keyboard.KEY_ESCAPE);
 	/** A mouse bindings*/
 	public static final MouseBinding SELECT = new MouseBinding(1), MOSUE_SPRINT = new MouseBinding(5);
 	

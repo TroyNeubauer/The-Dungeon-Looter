@@ -1,21 +1,15 @@
 package entity.player;
 
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.Display;
-
-import com.troy.troyberry.math.Maths;
-import com.troy.troyberry.math.Vector2f;
-import com.troy.troyberry.math.Vector3f;
+import com.troy.troyberry.math.*;
+import com.troy.troyberry.opengl.input.Mouse;
+import com.troy.troyberry.opengl.util.Window;
 
 import assets.Assets;
 import entity.Camera;
 import entity.EntityLiving;
 import gamestate.WorldState;
 import graphics.TexturedModel;
-import graphics.font.loader.GUIText;
-import graphics.font.renderer.TextMaster;
 import graphics.postprocessing.ContrastChanger;
-import graphics.renderer.MasterRenderer;
 import input.Controls;
 import input.GameSettings;
 import world.World;
@@ -26,7 +20,6 @@ public class EntityPlayer extends EntityLiving {
 	private static final float ORIGIONAL_RUN_SPEED = 0.05f, ORIGIONAL_JUMP_POWER = 0.05f;
 	private float runSpeed = ORIGIONAL_RUN_SPEED, jumpPower = ORIGIONAL_JUMP_POWER;
 	private float slope = 0f;
-	private GUIText healthText, deadText;
 	private DeathAnimation deathAnimation;
 
 	public EntityPlayer(TexturedModel model, Vector3f position, Vector3f rotation, float scale) {
@@ -49,7 +42,7 @@ public class EntityPlayer extends EntityLiving {
 	}
 
 	private void updateStats() {
-		if(((Controls.SPRINT.isPressedUpdateThread() || Controls.MOSUE_SPRINT.isPressed()) && Controls.isPressingMoreThenAmount(Controls.DIRECT_MOVEMENT, 0)) || sprinting){
+		if(((Controls.MOSUE_SPRINT.isPressed()) && Controls.isPressingMoreThenAmount(Controls.DIRECT_MOVEMENT, 0)) || sprinting){
 			runSpeed = 1.5f * ORIGIONAL_RUN_SPEED;
 			jumpPower = 1.5f * ORIGIONAL_JUMP_POWER;
 			sprinting = true;
@@ -65,11 +58,6 @@ public class EntityPlayer extends EntityLiving {
 	}
 
 	public void render() {
-		TextMaster.removeText(healthText);
-		healthText = new GUIText((Math.max(Maths.round(getHealth()), 0)) + "HP", GameSettings.FONT_SIZE + 0.3f,
-				Assets.font, new Vector2f(0.91f, 0.96f), 1f, false);
-		TextMaster.loadText(healthText);
-
 		if (isDead() && deathAnimation != null) {
 			Camera.getCamera().cameraHeight = (float) (1
 					+ Math.sin(Math.toRadians((0.3 - Math.min(deathAnimation.redFactor * 3, 0.3)) * 90.0)));
@@ -81,13 +69,14 @@ public class EntityPlayer extends EntityLiving {
 	}
 
 	private void move() {
-		Mouse.setGrabbed(grabbed);
+		
 
 		if (grabbed && isAlive()) {
-			int x = Mouse.getX() - Display.getWidth() / 2, y = Mouse.getY() - Display.getHeight() / 2;
-			rotation.y += (x / 10.0);
-			rotation.x -= (y / 10.0);
-			Mouse.setCursorPosition(Display.getWidth() / 2, Display.getHeight() / 2);
+			Mouse.setGrabbed(grabbed);
+			this.rotation.x += Mouse.getDY() / -10.0f;
+			this.rotation.y += Mouse.getDX() / 10.0f;
+			
+			Mouse.setCursorPosition(Window.getInstance().getWidth() / 2.0, Window.getInstance().getHeight() / 2.0);
 		}
 
 		float dx = (float) (Math.cos(Math.toRadians(rotation.y - 90)));
@@ -157,8 +146,6 @@ public class EntityPlayer extends EntityLiving {
 	@Override
 	public void onDeath() {
 		deathAnimation = new DeathAnimation(0.0007f);
-		deadText = new GUIText("YOU DIED ", 5f, Assets.font, new Vector2f(0f, 0.4f), 1f, true);
-		TextMaster.loadText(deadText);
 	}
 
 }

@@ -2,11 +2,10 @@
 package graphics.postprocessing;
 
 import java.nio.ByteBuffer;
-import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
-import org.lwjgl.opengl.GL14;
-import org.lwjgl.opengl.GL30;
+
+import org.lwjgl.opengl.*;
+
+import com.troy.troyberry.opengl.util.Window;
 
 public class Fbo {
 
@@ -91,7 +90,7 @@ public class Fbo {
 	 */
 	public void unbindFrameBuffer() {
 		GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
-		GL11.glViewport(0, 0, Display.getWidth(), Display.getHeight());
+		GL11.glViewport(0, 0, Window.getInstance().getWidth(), Window.getInstance().getHeight());
 	}
 
 	/**
@@ -115,7 +114,7 @@ public class Fbo {
 		GL30.glBindFramebuffer(GL30.GL_DRAW_FRAMEBUFFER, 0);
 		GL30.glBindFramebuffer(GL30.GL_READ_FRAMEBUFFER, this.frameBuffer);
 		GL11.glDrawBuffer(GL11.GL_BACK);
-		GL30.glBlitFramebuffer(0, 0, width, height, 0, 0, Display.getWidth(), Display.getHeight(), GL11.GL_COLOR_BUFFER_BIT, GL11.GL_NEAREST);
+		GL30.glBlitFramebuffer(0, 0, width, height, 0, 0, Window.getInstance().getWidth(), Window.getInstance().getHeight(), GL11.GL_COLOR_BUFFER_BIT, GL11.GL_NEAREST);
 	}
 
 	/**

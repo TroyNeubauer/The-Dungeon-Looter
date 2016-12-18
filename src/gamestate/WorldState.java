@@ -1,8 +1,7 @@
 package gamestate;
 
-import org.lwjgl.opengl.Display;
-
 import com.troy.troyberry.math.Vector3f;
+import com.troy.troyberry.opengl.util.Window;
 
 import assets.Assets;
 import entity.Camera;
@@ -11,10 +10,8 @@ import entity.player.EntityPlayer;
 import graphics.postprocessing.Fbo;
 import graphics.postprocessing.PostProcessing;
 import graphics.renderer.MasterRenderer;
-import graphics.water.WaterRenderer;
 import input.Controls;
 import input.GameSettings;
-import particle.ParticleShader;
 import particle.ParticleSystem;
 import utils.MousePicker;
 import world.World;
@@ -22,7 +19,6 @@ import world.WorldLoader;
 
 public class WorldState implements GameState {
 	
-	private static WaterRenderer waterRenderer;
 	private static MousePicker picker;
 	
 	public static Fbo multisampleFbo, outputFbo;
@@ -54,9 +50,8 @@ public class WorldState implements GameState {
 
 	@Override
 	public void onStart() {
-		Assets.loadAll();
-		multisampleFbo = new Fbo(Display.getWidth(), Display.getHeight(), new Integer(GameSettings.MULTISAMPLE_COUNT));
-		outputFbo = new Fbo(Display.getWidth(), Display.getHeight(), Fbo.DEPTH_TEXTURE);
+		multisampleFbo = new Fbo(Window.getInstance().getWidth(), Window.getInstance().getHeight(), new Integer(GameSettings.MULTISAMPLE_COUNT));
+		outputFbo = new Fbo(Window.getInstance().getWidth(), Window.getInstance().getHeight(), Fbo.DEPTH_TEXTURE);
 		
 		picker = new MousePicker(MasterRenderer.projectionMatrix);
 		

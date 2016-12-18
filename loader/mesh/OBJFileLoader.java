@@ -87,8 +87,8 @@ public class OBJFileLoader {
 		Vector2f uv0 = textures.get(v0.getTextureIndex());
 		Vector2f uv1 = textures.get(v1.getTextureIndex());
 		Vector2f uv2 = textures.get(v2.getTextureIndex());
-		Vector2f deltaUv1 = Vector2f.sub(uv1, uv0, null);
-		Vector2f deltaUv2 = Vector2f.sub(uv2, uv0, null);
+		Vector2f deltaUv1 = Vector2f.subtract(uv1, uv0);
+		Vector2f deltaUv2 = Vector2f.subtract(uv2, uv0);
 
 		float r = 1.0f / (deltaUv1.x * deltaUv2.y - deltaUv1.y * deltaUv2.x);
 		delatPos1.scale(deltaUv2.y);

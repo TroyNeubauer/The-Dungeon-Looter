@@ -1,6 +1,6 @@
 package input;
 
-import org.lwjgl.input.Mouse;
+import com.troy.troyberry.opengl.input.Mouse;
 
 public class MouseBinding {
 

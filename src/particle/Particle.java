@@ -1,12 +1,10 @@
 package particle;
 
-import com.troy.troyberry.math.Maths;
-import com.troy.troyberry.math.Vector2f;
-import com.troy.troyberry.math.Vector3f;
+import com.troy.troyberry.math.*;
+import com.troy.troyberry.opengl.util.Window;
 
 import entity.Camera;
 import graphics.Texture;
-import main.DisplayManager;
 import world.World;
 
 public class Particle {
@@ -38,13 +36,13 @@ public class Particle {
 	}
 
 	protected boolean update() {
-		this.velocity.y -= World.GRAVITY * gravityEffect * (DisplayManager.getFrameTimeSeconds() * 1000f);
+		this.velocity.y -= World.GRAVITY * gravityEffect * (Window.getFrameTimeSeconds() * 1000f);
 		Vector3f change = new Vector3f(velocity);
-		change.scale(DisplayManager.getFrameTimeSeconds());
+		change.scale(Window.getFrameTimeSeconds());
 		this.position.add(change);
 		distance = Vector3f.sub(Camera.getCamera().position, position, null).lengthSquared();
 		updateTextureCoordInfo();
-		age += DisplayManager.getFrameTimeSeconds();
+		age += Window.getFrameTimeSeconds();
 		return age < lifeLength;
 	}
 

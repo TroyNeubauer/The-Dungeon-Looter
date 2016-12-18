@@ -1,7 +1,5 @@
 package utils;
 
-import org.lwjgl.opengl.Display;
-
 import com.troy.troyberry.math.Maths;
 import com.troy.troyberry.math.Vector2f;
 

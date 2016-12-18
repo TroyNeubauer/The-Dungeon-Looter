@@ -1,18 +1,14 @@
 package graphics.renderer;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import org.lwjgl.opengl.Display;
+import java.util.*;
+
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
-import com.troy.troyberry.math.Maths;
-import com.troy.troyberry.math.Matrix4f;
-import com.troy.troyberry.math.Vector4f;
-import entity.Camera;
-import entity.Entity;
-import entity.Light;
+
+import com.troy.troyberry.math.*;
+import com.troy.troyberry.opengl.util.Window;
+
+import entity.*;
 import graphics.TexturedModel;
 import graphics.shader.StaticShader;
 import graphics.shader.TerrainShader;
@@ -177,7 +173,7 @@ public class MasterRenderer {
 
 	private static void createProjectionMatrix() {
 		projectionMatrix = new Matrix4f();
-		float aspectRatio = (float) Display.getWidth() / (float) Display.getHeight();
+		float aspectRatio = (float) Window.getInstance().getWidth() / (float) Window.getInstance().getHeight();
 		float y_scale = (float) ((1f / Math.tan(Math.toRadians(FOV / 2f))));
 		float x_scale = y_scale / aspectRatio;
 		float frustum_length = FAR_PLANE - NEAR_PLANE;

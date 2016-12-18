@@ -1,17 +1,13 @@
 package graphics.shader;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.nio.FloatBuffer;
+
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
-import com.troy.troyberry.math.Matrix4f;
-import com.troy.troyberry.math.Vector2f;
-import com.troy.troyberry.math.Vector3f;
-import com.troy.troyberry.math.Vector4f;
+
+import com.troy.troyberry.math.*;
 
 public abstract class ShaderProgram {
 
@@ -93,7 +89,7 @@ public abstract class ShaderProgram {
 	protected void loadMatrix(int location, Matrix4f matrix) {
 		matrix.store(matrixBuffer);
 		matrixBuffer.flip();
-		GL20.glUniformMatrix4(location, false, matrixBuffer);
+		GL20.glUniformMatrix4fv(location, false, matrixBuffer);
 	}
 
 	private static int loadShader(String file, int type) {

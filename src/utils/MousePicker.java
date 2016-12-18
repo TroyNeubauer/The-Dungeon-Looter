@@ -1,11 +1,9 @@
 package utils;
 
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.Display;
-import com.troy.troyberry.math.Matrix4f;
-import com.troy.troyberry.math.Vector2f;
-import com.troy.troyberry.math.Vector3f;
-import com.troy.troyberry.math.Vector4f;
+import com.troy.troyberry.math.*;
+import com.troy.troyberry.opengl.input.Mouse;
+import com.troy.troyberry.opengl.util.Window;
+
 import entity.Camera;
 
 public class MousePicker {
@@ -54,8 +52,8 @@ public class MousePicker {
 	}
 
 	private Vector2f getNormalisedDeviceCoordinates(float mouseX, float mouseY) {
-		float x = (2.0f * mouseX) / Display.getWidth() - 1f;
-		float y = (2.0f * mouseY) / Display.getHeight() - 1f;
+		float x = (2.0f * mouseX) / Window.getInstance().getWidth() - 1f;
+		float y = (2.0f * mouseY) / Window.getInstance().getHeight() - 1f;
 		return new Vector2f(x, y);
 	}
 }

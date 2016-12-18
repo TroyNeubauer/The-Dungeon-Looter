@@ -1,16 +1,11 @@
 package assets;
 
-import java.io.File;
 import java.util.LinkedList;
 
 import com.troy.troyberry.logging.Timer;
-import com.troy.troyberry.utils.CrashReport;
+import com.troy.troyberry.util.CrashReport;
 
-import graphics.Mesh;
-import graphics.TerrainTexturePack;
-import graphics.Texture;
-import graphics.TexturedModel;
-import graphics.font.loader.FontType;
+import graphics.*;
 import graphics.renderer.SplashRenderer;
 import loader.Loader;
 import mesh.NormalMappedObjLoader;
@@ -22,8 +17,6 @@ public class Assets {
 
 	public static Texture backgroundTexture, rTexture, gTexture, bTexture;
 	public static Texture loadingTexture;
-
-	public static FontType font;
 
 	private static Mesh personMesh, treeMesh;
 	public static TexturedModel person, rock, tree;
@@ -69,15 +62,6 @@ public class Assets {
 	private Assets() {
 	}
 
-	public static void loadAll() {
-		synchronized (lock) {
-			for (Asset a : toLoad) {
-				a.load();
-				toLoad.remove(a);
-			}
-		}
-	}
-
 	public static void loadNext() {
 		synchronized (lock) {
 			if (toLoad.isEmpty()) {
@@ -86,6 +70,10 @@ public class Assets {
 			toLoad.getFirst().load();
 			toLoad.removeFirst();
 		}
+	}
+	
+	public static boolean hasLoadedAll(){
+		return toLoad.isEmpty();
 	}
 
 	public static void add(Asset a) {
@@ -97,7 +85,6 @@ public class Assets {
 	public static void loadCoreAssets(Loader loader) {
 		loadingTexture = new Texture("loading", true);
 		loadingTexture.load();
-		font = new FontType((Texture) new Texture("/fonts/verdana.png").load(), "/fonts/verdana.fnt");
 	}
 
 	public static LinkedList<Asset> getToLoad() {

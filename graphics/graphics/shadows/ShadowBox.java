@@ -1,9 +1,8 @@
 package graphics.shadows;
 
-import org.lwjgl.opengl.Display;
-import com.troy.troyberry.math.Matrix4f;
-import com.troy.troyberry.math.Vector3f;
-import com.troy.troyberry.math.Vector4f;
+import com.troy.troyberry.math.*;
+import com.troy.troyberry.opengl.util.Window;
+
 import entity.Camera;
 import graphics.renderer.MasterRenderer;
 
@@ -224,7 +223,7 @@ public class ShadowBox {
 	 * @return The aspect ratio of the display (width:height ratio).
 	 */
 	private float getAspectRatio() {
-		return (float) Display.getWidth() / (float) Display.getHeight();
+		return (float) Window.getInstance().getWidth() / (float) Window.getInstance().getHeight();
 	}
 
 }

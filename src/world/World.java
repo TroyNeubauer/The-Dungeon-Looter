@@ -1,34 +1,19 @@
 package world;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 
 import com.troy.troyberry.logging.Timer;
-import com.troy.troyberry.math.Maths;
-import com.troy.troyberry.math.Vector2f;
-import com.troy.troyberry.math.Vector3f;
-import com.troy.troyberry.math.Vector4f;
+import com.troy.troyberry.math.*;
 
 import assets.Assets;
-import entity.Camera;
-import entity.Entity;
-import entity.EntityLiving;
-import entity.EntityManager;
-import entity.Light;
-import graphics.font.loader.GUIText;
-import graphics.font.renderer.TextMaster;
+import entity.*;
 import graphics.postprocessing.Fbo;
 import graphics.renderer.MasterRenderer;
 import graphics.renderer.SplashRenderer;
-import graphics.water.WaterFrameBuffers;
-import graphics.water.WaterRenderer;
-import graphics.water.WaterShader;
-import graphics.water.WaterTile;
 import input.Controls;
 import input.GameSettings;
 
@@ -42,13 +27,6 @@ public class World {
 	private EntityCreator entityCreator;
 	private final double divideFactor, persistence;
 
-	private WaterFrameBuffers buffers;
-	private WaterShader waterShader;
-	private WaterRenderer waterRenderer;
-	private List<WaterTile> waters;
-
-	private static GUIText timeText, pmText;
-
 	public float time = 12000f;
 
 	public List<Terrain> allTerrains, loadedTerrains;
@@ -59,7 +37,6 @@ public class World {
 	public World() {
 		System.out.println("Loading world");
 		Timer t = new Timer();
-		timeText = new GUIText("" + time, 1, Assets.font, new Vector2f(0.9f, 0.001f), 1f, false);
 		this.seed = new Random().nextLong();
 		allTerrains = new ArrayList<Terrain>();
 		loadedTerrains = new ArrayList<Terrain>();
@@ -69,11 +46,6 @@ public class World {
 		lights = new ArrayList<Light>();
 		sun = new Light(new Vector3f(1000000, 1500000, -1000000), new Vector3f(1.3f, 1.3f, 1.3f));
 		lights.add(sun);
-
-		buffers = new WaterFrameBuffers();
-		waterShader = new WaterShader();
-		waterRenderer = new WaterRenderer(waterShader, MasterRenderer.projectionMatrix, buffers);
-		waters = new ArrayList<WaterTile>();
 
 		Maths.setSeed(new Random(this.seed).nextLong());
 
@@ -134,7 +106,6 @@ public class World {
 			}
 		}
 		time += 8.33333333f;
-		waterRenderer.update();
 		flushEntityQuoe();
 		for (int i = 0; i < entities.size(); i++) {
 			entities.get(i).update();
@@ -143,42 +114,17 @@ public class World {
 
 	public void render(Fbo postProcessingFbo) {
 		flushDeadEntityQuoe();
-		TextMaster.removeText(timeText);
-		TextMaster.removeText(pmText);
-		timeText = new GUIText(getTime(), GameSettings.FONT_SIZE + 0.2f, Assets.font, new Vector2f(0.001f, 0.96f), 1f, false);
-		pmText = new GUIText(getPM(), GameSettings.FONT_SIZE + 0.2f, Assets.font, new Vector2f(0.056f, 0.96f), 1f, false);
-		TextMaster.loadText(timeText);
-		TextMaster.loadText(pmText);
 		double renderDistance = GameSettings.RENDER_DISTANCE;
 		List<Entity> coppiedEntities = new ArrayList<Entity>(entities);
 
-		for (WaterTile water : waters) {
-			if (Maths.getDistanceBetweenPoints(water.x, water.z, Camera.getCamera().position.x, Camera.getCamera().position.z) > renderDistance)
-				continue;
-			buffers.bindReflectionFrameBuffer();
-			float distance = 2 * (Camera.getCamera().position.y - water.height);
-			Camera dumyCamera = Camera.copyCamera(Camera.getCamera());
-			dumyCamera.position.y -= distance;
-			dumyCamera.invertPitch();
-			MasterRenderer.renderScene(coppiedEntities, loadedTerrains, lights, dumyCamera, new Vector4f(0, 1, 0, -water.height + 1), renderDistance);
-
-			buffers.bindRefractionFrameBuffer();
-			MasterRenderer.renderScene(coppiedEntities, loadedTerrains, lights, Camera.getCamera(), new Vector4f(0, -1, 0, water.height),
-				renderDistance);
-
-		}
 		GL11.glDisable(GL30.GL_CLIP_DISTANCE0);
-		buffers.unbindCurrentFrameBuffer();
 		postProcessingFbo.bindFrameBuffer();
 
 		MasterRenderer.renderScene(coppiedEntities, loadedTerrains, lights, Camera.getCamera(), new Vector4f(0, -1, 0, 100000), renderDistance);
-		waterRenderer.render(waters, sun);
 		postProcessingFbo.unbindFrameBuffer();
 	}
 
 	public void cleanUp() {
-		buffers.cleanUp();
-		waterShader.cleanUp();
 	}
 
 	public String getTime() {

@@ -1,6 +1,6 @@
 package input;
 
-import org.lwjgl.input.Keyboard;
+import com.troy.troyberry.opengl.input.Keyboard;
 
 /** A keybinding represents a key on the keyboard that is configurable **/
 public class KeyBinding {
