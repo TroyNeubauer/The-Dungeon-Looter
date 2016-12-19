@@ -1,4 +1,4 @@
-package entity;
+package entity.light;
 
 import com.troy.troyberry.math.Vector3f;
 
@@ -35,8 +35,8 @@ public class Light {
 		return color;
 	}
 
-	public void setColour(Vector3f colour) {
-		this.color = colour;
+	public void setColor(Vector3f color) {
+		this.color = color;
 	}
 
 }

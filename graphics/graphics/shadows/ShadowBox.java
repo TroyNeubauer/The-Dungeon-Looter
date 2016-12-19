@@ -3,7 +3,8 @@ package graphics.shadows;
 import com.troy.troyberry.math.*;
 import com.troy.troyberry.opengl.util.Window;
 
-import entity.Camera;
+import camera.FirstPersonCamera;
+import camera.ICamera;
 import graphics.renderer.MasterRenderer;
 
 /**
@@ -30,6 +31,7 @@ public class ShadowBox {
 	private float minY, maxY;
 	private float minZ, maxZ;
 	private Matrix4f lightViewMatrix;
+	private ICamera camera;
 
 	private float farHeight, farWidth, nearHeight, nearWidth;
 
@@ -44,8 +46,9 @@ public class ShadowBox {
 	 *            changes a point's coordinates from being in relation to the
 	 *            world's axis to being in terms of the light's local axis).
 	 */
-	protected ShadowBox(Matrix4f lightViewMatrix) {
-		this.lightViewMatrix = lightViewMatrix;
+	protected ShadowBox(ICamera camera) {
+		this.lightViewMatrix = camera.getViewMatrix();
+		this.camera = camera;
 		calculateWidthsAndHeights();
 	}
 
@@ -62,9 +65,9 @@ public class ShadowBox {
 		Vector3f toFar = new Vector3f(forwardVector);
 		toFar.scale(SHADOW_DISTANCE);
 		Vector3f toNear = new Vector3f(forwardVector);
-		toNear.scale(MasterRenderer.NEAR_PLANE);
-		Vector3f centerNear = Vector3f.add(toNear, Camera.getCamera().position, null);
-		Vector3f centerFar = Vector3f.add(toFar, Camera.getCamera().position, null);
+		toNear.scale(ICamera.NEAR_PLANE);
+		Vector3f centerNear = Vector3f.add(toNear, camera.getPosition(), null);
+		Vector3f centerFar = Vector3f.add(toFar, camera.getPosition(), null);
 
 		Vector4f[] points = calculateFrustumVertices(rotation, forwardVector, centerNear, centerFar);
 
@@ -200,8 +203,8 @@ public class ShadowBox {
 	 */
 	private Matrix4f calculateCameraRotationMatrix() {
 		Matrix4f rotation = new Matrix4f();
-		rotation.rotate((float) Math.toRadians(-Camera.getCamera().yaw), new Vector3f(0, 1, 0));
-		rotation.rotate((float) Math.toRadians(-Camera.getCamera().pitch), new Vector3f(1, 0, 0));
+		rotation.rotate((float) Math.toRadians(-camera.getYaw()), new Vector3f(0, 1, 0));
+		rotation.rotate((float) Math.toRadians(-camera.getPitch()), new Vector3f(1, 0, 0));
 		return rotation;
 	}
 
@@ -213,8 +216,8 @@ public class ShadowBox {
 	 * but means that distant objects wouldn't cast shadows.
 	 */
 	private void calculateWidthsAndHeights() {
-		farWidth = (float) (SHADOW_DISTANCE * Math.tan(Math.toRadians(MasterRenderer.FOV)));
-		nearWidth = (float) (MasterRenderer.NEAR_PLANE * Math.tan(Math.toRadians(MasterRenderer.FOV)));
+		farWidth = (float) (SHADOW_DISTANCE * Math.tan(Math.toRadians(ICamera.FOV)));
+		nearWidth = (float) (ICamera.NEAR_PLANE * Math.tan(Math.toRadians(ICamera.FOV)));
 		farHeight = farWidth / getAspectRatio();
 		nearHeight = nearWidth / getAspectRatio();
 	}

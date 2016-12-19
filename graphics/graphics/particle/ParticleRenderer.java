@@ -3,19 +3,15 @@ package graphics.particle;
 import java.util.List;
 import java.util.Map;
 
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL13;
-import org.lwjgl.opengl.GL20;
-import org.lwjgl.opengl.GL30;
+import org.lwjgl.opengl.*;
 
-import com.troy.troyberry.math.Maths;
 import com.troy.troyberry.math.Matrix4f;
 import com.troy.troyberry.math.Vector3f;
 
 import asset.Mesh;
-import asset.Texture;
-import entity.Camera;
-import input.GameSettings;
+import asset.ParticleTexture;
+import camera.FirstPersonCamera;
+import camera.ICamera;
 import loader.Loader;
 
 public class ParticleRenderer {
@@ -26,24 +22,23 @@ public class ParticleRenderer {
 	private ParticleShader shader;
 
 	protected ParticleRenderer(Matrix4f projectionMatrix) {
-		quad = Loader.getLoader().loadToVAO(VERTICES, 2);
+		quad = Loader.loadToVAO(VERTICES, 2);
 		shader = new ParticleShader();
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.stop();
 	}
 
-	protected void render(Map<Texture, List<Particle>> particles) {
-		Matrix4f viewMatrix = Camera.getCamera().getViewMatrix();
+	protected void render(ICamera camera, Map<ParticleTexture, List<Particle>> particles) {
+		Matrix4f viewMatrix = camera.getViewMatrix();
 		prepare();
-		for (Texture texture : particles.keySet()) {
+		for (ParticleTexture texture : particles.keySet()) {
 			GL13.glActiveTexture(GL13.GL_TEXTURE0);
 			GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getID());
+			if(texture.isAdditive())GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
+			else GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 			for (Particle particle : particles.get(texture)) {
-				if(Maths.approximateDistanceBetweenPoints(particle.position, Camera.getCamera().position) > GameSettings.RENDER_DISTANCE / 4f){
-					continue;
-				}
-				updateModelViewMatrix(particle.position, particle.rotation, particle.scale, viewMatrix);
+				updateModelViewMatrix(particle.position, particle.getRotation(), particle.getScale(), viewMatrix);
 				shader.loadTextureCoordInfo(particle.textureOffset1, particle.textureOffset2, texture.getNumberOfRows(), particle.blend);
 				GL11.glDrawArrays(GL11.GL_TRIANGLE_STRIP, 0, quad.getVertexCount());
 			}
@@ -78,7 +73,6 @@ public class ParticleRenderer {
 		GL30.glBindVertexArray(quad.getID());
 		GL20.glEnableVertexAttribArray(0);
 		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		GL11.glDepthMask(false);
 	}
 

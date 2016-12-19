@@ -1,12 +1,11 @@
 package entity.player;
 
-import com.troy.troyberry.math.*;
+import com.troy.troyberry.math.Vector2f;
+import com.troy.troyberry.math.Vector3f;
 import com.troy.troyberry.opengl.input.Mouse;
-import com.troy.troyberry.opengl.util.Window;
 
-import asset.Assets;
 import asset.TexturedModel;
-import entity.Camera;
+import camera.*;
 import entity.EntityLiving;
 import gamestate.WorldState;
 import graphics.postprocessing.ContrastChanger;
@@ -21,11 +20,13 @@ public class EntityPlayer extends EntityLiving {
 	private float runSpeed = ORIGIONAL_RUN_SPEED, jumpPower = ORIGIONAL_JUMP_POWER;
 	private float slope = 0f;
 	private DeathAnimation deathAnimation;
+	private PlayerBasedCamera camera;
 
-	public EntityPlayer(TexturedModel model, Vector3f position, Vector3f rotation, float scale) {
+	public EntityPlayer(TexturedModel model, Vector3f position, Vector3f rotation, float scale, PlayerBasedCamera camera) {
 		super(model, position, rotation, scale, 100f);
 		this.scale = 0.25f;
 		this.invincible = true;
+		this.camera = camera;
 	}
 
 	public void update() {
@@ -37,7 +38,7 @@ public class EntityPlayer extends EntityLiving {
 		this.position.add(velocity);
 		if (isDead) {
 			deathAnimation.update();
-			Camera.getCamera().roll = (deathAnimation.redFactor * 60f);
+			camera.setRoll(deathAnimation.redFactor * 60f);
 		}
 	}
 
@@ -59,8 +60,8 @@ public class EntityPlayer extends EntityLiving {
 
 	public void render() {
 		if (isDead() && deathAnimation != null) {
-			Camera.getCamera().cameraHeight = (float) (1
-					+ Math.sin(Math.toRadians((0.3 - Math.min(deathAnimation.redFactor * 3, 0.3)) * 90.0)));
+			camera.setHeight((float) (1
+					+ Math.sin(Math.toRadians((0.3 - Math.min(deathAnimation.redFactor * 3, 0.3)) * 90.0))));
 			ContrastChanger.add.x = deathAnimation.redFactor;
 			ContrastChanger.add.y = -deathAnimation.redFactor / 2;
 			ContrastChanger.add.z = -deathAnimation.redFactor;
@@ -76,7 +77,7 @@ public class EntityPlayer extends EntityLiving {
 			this.rotation.x += Mouse.getDY() / -10.0f * GameSettings.MOUSE_SENSITIVITY;
 			this.rotation.y += Mouse.getDX() / 10.0f * GameSettings.MOUSE_SENSITIVITY;
 			
-			Mouse.setCursorPosition(Window.getInstance().getWidth() / 2.0, Window.getInstance().getHeight() / 2.0);
+			//Mouse.setCursorPosition(Window.getInstance().getWidth() / 2.0, Window.getInstance().getHeight() / 2.0);
 		}
 
 		float dx = (float) (Math.cos(Math.toRadians(rotation.y - 90)));

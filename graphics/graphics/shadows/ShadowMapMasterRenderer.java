@@ -2,14 +2,15 @@ package graphics.shadows;
 
 import java.util.List;
 import java.util.Map;
+
 import org.lwjgl.opengl.GL11;
-import com.troy.troyberry.math.Matrix4f;
-import com.troy.troyberry.math.Vector2f;
-import com.troy.troyberry.math.Vector3f;
+
+import com.troy.troyberry.math.*;
 
 import asset.TexturedModel;
+import camera.ICamera;
 import entity.Entity;
-import entity.Light;
+import entity.light.Light;
 import input.GameSettings;
 
 /**
@@ -43,9 +44,9 @@ public class ShadowMapMasterRenderer {
 	 * {@link ShadowFrameBuffer} to which the scene is rendered. The size of the
 	 * shadow map is determined here.
 	 */
-	public ShadowMapMasterRenderer() {
+	public ShadowMapMasterRenderer(ICamera camera) {
 		shader = new ShadowShader();
-		shadowBox = new ShadowBox(lightViewMatrix);
+		shadowBox = new ShadowBox(camera);
 		shadowFbo = new ShadowFrameBuffer(SHADOW_MAP_SIZE, SHADOW_MAP_SIZE);
 		entityRenderer = new ShadowMapEntityRenderer(shader, projectionViewMatrix);
 	}

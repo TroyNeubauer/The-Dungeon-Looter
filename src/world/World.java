@@ -10,7 +10,10 @@ import com.troy.troyberry.logging.Timer;
 import com.troy.troyberry.math.*;
 
 import asset.Assets;
+import camera.FirstPersonCamera;
+import camera.ICamera;
 import entity.*;
+import entity.light.Light;
 import graphics.postprocessing.Fbo;
 import graphics.renderer.MasterRenderer;
 import graphics.renderer.SplashRenderer;
@@ -18,6 +21,7 @@ import input.Controls;
 import input.GameSettings;
 
 public class World {
+	private static World INSTANCE;
 
 	private DecimalFormat df = new DecimalFormat("00.0");
 
@@ -27,7 +31,7 @@ public class World {
 	private EntityCreator entityCreator;
 	private final double divideFactor, persistence;
 
-	public float time = 12000f;
+	public float time = 12000f, blendFactor;
 
 	public List<Terrain> allTerrains, loadedTerrains;
 	public List<Entity> entities;
@@ -46,7 +50,7 @@ public class World {
 		lights = new ArrayList<Light>();
 		sun = new Light(new Vector3f(1000000, 1500000, -1000000), new Vector3f(1.3f, 1.3f, 1.3f));
 		lights.add(sun);
-
+		
 		Maths.setSeed(new Random(this.seed).nextLong());
 
 		this.divideFactor = WorldPreset.SMALL_HILLS.divideFactor;
@@ -73,6 +77,7 @@ public class World {
 		}
 		System.out.println("Generating world done!  Took " + t.getTime());
 		flushEntityQuoe();
+		INSTANCE = this;
 	}
 
 	public Terrain getTerrain(Entity e) {
@@ -88,12 +93,8 @@ public class World {
 		return null;
 	}
 
-	double angle = 0.0;
-
 	public void update() {
-		float dx = (float) (Math.cos(Math.toRadians(angle))) / 200;
-		float dz = (float) (Math.sin(Math.toRadians(angle))) / 200;
-		angle += 0.5;
+		
 		if (Controls.TOGGLE_HOUR.hasBeenPressed()) {
 			GameSettings.CLOCK_24_HOUR = !GameSettings.CLOCK_24_HOUR;
 		}
@@ -106,13 +107,21 @@ public class World {
 			}
 		}
 		time += 8.33333333f;
+		Vector3f sunColor = new Vector3f(1.3f - blendFactor, 1.3f - blendFactor, 1.3f - blendFactor);
+		if(blendFactor > 0.0f && blendFactor < 1.0f){
+			// FF8000
+			sunColor.y = sunColor.y / 2.0f;
+			sunColor.z = sunColor.z / 5.0f;
+		}
+		sun.setColor(sunColor);
+		
 		flushEntityQuoe();
 		for (int i = 0; i < entities.size(); i++) {
 			entities.get(i).update();
 		}
 	}
 
-	public void render(Fbo postProcessingFbo) {
+	public void render(ICamera camera, Fbo postProcessingFbo) {
 		flushDeadEntityQuoe();
 		double renderDistance = GameSettings.RENDER_DISTANCE;
 		List<Entity> coppiedEntities = new ArrayList<Entity>(entities);
@@ -120,7 +129,7 @@ public class World {
 		GL11.glDisable(GL30.GL_CLIP_DISTANCE0);
 		postProcessingFbo.bindFrameBuffer();
 
-		MasterRenderer.renderScene(coppiedEntities, loadedTerrains, lights, Camera.getCamera(), new Vector4f(0, -1, 0, 100000), renderDistance);
+		MasterRenderer.renderScene(coppiedEntities, loadedTerrains, lights, camera, new Vector4f(0, -1, 0, 100000), renderDistance);
 		postProcessingFbo.unbindFrameBuffer();
 	}
 
@@ -194,6 +203,10 @@ public class World {
 		double y = ((2380625 * persistence * persistence) / 20601 - (3170525 * persistence) / 27468 + (353135 / 164808));
 
 		return (int) Maths.clamp(1.0, 999999.0, y);
+	}
+
+	public static World getInstance() {
+		return INSTANCE;
 	}
 
 }

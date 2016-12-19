@@ -4,6 +4,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.troy.troyberry.opengl.util.Window;
 
+import loader.Loader;
+import utils.MiscUtil;
+
 public class Main implements Runnable {
 
 	public static AtomicBoolean running = new AtomicBoolean(true);
@@ -15,22 +18,16 @@ public class Main implements Runnable {
 		thread.start();
 	}
 
-	@Override
 	public void run() {
 		GameManager.init();
-		//****************Game Loop Below*********************
+		//************** Game Loop **************
 		while (running.get()) {
 			GameManager.render();
 			if (Window.getInstance().isCloseRequested()) break;
 			Window.getInstance().update();
 		}
-
-		//*********Clean Up Below**************
-		Window.getInstance().hide();
-		try {
-			Thread.sleep(300);
-		} catch (InterruptedException e) {
-		}
+		running.set(false);
+		//************** Clean Up **************
 		GameManager.cleanUp();
 		Window.getInstance().destroy();
 		System.exit(0);

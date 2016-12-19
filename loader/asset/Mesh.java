@@ -120,7 +120,7 @@ public class Mesh extends Asset {
 			System.err.println("Error loading object file " + fileName + " on line " + lineNumber);
 		}
 		System.out.println("Loading model " + fileName);
-		return Loader.getLoader().loadToVAO(verticesArray, textureArray, normalsArray, indicesArray);
+		return Loader.loadToVAO(verticesArray, textureArray, normalsArray, indicesArray);
 
 	}
 

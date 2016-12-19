@@ -20,7 +20,7 @@ public class StaticEntity extends Entity {
 
 	@Override
 	public void render() {
-		System.out.println("calling static render");
+		
 	}
 
 }

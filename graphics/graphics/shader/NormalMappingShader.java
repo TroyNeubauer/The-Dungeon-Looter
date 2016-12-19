@@ -5,7 +5,8 @@ import com.troy.troyberry.math.Matrix4f;
 import com.troy.troyberry.math.Vector2f;
 import com.troy.troyberry.math.Vector3f;
 import com.troy.troyberry.math.Vector4f;
-import entity.Light;
+
+import entity.light.Light;
 
 public class NormalMappingShader extends ShaderProgram {
 

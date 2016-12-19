@@ -1,13 +1,11 @@
-package graphics.skybox;
+package graphics.sky;
 
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL13;
-import org.lwjgl.opengl.GL20;
-import org.lwjgl.opengl.GL30;
+import org.lwjgl.opengl.*;
+
 import com.troy.troyberry.math.Matrix4f;
 
 import asset.Mesh;
-import entity.Camera;
+import camera.ICamera;
 import loader.Loader;
 import world.World;
 
@@ -36,9 +34,10 @@ public class SkyboxRenderer {
 	private SkyboxShader shader;
 	public World world;
 
-	public SkyboxRenderer(Matrix4f projectionMatrix) {
-		cube = Loader.getLoader().loadToVAO(VERTICES, 3);
-		nightTexture = Loader.getLoader().loadCubeMap(NIGHT_TEXTURE_FILES);
+	public SkyboxRenderer(World world, Matrix4f projectionMatrix) {
+		this.world = world;
+		cube = Loader.loadToVAO(VERTICES, 3);
+		nightTexture = Loader.loadCubeMap(NIGHT_TEXTURE_FILES);
 		shader = new SkyboxShader();
 		shader.start();
 		shader.connectTextureUnits();
@@ -46,7 +45,7 @@ public class SkyboxRenderer {
 		shader.stop();
 	}
 
-	public void render(Camera camera, float r, float g, float b) {
+	public void render(ICamera camera, float r, float g, float b) {
 		shader.start();
 		shader.loadViewMatrix(camera);
 		GL30.glBindVertexArray(cube.getID());
@@ -75,6 +74,7 @@ public class SkyboxRenderer {
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
 		GL11.glBindTexture(GL13.GL_TEXTURE_CUBE_MAP, nightTexture);
 		shader.loadBlendFactor(blendFactor);
+		world.blendFactor = blendFactor;
 	}
 
 }

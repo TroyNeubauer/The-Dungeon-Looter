@@ -6,28 +6,24 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 
 import com.troy.troyberry.math.*;
-import com.troy.troyberry.opengl.util.Window;
 
 import asset.TexturedModel;
+import camera.FirstPersonCamera;
+import camera.ICamera;
 import entity.*;
+import entity.light.Light;
 import graphics.shader.StaticShader;
 import graphics.shader.TerrainShader;
 import graphics.shadows.ShadowMapMasterRenderer;
-import graphics.skybox.SkyboxRenderer;
+import graphics.sky.SkyMaster;
 import world.Terrain;
 import world.World;
 
 public class MasterRenderer {
 
-	public static float FOV = 70;
-	public static final float NEAR_PLANE = 0.1f;
-	public static final float FAR_PLANE = 1000;
-
 	public static final float RED = 119f / 256f;
 	public static final float GREEN = 169f / 256f;
 	public static final float BLUE = 254f / 256f;
-
-	public static Matrix4f projectionMatrix;
 
 	private static StaticShader shader = new StaticShader();
 	private static EntityRenderer renderer;
@@ -39,33 +35,32 @@ public class MasterRenderer {
 
 	private static NormalMappingRenderer normalMapRenderer;
 
-	public static SkyboxRenderer skyboxRenderer;
-
 	private static Map<TexturedModel, List<Entity>> entities = new HashMap<TexturedModel, List<Entity>>();
 	private static Map<TexturedModel, List<Entity>> normalMapEntities = new HashMap<TexturedModel, List<Entity>>();
 	private static List<Terrain> terrains = new ArrayList<Terrain>();
 
-	public static void init() {
+	public static void init(World world, ICamera camera) {
 		enableCulling();
-		createProjectionMatrix();
-		shadowMapRenderer = new ShadowMapMasterRenderer();
-		renderer = new EntityRenderer(shader, projectionMatrix);
-		terrainRenderer = new TerrainRenderer(terrainShader, projectionMatrix);
-		skyboxRenderer = new SkyboxRenderer(projectionMatrix);
-		normalMapRenderer = new NormalMappingRenderer(projectionMatrix);
+		
+		shadowMapRenderer = new ShadowMapMasterRenderer(camera);
+		renderer = new EntityRenderer(shader, camera.getProjectionMatrix());
+		terrainRenderer = new TerrainRenderer(terrainShader, camera.getProjectionMatrix());
+		
+		SkyMaster.init(world, camera.getProjectionMatrix());
+		normalMapRenderer = new NormalMappingRenderer(camera.getProjectionMatrix());
 	}
 
 	public static void setWorld(World world) {
-		skyboxRenderer.world = world;
+		SkyMaster.world = world;
 	}
 
-	public static void renderScene(List<Entity> entities, List<Terrain> terrains, List<Light> lights, Camera camera, Vector4f clipPlane,
+	public static void renderScene(List<Entity> entities, List<Terrain> terrains, List<Light> lights, ICamera camera, Vector4f clipPlane,
 		double renderDistance) {
 		for (Terrain terrain : terrains) {
 			processTerrain(terrain);
 		}
 		for (Entity entity : entities) {
-			if (Maths.approximateDistanceBetweenPoints(entity.position.x, entity.position.z, camera.position.x, camera.position.z) > renderDistance)
+			if (Maths.approximateDistanceBetweenPoints(entity.position.x, entity.position.z, camera.getPosition().x, camera.getPosition().z) > renderDistance)
 				continue;
 			if (entity.hasNormalMap) {
 				processNormalMapEntity(entity);
@@ -76,7 +71,7 @@ public class MasterRenderer {
 		render(lights, camera, clipPlane);
 	}
 
-	public static void render(List<Light> lights, Camera camera, Vector4f clipPlane) {
+	public static void render(List<Light> lights, ICamera camera, Vector4f clipPlane) {
 		prepare();
 		disableCulling();
 		shader.start();
@@ -95,7 +90,7 @@ public class MasterRenderer {
 		terrainShader.loadViewMatrix(camera);
 		terrainRenderer.render(terrains, shadowMapRenderer.getToShadowMapSpaceMatrix());
 		terrainShader.stop();
-		skyboxRenderer.render(camera, RED, GREEN, BLUE);
+		SkyMaster.render(camera, RED, GREEN, BLUE);
 		terrains.clear();
 		entities.clear();
 		normalMapEntities.clear();
@@ -170,20 +165,4 @@ public class MasterRenderer {
 		GL13.glActiveTexture(GL13.GL_TEXTURE5);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, getShadowMapTexture());
 	}
-
-	private static void createProjectionMatrix() {
-		projectionMatrix = new Matrix4f();
-		float aspectRatio = (float) Window.getInstance().getWidth() / (float) Window.getInstance().getHeight();
-		float y_scale = (float) ((1f / Math.tan(Math.toRadians(FOV / 2f))));
-		float x_scale = y_scale / aspectRatio;
-		float frustum_length = FAR_PLANE - NEAR_PLANE;
-
-		projectionMatrix.m00 = x_scale;
-		projectionMatrix.m11 = y_scale;
-		projectionMatrix.m22 = -((FAR_PLANE + NEAR_PLANE) / frustum_length);
-		projectionMatrix.m23 = -1;
-		projectionMatrix.m32 = -((2 * NEAR_PLANE * FAR_PLANE) / frustum_length);
-		projectionMatrix.m33 = 0;
-	}
-
 }

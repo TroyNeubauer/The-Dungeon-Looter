@@ -19,7 +19,7 @@ public class NormalMappedObjLoader {
 
 	private static final String RES_LOC = "/objects/";
 
-	public static Mesh loadOBJ(String objFileName, Loader loader) {
+	public static Mesh loadOBJ(String objFileName) {
 		InputStreamReader isr = null;
 		String path = RES_LOC + objFileName + ".obj";
 		if (GameSettings.DEBUG) System.out.println("Loading model " + path);
@@ -82,7 +82,7 @@ public class NormalMappedObjLoader {
 		float furthest = convertDataToArrays(vertices, textures, normals, verticesArray, texturesArray, normalsArray, tangentsArray);
 		int[] indicesArray = convertIndicesListToArray(indices);
 
-		return new Mesh(loader.loadToVAO(verticesArray, texturesArray, normalsArray, tangentsArray, indicesArray));
+		return new Mesh(Loader.loadToVAO(verticesArray, texturesArray, normalsArray, tangentsArray, indicesArray));
 	}
 
 	private static void calculateTangents(VertexNM v0, VertexNM v1, VertexNM v2, List<Vector2f> textures) {

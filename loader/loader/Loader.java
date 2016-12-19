@@ -17,14 +17,11 @@ import com.troy.troyberry.logging.Log;
 import asset.*;
 
 public class Loader {
+	private static List<Integer> vaos = new ArrayList<Integer>();
+	private static List<Integer> vbos = new ArrayList<Integer>();
+	private static List<Integer> textures = new ArrayList<Integer>();
 
-	private static final Loader LOADER = new Loader();
-
-	private List<Integer> vaos = new ArrayList<Integer>();
-	private List<Integer> vbos = new ArrayList<Integer>();
-	private List<Integer> textures = new ArrayList<Integer>();
-
-	public int loadToVAO(float[] positions, float[] textureCoords) {
+	public static int loadToVAO(float[] positions, float[] textureCoords) {
 		int vaoID = createVAO();
 		storeDataInAttributeList(0, 2, positions);
 		storeDataInAttributeList(1, 2, textureCoords);
@@ -32,7 +29,7 @@ public class Loader {
 		return vaoID;
 	}
 
-	public MeshData loadToVAO(float[] vertices, float[] textureCoords, float[] normals) {
+	public static MeshData loadToVAO(float[] vertices, float[] textureCoords, float[] normals) {
 		int vaoID = createVAO();
 		storeDataInAttributeList(0, 3, vertices);
 		storeDataInAttributeList(1, 2, textureCoords);
@@ -41,7 +38,7 @@ public class Loader {
 		return new MeshData(vaoID, vertices.length / 3);
 	}
 
-	public MeshData loadToVAO(float[] positions, float[] textureCoords, float[] normals, int[] indices) {
+	public static MeshData loadToVAO(float[] positions, float[] textureCoords, float[] normals, int[] indices) {
 		int vaoID = createVAO();
 		bindIndicesBuffer(indices);
 		storeDataInAttributeList(0, 3, positions);
@@ -51,7 +48,7 @@ public class Loader {
 		return new MeshData(vaoID, indices.length);
 	}
 
-	public MeshData loadToVAO(float[] positions, float[] textureCoords, float[] normals, float[] tangents, int[] indices) {
+	public static MeshData loadToVAO(float[] positions, float[] textureCoords, float[] normals, float[] tangents, int[] indices) {
 		int vaoID = createVAO();
 		bindIndicesBuffer(indices);
 		storeDataInAttributeList(0, 3, positions);
@@ -62,14 +59,14 @@ public class Loader {
 		return new MeshData(vaoID, indices.length);
 	}
 
-	public Mesh loadToVAO(float[] positions, int dimensions) {
+	public static Mesh loadToVAO(float[] positions, int dimensions) {
 		int vaoID = createVAO();
-		this.storeDataInAttributeList(0, dimensions, positions);
+		storeDataInAttributeList(0, dimensions, positions);
 		unbindVAO();
 		return new Mesh(vaoID, positions.length / dimensions);
 	}
 
-	public void cleanUp() {
+	public static void cleanUp() {
 		for (int vao : vaos) {
 			GL30.glDeleteVertexArrays(vao);
 		}
@@ -81,7 +78,7 @@ public class Loader {
 		}
 	}
 
-	public int loadCubeMap(String[] textureFiles) {
+	public static int loadCubeMap(String[] textureFiles) {
 		int texID = GL11.glGenTextures();
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
 		GL11.glBindTexture(GL13.GL_TEXTURE_CUBE_MAP, texID);
@@ -100,14 +97,14 @@ public class Loader {
 		return texID;
 	}
 
-	private int createVAO() {
+	private static int createVAO() {
 		int vaoID = GL30.glGenVertexArrays();
 		vaos.add(vaoID);
 		GL30.glBindVertexArray(vaoID);
 		return vaoID;
 	}
 
-	private void storeDataInAttributeList(int attributeNumber, int coordinateSize, float[] data) {
+	private static void storeDataInAttributeList(int attributeNumber, int coordinateSize, float[] data) {
 		int vboID = GL15.glGenBuffers();
 		vbos.add(vboID);
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboID);
@@ -117,11 +114,11 @@ public class Loader {
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
 	}
 
-	private void unbindVAO() {
+	private static void unbindVAO() {
 		GL30.glBindVertexArray(0);
 	}
 
-	private void bindIndicesBuffer(int[] indices) {
+	private static void bindIndicesBuffer(int[] indices) {
 		int vboID = GL15.glGenBuffers();
 		vbos.add(vboID);
 		GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, vboID);
@@ -129,30 +126,26 @@ public class Loader {
 		GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, buffer, GL15.GL_STATIC_DRAW);
 	}
 
-	private IntBuffer storeDataInIntBuffer(int[] data) {
+	private static IntBuffer storeDataInIntBuffer(int[] data) {
 		IntBuffer buffer = BufferUtils.createIntBuffer(data.length);
 		buffer.put(data);
 		buffer.flip();
 		return buffer;
 	}
 
-	private FloatBuffer storeDataInFloatBuffer(float[] data) {
+	private static FloatBuffer storeDataInFloatBuffer(float[] data) {
 		FloatBuffer buffer = BufferUtils.createFloatBuffer(data.length);
 		buffer.put(data);
 		buffer.flip();
 		return buffer;
 	}
 	
-	public void removeVAO(int vao){
+	public static void removeVAO(int vao){
 		for(int i : vaos){
 			if(i == vao){
 				vaos.remove(i);
 				return;
 			}
 		}
-	}
-
-	public static Loader getLoader() {
-		return LOADER;
 	}
 }

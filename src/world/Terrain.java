@@ -122,7 +122,7 @@ public class Terrain {
 			}
 		}
 		populate();
-		Mesh mesh = new Mesh(Loader.getLoader().loadToVAO(vertices, textureCoords, normals, indices));
+		Mesh mesh = new Mesh(Loader.loadToVAO(vertices, textureCoords, normals, indices));
 		return mesh;
 	}
 

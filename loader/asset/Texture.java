@@ -29,7 +29,7 @@ public class Texture extends Asset {
 	private boolean hasTransparency = false;
 	private boolean useFakeLighting = false;
 
-	private int numberOfRows;
+	private int numberOfRows = 1;
 	public boolean hasNormalMap = false;
 
 	private int width, height;
@@ -110,7 +110,7 @@ public class Texture extends Asset {
 		try {
 			image = ImageIO.read(Class.class.getResourceAsStream(path));
 
-		} catch (IOException e) {
+		} catch (Exception e) {
 			Log.warning("Unable to load texture " + path);
 			e.printStackTrace();
 		}

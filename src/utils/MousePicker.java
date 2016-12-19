@@ -4,19 +4,17 @@ import com.troy.troyberry.math.*;
 import com.troy.troyberry.opengl.input.Mouse;
 import com.troy.troyberry.opengl.util.Window;
 
-import entity.Camera;
+import camera.FirstPersonCamera;
+import camera.ICamera;
 
 public class MousePicker {
 
-	private static final int RECURSION_COUNT = 100;
-	private static final float RAY_RANGE = 600;
-
 	private Vector3f currentRay = new Vector3f();
 
-	private Matrix4f projectionMatrix;
-
-	public MousePicker(Matrix4f projection) {
-		projectionMatrix = projection;
+	private ICamera camera;
+	
+	public MousePicker(ICamera camera) {
+		this.camera = camera;
 	}
 
 	public Vector3f getCurrentRay() {
@@ -38,7 +36,7 @@ public class MousePicker {
 	}
 
 	private Vector3f toWorldCoords(Vector4f eyeCoords) {
-		Matrix4f invertedView = Matrix4f.invert(Camera.getCamera().getViewMatrix(), null);
+		Matrix4f invertedView = Matrix4f.invert(camera.getViewMatrix(), null);
 		Vector4f rayWorld = Matrix4f.transform(invertedView, eyeCoords, null);
 		Vector3f mouseRay = new Vector3f(rayWorld.x, rayWorld.y, rayWorld.z);
 		mouseRay.normalised();
@@ -46,7 +44,7 @@ public class MousePicker {
 	}
 
 	private Vector4f toEyeCoords(Vector4f clipCoords) {
-		Matrix4f invertedProjection = Matrix4f.invert(projectionMatrix, null);
+		Matrix4f invertedProjection = Matrix4f.invert(camera.getProjectionMatrix(), null);
 		Vector4f eyeCoords = Matrix4f.transform(invertedProjection, clipCoords, null);
 		return new Vector4f(eyeCoords.x, eyeCoords.y, -1f, 0f);
 	}

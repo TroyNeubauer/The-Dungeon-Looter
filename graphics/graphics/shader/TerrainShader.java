@@ -1,11 +1,11 @@
 package graphics.shader;
 
 import java.util.List;
-import com.troy.troyberry.math.Matrix4f;
-import com.troy.troyberry.math.Vector3f;
-import com.troy.troyberry.math.Vector4f;
-import entity.Camera;
-import entity.Light;
+
+import com.troy.troyberry.math.*;
+
+import camera.ICamera;
+import entity.light.Light;
 
 public class TerrainShader extends ShaderProgram {
 
@@ -149,7 +149,7 @@ public class TerrainShader extends ShaderProgram {
 		}
 	}
 
-	public void loadViewMatrix(Camera camera) {
+	public void loadViewMatrix(ICamera camera) {
 		super.loadMatrix(location_viewMatrix, camera.getViewMatrix());
 	}
 

@@ -1,15 +1,16 @@
-package graphics.skybox;
+package graphics.sky;
 
 import com.troy.troyberry.math.Matrix4f;
 import com.troy.troyberry.math.Vector3f;
-import entity.Camera;
+
+import camera.ICamera;
 import graphics.shader.ShaderProgram;
 import utils.MathUtil;
 
 public class SkyboxShader extends ShaderProgram {
 
-	private static final String VERTEX_FILE = "/graphics/skybox/skybox.vert";
-	private static final String FRAGMENT_FILE = "/graphics/skybox/skybox.frag";
+	private static final String VERTEX_FILE = "/graphics/sky/skybox.vert";
+	private static final String FRAGMENT_FILE = "/graphics/sky/skybox.frag";
 
 	private static final float ROTATE_SPEED = 1f;
 
@@ -28,13 +29,8 @@ public class SkyboxShader extends ShaderProgram {
 		super.loadMatrix(location_projectionMatrix, matrix);
 	}
 
-	public void loadViewMatrix(Camera camera) {
-		Matrix4f matrix = MathUtil.createViewMatrix(camera);
-		matrix.m30 = 0;
-		matrix.m31 = 0;
-		matrix.m32 = 0;
-		Matrix4f.rotate((float) Math.toRadians(rotation), new Vector3f(0, 1, 0), matrix, matrix);
-		super.loadMatrix(location_viewMatrix, matrix);
+	public void loadViewMatrix(ICamera camera) {
+		super.loadMatrix(location_viewMatrix, camera.getViewMatrix());
 	}
 
 	public void connectTextureUnits() {

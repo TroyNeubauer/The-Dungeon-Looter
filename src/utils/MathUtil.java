@@ -3,7 +3,8 @@ package utils;
 import com.troy.troyberry.math.Matrix4f;
 import com.troy.troyberry.math.Vector2f;
 import com.troy.troyberry.math.Vector3f;
-import entity.Camera;
+
+import camera.FirstPersonCamera;
 
 public class MathUtil {
 
@@ -33,17 +34,4 @@ public class MathUtil {
 		float l3 = 1.0f - l1 - l2;
 		return l1 * p1.y + l2 * p2.y + l3 * p3.y;
 	}
-
-	public static Matrix4f createViewMatrix(Camera camera) {
-		Matrix4f viewMatrix = new Matrix4f();
-		viewMatrix.setIdentity();
-		Matrix4f.rotate((float) Math.toRadians(camera.pitch), new Vector3f(1, 0, 0), viewMatrix, viewMatrix);
-		Matrix4f.rotate((float) Math.toRadians(camera.yaw), new Vector3f(0, 1, 0), viewMatrix, viewMatrix);
-		Matrix4f.rotate((float) Math.toRadians(camera.roll), new Vector3f(0, 0, 1), viewMatrix, viewMatrix);
-		Vector3f cameraPos = camera.position;
-		Vector3f negativeCameraPos = Vector3f.negate(cameraPos);
-		Matrix4f.translate(negativeCameraPos, viewMatrix, viewMatrix);
-		return viewMatrix;
-	}
-
 }

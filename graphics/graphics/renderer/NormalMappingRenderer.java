@@ -2,17 +2,17 @@ package graphics.renderer;
 
 import java.util.List;
 import java.util.Map;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL13;
-import org.lwjgl.opengl.GL20;
-import org.lwjgl.opengl.GL30;
+
+import org.lwjgl.opengl.*;
+
 import com.troy.troyberry.math.Matrix4f;
 import com.troy.troyberry.math.Vector4f;
 
 import asset.*;
-import entity.Camera;
+import camera.FirstPersonCamera;
+import camera.ICamera;
 import entity.Entity;
-import entity.Light;
+import entity.light.Light;
 import graphics.shader.NormalMappingShader;
 import graphics.shadows.ShadowBox;
 import graphics.shadows.ShadowMapMasterRenderer;
@@ -35,7 +35,7 @@ public class NormalMappingRenderer {
 		shader.stop();
 	}
 
-	public void render(Map<TexturedModel, List<Entity>> entities, Vector4f clipPlane, List<Light> lights, Camera camera, Matrix4f toShadowSpace) {
+	public void render(Map<TexturedModel, List<Entity>> entities, Vector4f clipPlane, List<Light> lights, ICamera camera, Matrix4f toShadowSpace) {
 
 		shader.start();
 		shader.loadToShadowSpace(toShadowSpace);
@@ -96,7 +96,7 @@ public class NormalMappingRenderer {
 		shader.loadOffset(entity.getTextureXOffset(), entity.getTextureYOffset());
 	}
 
-	private void prepare(Vector4f clipPlane, List<Light> lights, Camera camera) {
+	private void prepare(Vector4f clipPlane, List<Light> lights, ICamera camera) {
 		shader.loadClipPlane(clipPlane);
 		//need to be public variables in MasterRenderer
 		shader.loadSkyColour(MasterRenderer.RED, MasterRenderer.GREEN, MasterRenderer.BLUE);

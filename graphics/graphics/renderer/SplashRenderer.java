@@ -16,7 +16,7 @@ public class SplashRenderer {
 	private static LoadingScreenShader shader;
 
 	public static void init() {
-		quad = Loader.getLoader().loadToVAO(POSITIONS, 2);
+		quad = Loader.loadToVAO(POSITIONS, 2);
 		shader = new LoadingScreenShader();
 		SplashRenderer.render();
 	}

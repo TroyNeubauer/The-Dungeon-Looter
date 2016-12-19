@@ -1,10 +1,9 @@
 package graphics.renderer;
 
 import java.util.List;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL13;
-import org.lwjgl.opengl.GL20;
-import org.lwjgl.opengl.GL30;
+
+import org.lwjgl.opengl.*;
+
 import com.troy.troyberry.math.Matrix4f;
 import com.troy.troyberry.math.Vector3f;
 
@@ -13,6 +12,7 @@ import asset.TerrainTexturePack;
 import graphics.shader.TerrainShader;
 import graphics.shadows.ShadowBox;
 import graphics.shadows.ShadowMapMasterRenderer;
+import graphics.sky.SkyMaster;
 import input.GameSettings;
 import utils.MathUtil;
 import world.Terrain;
@@ -36,7 +36,7 @@ public class TerrainRenderer {
 		shader.loadFogValues(GameSettings.FOG_DENSITY, GameSettings.FOG_GRADIENT);
 		shader.loadToShadowSpace(toShadowSpace);
 		shader.enableShadows(GameSettings.SHAWODS_ENABLED);
-		shader.loadSkyBlendFactor(MasterRenderer.skyboxRenderer.blendFactor);
+		shader.loadSkyBlendFactor(SkyMaster.skyboxRenderer.blendFactor);
 		for (Terrain terrain : terrains) {
 			prepareTerrain(terrain);
 			loadModelMatrix(terrain);

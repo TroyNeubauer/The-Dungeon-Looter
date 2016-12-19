@@ -6,17 +6,25 @@ import java.util.List;
 public class EntityManager {
 
 	private static List<Entity> entitiesToAdd = new ArrayList<Entity>();
+	private static Object lock = new Object();
 
 	public static void clear() {
-		entitiesToAdd.clear();
+		synchronized (lock) {
+			entitiesToAdd.clear();
+		}
+		
 	}
 
 	public static void addEntity(Entity e) {
-		entitiesToAdd.add(e);
+		synchronized (lock) {
+			entitiesToAdd.add(e);
+		}
 	}
 
 	public static List<Entity> getEntitiesToAdd() {
-		return entitiesToAdd;
+		synchronized (lock) {
+			return entitiesToAdd;
+		}
 	}
 
 }

@@ -9,7 +9,8 @@ public class TitleScreenState implements GameState {
 	@Override
 	public void render() {
 		Assets.loadNext();
-		if (Controls.NEXT.hasBeenPressed() && Assets.hasLoadedAll()) {
+		if (Assets.hasLoadedAll()) {
+			System.out.println("PRESSED!!!!");
 			GameStateManager.setState(new WorldState());
 			
 		}

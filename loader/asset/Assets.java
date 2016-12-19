@@ -1,11 +1,12 @@
 package asset;
 
+import java.io.File;
 import java.util.LinkedList;
 
 import com.troy.troyberry.logging.Timer;
 import com.troy.troyberry.util.CrashReport;
 
-import graphics.*;
+import graphics.fontcreator.FontType;
 import graphics.renderer.SplashRenderer;
 import loader.Loader;
 import mesh.NormalMappedObjLoader;
@@ -18,30 +19,36 @@ public class Assets {
 	public static Texture backgroundTexture, rTexture, gTexture, bTexture;
 	public static Texture loadingTexture;
 
-	private static Mesh personMesh, treeMesh;
-	public static TexturedModel person, rock, tree;
-	public static Texture particleTexture;
+	private static Mesh personMesh, treeMesh, lampModel;
+	public static TexturedModel person, rock, tree, lamp;
+	public static ParticleTexture smokeParticle;
+	
+	public static FontType font;
 
 	public static TerrainTexturePack texturePack;
 	public static Texture blendMap;
 
-	public static void init(Loader loader) {
+	public static void init() {
 		try {
 			System.out.println("Loading assets  ");
 			Timer t = new Timer();
 
 			personMesh = new Mesh("person");
 			treeMesh = new Mesh("pine");
-			particleTexture = new Texture("particleAtlas", true);
-			particleTexture.setNumberOfRows(4);
-			particleTexture.load();
-			rock = new TexturedModel(NormalMappedObjLoader.loadOBJ("boulder", loader), new Texture("boulder", true));
+			lampModel = new Mesh("lamp");
+			
+			smokeParticle = new ParticleTexture("smoke", false);
+			smokeParticle.setNumberOfRows(4);
+			smokeParticle.load();
+			rock = new TexturedModel(NormalMappedObjLoader.loadOBJ("boulder"), new Texture("boulder", true));
 			rock.getTexture().setNormalMap(new Texture("boulderNormal", true));
 			rock.getTexture().setShineDamper(10);
-			rock.getTexture().setReflectivity(0.5f);
+			rock.getTexture().setReflectivity(0.2f);
 
 			person = new TexturedModel(personMesh, new Texture("playerTexture", true));
 			tree = new TexturedModel(treeMesh, new Texture("pine", true));
+			
+			lamp = new TexturedModel(lampModel, new Texture("lamp", true));
 
 			backgroundTexture = new Texture("grassy2", true);
 			rTexture = new Texture("mud", true);
@@ -83,9 +90,12 @@ public class Assets {
 		}
 	}
 
-	public static void loadCoreAssets(Loader loader) {
+	public static void loadCoreAssets() {
 		loadingTexture = new Texture("loading", true);
 		loadingTexture.load();
+		Texture fontAtlas = new Texture("/fonts/arial.png");
+		fontAtlas.load();
+		font = new FontType(fontAtlas, "/fonts/arial.fnt");
 	}
 
 	public static LinkedList<Asset> getToLoad() {

@@ -7,24 +7,24 @@ public class GameStateManager {
 	private static GameState currentState = null;
 
 	public static void start(GameState startingState) {
-				KeyHandler.unPressAllKeys();
-				currentState = startingState;
-				startingState.onStart();
+		KeyHandler.unPressAllKeys();
+		currentState = startingState;
+		startingState.onStart();
 	}
 
 	public static void setState(GameState newState) {
-				currentState.onEnd();
-				KeyHandler.unPressAllKeys();
-				newState.onStart();
-				currentState = newState;
+		currentState.onEnd();
+		KeyHandler.unPressAllKeys();
+		newState.onStart();
+		currentState = newState;
 	}
 
 	public static void render() {
-			currentState.render();
+		currentState.render();
 	}
 
 	public static void update(int updateCount) {
-			currentState.update(updateCount);
+		currentState.update(updateCount);
 	}
 
 }

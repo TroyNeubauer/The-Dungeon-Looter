@@ -14,7 +14,7 @@ import utils.MathUtil;
 
 public class ImageRenderer {
 	private static final float[] POSITIONS = { -1, 1, -1, -1, 1, 1, 1, -1 };
-	private static final Mesh QUAD = Loader.getLoader().loadToVAO(POSITIONS, 2);
+	private static final Mesh QUAD = Loader.loadToVAO(POSITIONS, 2);
 	private static ImageShader shader = new ImageShader();
 	private static volatile List<SizeableTexture> guis = new ArrayList<SizeableTexture>();
 

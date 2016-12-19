@@ -2,10 +2,9 @@ package graphics.renderer;
 
 import java.util.List;
 import java.util.Map;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL13;
-import org.lwjgl.opengl.GL20;
-import org.lwjgl.opengl.GL30;
+
+import org.lwjgl.opengl.*;
+
 import com.troy.troyberry.math.Matrix4f;
 
 import asset.*;
@@ -13,6 +12,7 @@ import entity.Entity;
 import graphics.shader.StaticShader;
 import graphics.shadows.ShadowBox;
 import graphics.shadows.ShadowMapMasterRenderer;
+import graphics.sky.SkyMaster;
 import input.GameSettings;
 import utils.MathUtil;
 
@@ -35,7 +35,7 @@ public class EntityRenderer {
 	public void render(Map<TexturedModel, List<Entity>> entities, Matrix4f toShadowSpace) {
 		shader.loadToShadowSpace(toShadowSpace);
 		shader.enableShadows(GameSettings.SHAWODS_ENABLED);
-		shader.loadSkyBlendFactor(MasterRenderer.skyboxRenderer.blendFactor);
+		shader.loadSkyBlendFactor(SkyMaster.skyboxRenderer.blendFactor);
 		for (TexturedModel model : entities.keySet()) {
 			prepareTexturedModel(model);
 			List<Entity> batch = entities.get(model);

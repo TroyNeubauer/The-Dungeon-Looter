@@ -1,7 +1,5 @@
 package main;
 
-import java.util.ArrayList;
-
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
@@ -13,10 +11,12 @@ import com.troy.troyberry.opengl.util.Window;
 import com.troy.troyberry.utils.graphics.ResolutionUtil;
 
 import asset.Assets;
+import camera.FirstPersonCamera;
+import camera.ICamera;
 import gamestate.GameStateManager;
 import gamestate.TitleScreenState;
+import graphics.fontrendering.TextMaster;
 import graphics.image.ImageRenderer;
-import graphics.image.SizeableTexture;
 import graphics.particle.ParticleMaster;
 import graphics.postprocessing.PostProcessing;
 import graphics.renderer.MasterRenderer;
@@ -27,7 +27,7 @@ import loader.Loader;
 
 public class GameManager {
 
-	private static MasterRenderer renderer;
+	private static volatile ICamera camera;
 
 	private static Window window;
 
@@ -42,19 +42,20 @@ public class GameManager {
 	}
 
 	public static void render() {
-		ParticleMaster.update();
-		GL11.glEnable(GL30.GL_CLIP_DISTANCE0);
 		GameStateManager.render();
-		ParticleMaster.render();
+
 		ImageRenderer.render();
+		TextMaster.render();
 	}
 
 	public static void cleanUp() {
+		Mouse.setGrabbed(false);
 		ParticleMaster.cleanUp();
 		PostProcessing.cleanUp();
 		ImageRenderer.cleanUp();
 		MasterRenderer.cleanUp();
 		Assets.cleanUp();
+		Loader.cleanUp();
 	}
 
 	public static void init() {
@@ -65,22 +66,24 @@ public class GameManager {
 		System.out.println("Starting " + Version.getWindowTitle() + "\n");
 		Timer t = new Timer();
 		window = new Window(ResolutionUtil.getscaledResolution(0.75));
+		camera = new FirstPersonCamera();
 		Mouse.init(window);
 		Keyboard.init(window);
 		
-		Assets.loadCoreAssets(Loader.getLoader());
+		Assets.loadCoreAssets();
 		SplashRenderer.init();
+		TextMaster.init();
 
-		MasterRenderer.init();
-		ParticleMaster.init(MasterRenderer.projectionMatrix);
-		Assets.init(Loader.getLoader());
-		
-		PostProcessing.init();
+		Assets.init();
 
 		System.out.println("finished game initalization took " + t.getTime() + "\n");
 
 		GameStateManager.start(new TitleScreenState());
 		Updater.init();
+	}
+	
+	public static ICamera getCamera(){
+		return camera;
 	}
 
 }

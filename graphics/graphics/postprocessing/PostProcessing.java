@@ -14,7 +14,7 @@ public class PostProcessing {
 	private static ContrastChanger contrastChanger;
 
 	public static void init() {
-		quad = Loader.getLoader().loadToVAO(POSITIONS, 2);
+		quad = Loader.loadToVAO(POSITIONS, 2);
 		contrastChanger = new ContrastChanger();
 	}
 
