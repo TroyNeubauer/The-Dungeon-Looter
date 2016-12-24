@@ -9,5 +9,7 @@ public interface GameState {
 	public void onStart();
 	
 	public void onEnd();
+	
+	public void cleanUp();
 
 }

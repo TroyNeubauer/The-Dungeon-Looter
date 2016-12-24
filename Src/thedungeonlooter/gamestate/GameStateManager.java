@@ -27,4 +27,9 @@ public class GameStateManager {
 		currentState.update(updateCount);
 	}
 
+	public static void cleanUp() {
+		currentState.onEnd();
+		currentState.cleanUp();
+	}
+
 }

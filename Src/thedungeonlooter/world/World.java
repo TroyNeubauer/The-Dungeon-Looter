@@ -159,6 +159,9 @@ public class World {
 	}
 
 	public void cleanUp() {
+		for(Terrain t : allTerrains){
+			//TODO: after assets update, clean up terrain
+		}
 	}
 
 	public String getTime() {

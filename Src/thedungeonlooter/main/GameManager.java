@@ -44,6 +44,7 @@ public class GameManager {
 		PostProcessing.cleanUp();
 		ImageRenderer.cleanUp();
 		MasterRenderer.cleanUp();
+		GameStateManager.cleanUp();
 		Assets.cleanUp();
 		Loader.cleanUp();
 	}

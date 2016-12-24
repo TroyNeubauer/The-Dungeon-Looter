@@ -29,7 +29,6 @@ public class WorldState implements GameState {
 	public static ICamera camera;
 	
 	public static Fbo multisampleFbo, outputFbo;
-	private static WaterFrameBuffers waterBuffers;
 	
 	public static World world;
 	private static EntityPlayer player;
@@ -69,7 +68,6 @@ public class WorldState implements GameState {
 	@Override
 	public void onStart() {
 		camera = CameraMaster.init(CameraMode.FIRST_PERSON);
-		waterBuffers = new WaterFrameBuffers();
 		FPSText = new GUIText("FPS: 1", 1.2f, Assets.font, new Vector2f(0.001f, 0.001f), 1.0f, false);
 		multisampleFbo = new Fbo(Window.getInstance().getWidth(), Window.getInstance().getHeight(), new Integer(GameSettings.MULTISAMPLE_COUNT));
 		outputFbo = new Fbo(Window.getInstance().getWidth(), Window.getInstance().getHeight(), Fbo.DEPTH_TEXTURE);
@@ -85,7 +83,7 @@ public class WorldState implements GameState {
 		if(camera instanceof PlayerBasedCamera)((PlayerBasedCamera)camera).setPlayer(player);
 		camera.update();
 		
-		MasterRenderer.init(world, camera, waterBuffers);
+		MasterRenderer.init(world, camera);
 		ParticleMaster.init(camera);
 		Assets.init();
 		
@@ -110,6 +108,11 @@ public class WorldState implements GameState {
 	public static void setCamera(ICamera camera) {
 		WorldState.camera = camera;
 		if(camera instanceof PlayerBasedCamera && player != null)((PlayerBasedCamera)camera).setPlayer(player);
+	}
+
+	@Override
+	public void cleanUp() {
+		FPSText.delete();
 	}
 
 }

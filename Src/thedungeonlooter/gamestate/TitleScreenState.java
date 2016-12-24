@@ -30,4 +30,9 @@ public class TitleScreenState implements GameState {
 	public void onEnd() {
 	}
 
+	@Override
+	public void cleanUp() {
+		
+	}
+
 }

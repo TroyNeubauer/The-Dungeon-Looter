@@ -50,13 +50,12 @@ public class MasterRenderer {
 	
 	public static int entitiesRedered = 0, terrainssRedered;
 
-	public static void init(World world, ICamera camera, WaterFrameBuffers fbos) {
+	public static void init(World world, ICamera camera) {
 		enableCulling();
 		
 		shadowMapRenderer = new ShadowMapMasterRenderer(camera);
 		renderer = new EntityRenderer(shader, camera.getProjectionMatrix());
 		terrainRenderer = new TerrainRenderer(terrainShader, camera.getProjectionMatrix());
-		WaterMaster.init(camera, fbos);
 		SkyMaster.init(world, camera);
 		normalMapRenderer = new NormalMappingRenderer(camera.getProjectionMatrix());
 	}
