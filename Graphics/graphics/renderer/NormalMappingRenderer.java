@@ -12,7 +12,9 @@ import com.troy.troyberry.opengl.util.GLMaths;
 import graphics.shader.NormalMappingShader;
 import graphics.shadows.ShadowBox;
 import graphics.shadows.ShadowMapMasterRenderer;
-import loader.asset.*;
+import loader.CompleteModel;
+import loader.mesh.Mesh;
+import loader.texture.Texture;
 import thedungeonlooter.camera.ICamera;
 import thedungeonlooter.entity.Entity;
 import thedungeonlooter.entity.light.Light;
@@ -34,17 +36,17 @@ public class NormalMappingRenderer {
 		shader.stop();
 	}
 
-	public void render(Map<TexturedModel, List<Entity>> entities, Vector4f clipPlane, List<Light> lights, ICamera camera, Matrix4f toShadowSpace) {
+	public void render(Map<CompleteModel, List<Entity>> entities, Vector4f clipPlane, List<Light> lights, ICamera camera, Matrix4f toShadowSpace) {
 
 		shader.start();
 		shader.loadToShadowSpace(toShadowSpace);
 		shader.enableShadows(GameSettings.SHAWODS_ENABLED);
 		prepare(clipPlane, lights, camera);
-		for (TexturedModel model : entities.keySet()) {
+		for (CompleteModel model : entities.keySet()) {
 			prepareTexturedModel(model);
 			List<Entity> batch = entities.get(model);
 			for (Entity entity : batch) {
-				if (!entity.skipRenderMethod) entity.render();
+				entity.render();
 				prepareInstance(entity);
 				GL11.glDrawElements(GL11.GL_TRIANGLES, model.getRawModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
 			}
@@ -57,23 +59,19 @@ public class NormalMappingRenderer {
 		shader.cleanUp();
 	}
 
-	private void prepareTexturedModel(TexturedModel model) {
+	private void prepareTexturedModel(CompleteModel model) {
 		Mesh mesh = model.getRawModel();
-		GL30.glBindVertexArray(mesh.getID());
+		mesh.bind();
 		GL20.glEnableVertexAttribArray(0);
 		GL20.glEnableVertexAttribArray(1);
 		GL20.glEnableVertexAttribArray(2);
 		GL20.glEnableVertexAttribArray(3);
 		Texture texture = model.getTexture();
-		shader.loadNumberOfRows(texture.getNumberOfRows());
-		if (texture.hasTransparency()) {
-			MasterRenderer.disableCulling();
-		}
-		shader.loadShineVariables(texture.getShineDamper(), texture.getReflectivity());
+		shader.loadShineVariables(model.getSkin().getShineDamper(), model.getSkin().getReflectivity());
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getID());
+		model.getTexture().bind();
 		GL13.glActiveTexture(GL13.GL_TEXTURE1);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getNormalMap());
+		model.getNormalMap().bind();
 		GL13.glActiveTexture(GL13.GL_TEXTURE2);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, MasterRenderer.getShadowMapTexture());
 	}
@@ -91,12 +89,12 @@ public class NormalMappingRenderer {
 		Matrix4f transformationMatrix = GLMaths.createTransformationMatrix(entity.position, entity.rotation.x, entity.rotation.y, entity.rotation.z,
 			entity.scale);
 		shader.loadTransformationMatrix(transformationMatrix);
-		shader.loadOffset(entity.getTextureXOffset(), entity.getTextureYOffset());
+		shader.loadShineVariables(entity.getSkin().getShineDamper(), entity.getSkin().getReflectivity());
 	}
 
 	private void prepare(Vector4f clipPlane, List<Light> lights, ICamera camera) {
+		MasterRenderer.disableCulling();
 		shader.loadClipPlane(clipPlane);
-		//need to be public variables in MasterRenderer
 		shader.loadSkyColour(MasterRenderer.RED, MasterRenderer.GREEN, MasterRenderer.BLUE);
 
 		shader.loadLights(lights, camera.getViewMatrix());

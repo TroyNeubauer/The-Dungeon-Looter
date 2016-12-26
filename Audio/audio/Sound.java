@@ -5,9 +5,6 @@ import com.troy.troyberry.util.MyFile;
 /**
  * Represents a single sound effect. Holds a reference to the sound's file, and
  * a reference to any buffers containing loaded data of the sound.
- * 
- * @author Karl
- *
  */
 public class Sound {
 

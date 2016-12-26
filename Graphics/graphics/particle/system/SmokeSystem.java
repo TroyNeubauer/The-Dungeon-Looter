@@ -4,7 +4,7 @@ import com.troy.troyberry.math.Vector3f;
 
 import graphics.particle.ParticleMaster;
 import graphics.particle.system.ParticleSystem.ParticleSystemShape;
-import loader.asset.Assets;
+import loader.Assets;
 
 public class SmokeSystem {
 

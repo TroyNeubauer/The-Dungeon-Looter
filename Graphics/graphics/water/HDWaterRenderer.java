@@ -9,7 +9,7 @@ import com.troy.troyberry.math.Vector3f;
 import com.troy.troyberry.opengl.util.GLMaths;
 
 import loader.Loader;
-import loader.asset.Mesh;
+import loader.mesh.*;
 import thedungeonlooter.camera.ICamera;
 
 public class HDWaterRenderer {
@@ -41,7 +41,7 @@ public class HDWaterRenderer {
 	private void prepareRender(ICamera camera){
 		shader.start();
 		shader.loadViewMatrix(camera);
-		GL30.glBindVertexArray(quad.getID());
+		quad.bind();
 		GL20.glEnableVertexAttribArray(0);
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, fbos.getReflectionTexture());
@@ -58,7 +58,7 @@ public class HDWaterRenderer {
 	private void setUpVAO() {
 		// Just x and z vectex positions here, y is set to 0 in v.shader
 		float[] vertices = { -1, -1, -1, 1, 1, -1, 1, -1, -1, 1, 1, 1 };
-		quad = Loader.loadToVAO(vertices, 2);
+		quad = new CustomMesh("Quad for water", new RawMeshData(vertices, 2));
 	}
 
 }

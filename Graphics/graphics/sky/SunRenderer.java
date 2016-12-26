@@ -5,9 +5,9 @@ import org.lwjgl.opengl.*;
 import com.troy.troyberry.math.Matrix4f;
 import com.troy.troyberry.math.Vector3f;
 
-import loader.Loader;
-import loader.asset.Mesh;
-import loader.asset.Texture;
+import loader.mesh.*;
+import loader.texture.Texture;
+import loader.texture.Texture2D;
 import thedungeonlooter.camera.ICamera;
 import thedungeonlooter.entity.light.Light;
 
@@ -21,13 +21,12 @@ public class SunRenderer {
 	private SunShader shader;
 
 	public SunRenderer(ICamera camera) {
-		quad = Loader.loadToVAO(VERTICES, 2);
+		quad = new CustomMesh("Mesh for sun", new RawMeshData(VERTICES, 2));
 		shader = new SunShader();
 		shader.start();
 		shader.loadProjectionMatrix(camera.getProjectionMatrix());
 		shader.stop();
-		sunTexture = new Texture("sun", true);
-		sunTexture.load();
+		sunTexture = new Texture2D("sun").loadCompletely();
 	}
 	
 	public void render(ICamera camera, Light sun){
@@ -62,9 +61,8 @@ public class SunRenderer {
 
 	private void prepare() {
 		shader.start();
-		GL13.glActiveTexture(GL13.GL_TEXTURE0);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, sunTexture.getID());
-		GL30.glBindVertexArray(quad.getID());
+		sunTexture.bindToUnit(0);
+		quad.bind();
 		GL20.glEnableVertexAttribArray(0);
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glDepthMask(false);

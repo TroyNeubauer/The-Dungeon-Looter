@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.troy.troyberry.math.Vector3f;
 
-import loader.asset.TexturedModel;
+import loader.CompleteModel;
 
 public abstract class EntityLiving extends Entity {
 
@@ -14,12 +14,12 @@ public abstract class EntityLiving extends Entity {
 	private float health;
 	public static List<EntityLiving> onDead = new ArrayList<EntityLiving>();
 
-	public EntityLiving(TexturedModel model, Vector3f position, Vector3f rotation, float scale, float health) {
+	public EntityLiving(CompleteModel model, Vector3f position, Vector3f rotation, float scale, float health) {
 		super(model, position, rotation, scale);
 		this.health = health;
 	}
 
-	public EntityLiving(TexturedModel model, Vector3f position) {
+	public EntityLiving(CompleteModel model, Vector3f position) {
 		super(model, position);
 	}
 

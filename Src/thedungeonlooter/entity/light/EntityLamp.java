@@ -2,7 +2,7 @@ package thedungeonlooter.entity.light;
 
 import com.troy.troyberry.math.Vector3f;
 
-import loader.asset.Assets;
+import loader.Assets;
 import thedungeonlooter.entity.Entity;
 
 public class EntityLamp extends Entity {

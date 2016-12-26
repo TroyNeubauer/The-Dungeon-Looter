@@ -4,13 +4,14 @@ import java.util.*;
 import java.util.Map.Entry;
 
 import graphics.particle.system.ParticleSystem;
-import loader.asset.Texture;
+import loader.texture.ParticleTexture;
+import loader.texture.Texture;
 import thedungeonlooter.camera.ICamera;
 import thedungeonlooter.gamestate.WorldState;
 
 public class ParticleMaster {
 
-	private static Map<Texture, List<Particle>> particles = new HashMap<Texture, List<Particle>>();
+	private static Map<ParticleTexture, List<Particle>> particles = new HashMap<ParticleTexture, List<Particle>>();
 	private static List<ParticleSystem> systems = new ArrayList<ParticleSystem>();
 	private static ParticleRenderer renderer;
 	private static ICamera camera;
@@ -22,7 +23,7 @@ public class ParticleMaster {
 
 	public static void update() {
 
-		Iterator<Entry<Texture, List<Particle>>> mapIterator = particles.entrySet().iterator();
+		Iterator<Entry<ParticleTexture, List<Particle>>> mapIterator = particles.entrySet().iterator();
 		while (mapIterator.hasNext()) {
 			List<Particle> list = mapIterator.next().getValue();
 			Iterator<Particle> i = list.iterator();

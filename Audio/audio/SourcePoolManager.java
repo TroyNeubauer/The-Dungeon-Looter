@@ -9,7 +9,6 @@ import java.util.List;
  * deals with any requests to play a sound. When a sound needs to be played an
  * unused source is removed from the pool and used to play the sound. When a
  * source finishes playing its current sound it gets added back into the pool.
- *
  */
 public class SourcePoolManager {
 

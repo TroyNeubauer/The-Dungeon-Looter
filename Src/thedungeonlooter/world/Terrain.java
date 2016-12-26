@@ -5,8 +5,10 @@ import java.util.*;
 import com.troy.troyberry.math.*;
 import com.troy.troyberry.opengl.util.GLMaths;
 
-import loader.Loader;
-import loader.asset.*;
+import loader.Assets;
+import loader.mesh.*;
+import loader.texture.TerrainTexturePack;
+import loader.texture.Texture;
 import thedungeonlooter.entity.*;
 
 public class Terrain {
@@ -19,6 +21,7 @@ public class Terrain {
 	private HeightGenerator generator, bassGenerator;
 
 	public final float x, z;
+	public final int gridX, gridZ;
 	public final Mesh model;
 	public TerrainTexturePack texturePack;
 	private EntityCreator entityCreator;
@@ -30,6 +33,8 @@ public class Terrain {
 
 	public Terrain(int gridX, int gridZ, TerrainTexturePack texturePack, Texture blendMap, double divideFactor, double persistence,
 		int largestFeature, long seed, EntityCreator entityCreator) {
+		this.gridX = gridX;
+		this.gridZ = gridZ;
 		this.texturePack = texturePack;
 		this.blendMap = blendMap;
 		this.x = gridX * SIZE;
@@ -114,7 +119,7 @@ public class Terrain {
 			}
 		}
 		populate();
-		return new Mesh(Loader.loadToVAO(vertices, textureCoords, normals, indices));
+		return new CustomMesh("Terrain " + x + ", " + z, new RawMeshData(vertices, textureCoords, normals, indices));
 	}
 
 	private void populate() {
@@ -123,7 +128,6 @@ public class Terrain {
 			float x = com.troy.troyberry.math.Maths.randRange(this.x, this.x + SIZE);
 			float z = com.troy.troyberry.math.Maths.randRange(this.z, this.z + SIZE);
 			StaticEntity e = new StaticEntity(Assets.tree, new Vector3f(x, getHeightOfTerrain(x, z), z));
-			e.skipRenderMethod = true;
 			EntityManager.addEntity(e);
 		}
 		for (int i = 0; i < SIZE / 30; i++) {
@@ -136,8 +140,6 @@ public class Terrain {
 			float rotZ = random.nextBoolean() ? Maths.randRange(-90, -30) : Maths.randRange(30, 90);
 
 			StaticEntity e = new StaticEntity(Assets.rock, new Vector3f(x, getHeightOfTerrain(x, z), z), new Vector3f(rotX, rotY, rotZ), scale);
-			e.skipRenderMethod = true;
-			e.hasNormalMap = true;
 			EntityManager.addEntity(e);
 		}
 	}

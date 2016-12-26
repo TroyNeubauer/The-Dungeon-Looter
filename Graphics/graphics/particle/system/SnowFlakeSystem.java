@@ -2,7 +2,7 @@ package graphics.particle.system;
 
 import com.troy.troyberry.math.Vector3f;
 
-import loader.asset.Assets;
+import loader.Assets;
 import thedungeonlooter.entity.player.EntityPlayer;
 
 public class SnowFlakeSystem extends ParticleSystem {

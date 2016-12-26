@@ -6,8 +6,8 @@ import com.troy.troyberry.math.Vector3f;
 import graphics.fontcreator.GUIText;
 import graphics.postprocessing.ContrastChanger;
 import graphics.renderer.ScreenShotMaster;
-import loader.asset.Assets;
-import loader.asset.TexturedModel;
+import loader.Assets;
+import loader.CompleteModel;
 import thedungeonlooter.camera.CameraMaster;
 import thedungeonlooter.camera.CameraMaster.CameraMode;
 import thedungeonlooter.entity.EntityLiving;
@@ -27,7 +27,7 @@ public class EntityPlayer extends EntityLiving {
 	private GUIText positionText;
 	public static boolean inUI = false;
 
-	public EntityPlayer(TexturedModel model, Vector3f position, Vector3f rotation, float scale) {
+	public EntityPlayer(CompleteModel model, Vector3f position, Vector3f rotation, float scale) {
 		super(model, position, rotation, scale, 100f);
 		this.scale = 0.3f;
 		this.invincible = true;

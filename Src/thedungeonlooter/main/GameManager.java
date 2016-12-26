@@ -14,8 +14,10 @@ import graphics.particle.ParticleMaster;
 import graphics.postprocessing.PostProcessing;
 import graphics.renderer.MasterRenderer;
 import graphics.renderer.SplashRenderer;
+import loader.Assets;
 import loader.Loader;
-import loader.asset.Assets;
+import loader.request.GlRequestProcessor;
+import loader.request.RequestProcessor;
 import thedungeonlooter.gamestate.GameStateManager;
 import thedungeonlooter.gamestate.TitleScreenState;
 
@@ -32,21 +34,27 @@ public class GameManager {
 	}
 
 	public static void render() {
+		OpenGlUtil.checkForErrors("Pre request processor");
+		GlRequestProcessor.dealWithTopRequests();
+		OpenGlUtil.checkForErrors("Pre mouse");
 		Mouse.update();
+		OpenGlUtil.checkForErrors("Pre gamestate reander");
 		GameStateManager.render();
+		OpenGlUtil.checkForErrors("Pre image render");
 		ImageRenderer.render();
+		OpenGlUtil.checkForErrors("Pre text master render");
 		TextMaster.render();
 	}
 
 	public static void cleanUp() {
+		GlRequestProcessor.completeAllRequests();
+		RequestProcessor.cleanUp();
 		Mouse.setGrabbed(false);
 		ParticleMaster.cleanUp();
 		PostProcessing.cleanUp();
 		ImageRenderer.cleanUp();
 		MasterRenderer.cleanUp();
 		GameStateManager.cleanUp();
-		Assets.cleanUp();
-		Loader.cleanUp();
 	}
 
 	public static void init() {
@@ -59,8 +67,9 @@ public class GameManager {
 		Mouse.init(window);
 		Keyboard.init(window);
 		
-		Assets.loadCoreAssets();
 		SplashRenderer.init();
+		Assets.loadCoreAssets();
+		SplashRenderer.render();
 		TextMaster.init();
 
 		Assets.init();

@@ -1,5 +1,7 @@
 package graphics.fontcreator;
 
+import loader.mesh.RawMeshData;
+
 /**
  * Stores the vertex data for all the quads on which a text will be rendered.
  * @author Karl
@@ -25,6 +27,10 @@ public class TextMeshData {
 
 	public int getVertexCount() {
 		return vertexPositions.length/2;
+	}
+	
+	public RawMeshData toRawMeshData() {
+		return new RawMeshData(vertexPositions, textureCoords);
 	}
 
 }

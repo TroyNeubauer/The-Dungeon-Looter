@@ -110,7 +110,7 @@ public class WavDataStream {
 	 *            the file each time {@link #loadNextData()} is called
 	 * @return The open wave data stream.
 	 * @throws Exception
-	 *             When something goes wrong :'(
+	 *             If something goes wrong
 	 */
 	protected static WavDataStream openWavStream(MyFile wavFile, int chunkSize) throws Exception {
 		InputStream bufferedInput = new BufferedInputStream(wavFile.getInputStream());

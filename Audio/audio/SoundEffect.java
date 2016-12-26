@@ -2,8 +2,6 @@ package audio;
 
 /**
  * Represents a 3D sound effect which can be played in the 3D world.
- * 
- * @author Karl
  *
  */
 public class SoundEffect {

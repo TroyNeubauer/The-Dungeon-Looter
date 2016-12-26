@@ -1,28 +1,30 @@
 package loader.mesh;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.troy.troyberry.math.Vector2f;
 import com.troy.troyberry.math.Vector3f;
+import com.troy.troyberry.util.MyFile;
 
-import loader.Loader;
-import loader.asset.Mesh;
+import thedungeonlooter.input.GameSettings;
 
 public class OBJFileLoader {
 
 	private static final String RES_LOC = "res/";
 
-	public static Mesh loadOBJ(String objFileName) {
-		FileReader isr = null;
-		File objFile = new File(RES_LOC + objFileName + ".obj");
+	public static RawMeshData loadOBJ(MyFile file) {
+		if (GameSettings.DEBUG) System.out.println("Loading model " + file.getPath());
+		BufferedReader reader = null;
 		try {
-			isr = new FileReader(objFile);
-		} catch (FileNotFoundException e) {
-			System.err.println("File not found in res; don't use any extention");
+			reader = file.getReader();
+		} catch (Exception e1) {
+			System.err.println("Unable to find normal mapped file " + file.getPath());
+			e1.printStackTrace();
 		}
-		BufferedReader reader = new BufferedReader(isr);
+
 		String line;
 		List<Vertex> vertices = new ArrayList<Vertex>();
 		List<Vector2f> textures = new ArrayList<Vector2f>();
@@ -76,7 +78,7 @@ public class OBJFileLoader {
 		// ModelData data = new ModelData(verticesArray, texturesArray,
 		// normalsArray, tangentsArray, indicesArray,
 		// furthest);
-		return new Mesh(Loader.loadToVAO(verticesArray, texturesArray, normalsArray, indicesArray));
+		return new RawMeshData(verticesArray, texturesArray, normalsArray, indicesArray);
 	}
 
 	private static void calculateTangents(Vertex v0, Vertex v1, Vertex v2, List<Vector2f> textures) {

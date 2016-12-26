@@ -3,7 +3,7 @@ package graphics.particle.system;
 import com.troy.troyberry.math.Vector3f;
 
 import graphics.particle.system.ParticleSystem.ParticleSystemShape;
-import loader.asset.Texture;
+import loader.texture.ParticleTexture;
 
 public class ParticleSystemBuilder {
 	
@@ -13,13 +13,13 @@ public class ParticleSystemBuilder {
 	private float gravityComplient = 0.5f, gravityComplientError = 0.05f;
 	private float particleLifeLength = 3, particleLifeLengthError = 0.5f;
 	private float systemLifeLength = 5, systemAge = 0.0f;
-	private Texture texture;
+	private ParticleTexture texture;
 	private Vector3f systemCenter;
 	private ParticleSystemShape shape;
 	private float radius = 0f;
 	private boolean diesWhenTouchesGround = true;
 	
-	public ParticleSystemBuilder(Texture texture, Vector3f center, ParticleSystemShape shape, float pps) {
+	public ParticleSystemBuilder(ParticleTexture texture, Vector3f center, ParticleSystemShape shape, float pps) {
 		this.texture = texture;
 		this.systemCenter = center;
 		this.shape = shape;

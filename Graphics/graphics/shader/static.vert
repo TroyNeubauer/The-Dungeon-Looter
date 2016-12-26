@@ -15,13 +15,9 @@ uniform mat4 transformationMatrix;
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
 uniform vec3 lightPosition[4];
-uniform float useFakeLighting;
 
 uniform float shadowDistance;
 uniform mat4 toShadowMapSpace;
-
-uniform float numberOfRows;
-uniform vec2 offset;
 
 uniform float density;
 uniform float gradient;
@@ -38,14 +34,9 @@ void main(void){
 	gl_ClipDistance[0] = dot(worldPosition, plane);
 	vec4 positionRelativeToCam = viewMatrix * worldPosition;
 	gl_Position = projectionMatrix * positionRelativeToCam;
-	pass_textureCoordinates = (textureCoordinates/numberOfRows) + offset;
+	pass_textureCoordinates = textureCoordinates;
 	
-	vec3 actualNormal = normal;
-	if(useFakeLighting > 0.5){
-		actualNormal = vec3(0.0,1.0,0.0);
-	}
-	
-	surfaceNormal = (transformationMatrix * vec4(actualNormal,0.0)).xyz;
+	surfaceNormal = (transformationMatrix * vec4(normal,0.0)).xyz;
 	for(int i=0;i<4;i++){
 		toLightVector[i] = lightPosition[i] - worldPosition.xyz;
 	}

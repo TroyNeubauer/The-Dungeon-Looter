@@ -8,9 +8,9 @@ import org.lwjgl.opengl.*;
 import com.troy.troyberry.math.Matrix4f;
 import com.troy.troyberry.math.Vector3f;
 
-import loader.Loader;
-import loader.asset.Mesh;
-import loader.asset.Texture;
+import loader.mesh.*;
+import loader.texture.ParticleTexture;
+import loader.texture.Texture;
 import thedungeonlooter.camera.ICamera;
 
 public class ParticleRenderer {
@@ -21,19 +21,18 @@ public class ParticleRenderer {
 	private ParticleShader shader;
 
 	protected ParticleRenderer(ICamera camera) {
-		quad = Loader.loadToVAO(VERTICES, 2);
+		quad = new CustomMesh("Particle Mesh", new RawMeshData(VERTICES, 2));
 		shader = new ParticleShader();
 		shader.start();
 		shader.loadProjectionMatrix(camera.getProjectionMatrix());
 		shader.stop();
 	}
 
-	protected void render(ICamera camera, Map<Texture, List<Particle>> particles) {
+	protected void render(ICamera camera, Map<ParticleTexture, List<Particle>> particles) {
 		Matrix4f viewMatrix = camera.getViewMatrix();
 		prepare();
-		for (Texture texture : particles.keySet()) {
-			GL13.glActiveTexture(GL13.GL_TEXTURE0);
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getID());
+		for (ParticleTexture texture : particles.keySet()) {
+			texture.bindToUnit(0);
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 			for (Particle particle : particles.get(texture)) {
 				updateModelViewMatrix(particle.position, particle.getRotation(), particle.getScale(), viewMatrix);
@@ -68,7 +67,7 @@ public class ParticleRenderer {
 
 	private void prepare() {
 		shader.start();
-		GL30.glBindVertexArray(quad.getID());
+		quad.bind();
 		GL20.glEnableVertexAttribArray(0);
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glDepthMask(false);

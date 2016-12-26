@@ -6,7 +6,7 @@ import com.troy.troyberry.util.StringFormatter;
 import graphics.fontcreator.GUIText;
 import graphics.particle.ParticleMaster;
 import graphics.renderer.MasterRenderer;
-import loader.asset.Assets;
+import loader.Assets;
 import thedungeonlooter.input.Controls;
 
 public class DebugMenu {

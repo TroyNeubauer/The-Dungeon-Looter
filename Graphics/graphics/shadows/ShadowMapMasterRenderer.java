@@ -7,7 +7,7 @@ import org.lwjgl.opengl.GL11;
 
 import com.troy.troyberry.math.*;
 
-import loader.asset.TexturedModel;
+import loader.CompleteModel;
 import thedungeonlooter.camera.ICamera;
 import thedungeonlooter.entity.Entity;
 import thedungeonlooter.entity.light.Light;
@@ -61,12 +61,12 @@ public class ShadowMapMasterRenderer {
 	 * 
 	 * @param entities
 	 *            - the lists of entities to be rendered. Each list is
-	 *            associated with the {@link TexturedModel} that all of the
+	 *            associated with the {@link CompleteModel} that all of the
 	 *            entities in that list use.
 	 * @param sun
 	 *            - the light acting as the sun in the scene.
 	 */
-	public void render(Map<TexturedModel, List<Entity>> entities, Light sun) {
+	public void render(Map<CompleteModel, List<Entity>> entities, Light sun) {
 		shadowBox.update();
 		Vector3f sunPosition = sun.getPosition();
 		Vector3f lightDirection = new Vector3f(-sunPosition.x, -sunPosition.y, -sunPosition.z);

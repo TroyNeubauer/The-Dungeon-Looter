@@ -5,7 +5,8 @@ import com.troy.troyberry.math.Vector3f;
 import com.troy.troyberry.opengl.util.Window;
 
 import graphics.particle.Particle;
-import loader.asset.Texture;
+import loader.texture.ParticleTexture;
+import loader.texture.Texture;
 import thedungeonlooter.gamestate.WorldState;
 import thedungeonlooter.input.GameSettings;
 
@@ -17,7 +18,7 @@ public class ParticleSystem {
 	protected float gravityComplient, gravityComplientError;
 	protected float particleLifeLength, particleLifeLengthError;
 	protected float systemLifeLength, systemAge;
-	protected Texture texture;
+	protected ParticleTexture texture;
 	protected Vector3f systemCenter;
 	protected ParticleSystemShape shape;
 	protected float radius;
@@ -25,7 +26,7 @@ public class ParticleSystem {
 
 	public ParticleSystem(float pps, float ppsError, float speed, float speedError, float size, float sizeError,
 			float gravityComplient, float gravityComplientError, float particleLifeLength, float particleLifeLengthError,
-			float systemLifeLength, Texture texture, Vector3f systemCenter, ParticleSystemShape shape, float radius, boolean diesWhenTouchesGround) {
+			float systemLifeLength, ParticleTexture texture, Vector3f systemCenter, ParticleSystemShape shape, float radius, boolean diesWhenTouchesGround) {
 		
 		this.pps = pps;
 		this.ppsError = ppsError;

@@ -3,7 +3,8 @@ package graphics.particle;
 import com.troy.troyberry.math.*;
 import com.troy.troyberry.opengl.util.Window;
 
-import loader.asset.Texture;
+import loader.texture.ParticleTexture;
+import loader.texture.Texture;
 import thedungeonlooter.camera.ICamera;
 import thedungeonlooter.world.World;
 
@@ -11,7 +12,7 @@ public class Particle {
 
 	public Vector3f position, velocity;
 	private float gravityEffect, lifeLength, rotation, scale, distance;
-	public Texture texture;
+	public ParticleTexture texture;
 
 	public Vector2f textureOffset1 = new Vector2f(), textureOffset2 = new Vector2f();
 	public float blend;
@@ -19,7 +20,7 @@ public class Particle {
 
 	private float age;
 
-	public Particle(Vector3f position, Vector3f velocity, Texture texture, float gravityEffect, float lifeLength, float rotation,
+	public Particle(Vector3f position, Vector3f velocity, ParticleTexture texture, float gravityEffect, float lifeLength, float rotation,
 		float scale, boolean diesWhenTouchesGround) {
 		this.position = position;
 		this.velocity = velocity;

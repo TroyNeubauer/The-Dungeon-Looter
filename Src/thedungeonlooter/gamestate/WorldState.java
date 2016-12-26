@@ -11,7 +11,7 @@ import graphics.postprocessing.Fbo;
 import graphics.postprocessing.PostProcessing;
 import graphics.renderer.MasterRenderer;
 import graphics.water.WaterFrameBuffers;
-import loader.asset.Assets;
+import loader.Assets;
 import thedungeonlooter.camera.*;
 import thedungeonlooter.camera.CameraMaster.CameraMode;
 import thedungeonlooter.entity.EntityManager;

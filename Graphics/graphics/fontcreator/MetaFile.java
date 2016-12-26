@@ -48,7 +48,7 @@ public class MetaFile {
 	 */
 	protected MetaFile(String path) {
 		this.aspectRatio = (double) Window.getInstance().getWidth() / (double) Window.getInstance().getHeight();
-		openFile(path);
+		openFile("/fonts/" + path + ".fnt");
 		loadPaddingData();
 		loadLineSizes();
 		int imageWidth = getValueOfVariable("scaleW");

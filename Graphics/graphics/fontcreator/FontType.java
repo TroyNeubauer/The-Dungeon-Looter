@@ -1,6 +1,6 @@
 package graphics.fontcreator;
 
-import loader.asset.Texture;
+import loader.texture.Texture;
 
 /**
  * Represents a font. It holds the font's texture atlas as well as having the

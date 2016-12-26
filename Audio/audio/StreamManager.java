@@ -7,9 +7,6 @@ import java.util.List;
  * This thread runs in the background and keeps any audio streams updated. It
  * continuously loops through all currently active {@link Streamer}s and updates
  * them, removing and deleting any which have finished their streaming duty.
- * 
- * @author Karl
- *
  */
 public class StreamManager extends Thread {
 

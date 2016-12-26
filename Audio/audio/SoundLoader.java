@@ -10,8 +10,6 @@ import org.lwjgl.openal.AL10;
  * Contains methods used for loading and deleting sounds, and also keeps track
  * of all the sound buffers that are currently loaded so that it can delete them
  * when the game closes.
- * 
- * @author Karl
  *
  */
 public class SoundLoader {

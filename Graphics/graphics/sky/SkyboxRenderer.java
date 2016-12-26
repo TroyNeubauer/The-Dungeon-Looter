@@ -3,9 +3,11 @@ package graphics.sky;
 import org.lwjgl.opengl.*;
 
 import com.troy.troyberry.math.Vector3f;
+import com.troy.troyberry.util.MyFile;
 
-import loader.Loader;
-import loader.asset.Mesh;
+import loader.mesh.*;
+import loader.texture.Texture;
+import loader.texture.TextureCubeMap;
 import thedungeonlooter.camera.ICamera;
 import thedungeonlooter.world.World;
 
@@ -30,14 +32,14 @@ public class SkyboxRenderer {
 	private static final String[] NIGHT_TEXTURE_FILES = { "nightRight", "nightLeft", "nightTop", "nightBottom", "nightBack", "nightFront", "night" };
 
 	private Mesh cube;
-	private int nightTexture;
+	private Texture nightTexture;
 	private SkyboxShader shader;
 	public World world;
 
 	public SkyboxRenderer(World world, ICamera camera) {
 		this.world = world;
-		cube = Loader.loadToVAO(VERTICES, 3);
-		nightTexture = Loader.loadCubeMap(NIGHT_TEXTURE_FILES);
+		cube = new CustomMesh("Cube for skybox", new RawMeshData(VERTICES, 3));
+		nightTexture = new TextureCubeMap(new MyFile(), "");
 		shader = new SkyboxShader();
 		shader.start();
 		shader.connectTextureUnits();
@@ -49,7 +51,7 @@ public class SkyboxRenderer {
 		shader.start();
 		shader.loadViewMatrix(camera);
 		shader.loadSkyColor(new Vector3f(r, g, b));
-		GL30.glBindVertexArray(cube.getID());
+		cube.bind();
 		GL20.glEnableVertexAttribArray(0);
 		bindTextures();
 		GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, cube.getVertexCount());
@@ -59,8 +61,6 @@ public class SkyboxRenderer {
 	}
 
 	private void bindTextures() {
-		int texture1;
-		int texture2;
 		if (world.time >= World.END_SUNRISE && world.time < World.START_SUNSET) {
 			blendFactor = 0;
 		} else if (world.time >= World.START_SUNSET && world.time < World.END_SUNSET) {
@@ -72,7 +72,7 @@ public class SkyboxRenderer {
 		}
 
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
-		GL11.glBindTexture(GL13.GL_TEXTURE_CUBE_MAP, nightTexture);
+		nightTexture.bind();
 		shader.loadBlendFactor(blendFactor);
 		world.blendFactor = blendFactor;
 	}

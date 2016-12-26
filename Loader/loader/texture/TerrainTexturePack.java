@@ -1,4 +1,4 @@
-package loader.asset;
+package loader.texture;
 
 public class TerrainTexturePack {
 	

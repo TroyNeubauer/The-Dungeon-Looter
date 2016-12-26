@@ -1,19 +1,22 @@
 package thedungeonlooter.gamestate;
 
-import loader.asset.Assets;
+import org.lwjgl.opengl.GL30;
+
+import graphics.renderer.SplashRenderer;
+import loader.Assets;
 import thedungeonlooter.input.Controls;
 
 public class TitleScreenState implements GameState {
 
 	@Override
 	public void render() {
-		Assets.loadNext();
-		if (Assets.hasLoadedAll()) {
-			GameStateManager.setState(new WorldState());
-			
-		}
+		SplashRenderer.render();
 		if (Controls.ESCAPE.hasBeenPressed()) {
 			System.exit(0);
+		}
+		
+		if (Controls.NEXT.hasBeenPressed()) {
+			GameStateManager.setState(new WorldState());
 		}
 	}
 

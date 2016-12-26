@@ -9,8 +9,8 @@ import com.troy.troyberry.math.Matrix4f;
 import com.troy.troyberry.opengl.util.GLMaths;
 
 import graphics.renderer.MasterRenderer;
-import loader.asset.Mesh;
-import loader.asset.TexturedModel;
+import loader.CompleteModel;
+import loader.mesh.Mesh;
 import thedungeonlooter.entity.Entity;
 import thedungeonlooter.entity.player.EntityPlayer;
 import thedungeonlooter.input.GameSettings;
@@ -40,22 +40,17 @@ public class ShadowMapEntityRenderer {
 	 * @param entities
 	 *            - the entities to be rendered to the shadow map.
 	 */
-	protected void render(Map<TexturedModel, List<Entity>> entities) {
-		for (TexturedModel model : entities.keySet()) {
+	protected void render(Map<CompleteModel, List<Entity>> entities) {
+		MasterRenderer.enableCulling();
+		for (CompleteModel model : entities.keySet()) {
 			Mesh rawModel = model.getRawModel();
 			bindModel(rawModel);
 			GL13.glActiveTexture(GL13.GL_TEXTURE0);
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getID());
-			if (model.getTexture().hasTransparency()) {
-				MasterRenderer.disableCulling();
-			}
+			model.getTexture().bind();
 			for (Entity entity : entities.get(model)) {
 				if ((entity instanceof EntityPlayer) && !GameSettings.SHOW_PLAYER_SHADOW) continue;
 				prepareInstance(entity);
 				GL11.glDrawElements(GL11.GL_TRIANGLES, rawModel.getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
-			}
-			if (model.getTexture().hasTransparency()) {
-				MasterRenderer.enableCulling();
 			}
 		}
 		GL20.glDisableVertexAttribArray(0);
@@ -68,11 +63,11 @@ public class ShadowMapEntityRenderer {
 	 * because that is where the positions are stored in the VAO, and only the
 	 * positions are required in the vertex shader.
 	 * 
-	 * @param rawModel
+	 * @param mesh
 	 *            - the model to be bound.
 	 */
-	private void bindModel(Mesh rawModel) {
-		GL30.glBindVertexArray(rawModel.getID());
+	private void bindModel(Mesh mesh) {
+		mesh.bind();
 		GL20.glEnableVertexAttribArray(0);
 		GL20.glEnableVertexAttribArray(1);
 	}

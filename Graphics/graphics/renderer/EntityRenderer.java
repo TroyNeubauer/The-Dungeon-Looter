@@ -12,7 +12,9 @@ import graphics.shader.StaticShader;
 import graphics.shadows.ShadowBox;
 import graphics.shadows.ShadowMapMasterRenderer;
 import graphics.sky.SkyMaster;
-import loader.asset.*;
+import loader.CompleteModel;
+import loader.mesh.Mesh;
+import loader.texture.Skin;
 import thedungeonlooter.camera.CameraMaster;
 import thedungeonlooter.camera.CameraMaster.CameraMode;
 import thedungeonlooter.entity.Entity;
@@ -35,11 +37,12 @@ public class EntityRenderer {
 		shader.stop();
 	}
 
-	public void render(Map<TexturedModel, List<Entity>> entities, Matrix4f toShadowSpace) {
+	public void render(Map<CompleteModel, List<Entity>> entities, Matrix4f toShadowSpace) {
+		MasterRenderer.disableCulling();
 		shader.loadToShadowSpace(toShadowSpace);
 		shader.enableShadows(GameSettings.SHAWODS_ENABLED);
 		shader.loadSkyBlendFactor(SkyMaster.skyboxRenderer.blendFactor);
-		for (TexturedModel model : entities.keySet()) {
+		for (CompleteModel model : entities.keySet()) {
 			prepareTexturedModel(model);
 			List<Entity> batch = entities.get(model);
 			for (Entity entity : batch) {
@@ -52,21 +55,17 @@ public class EntityRenderer {
 		}
 	}
 
-	private void prepareTexturedModel(TexturedModel model) {
+	private void prepareTexturedModel(CompleteModel model) {
 		Mesh mesh = model.getRawModel();
-		GL30.glBindVertexArray(mesh.getID());
+		mesh.bind();
 		GL20.glEnableVertexAttribArray(0);
 		GL20.glEnableVertexAttribArray(1);
 		GL20.glEnableVertexAttribArray(2);
-		Texture texture = model.getTexture();
-		shader.loadNumberOfRows(texture.getNumberOfRows());
-		if (texture.hasTransparency()) {
-			MasterRenderer.disableCulling();
-		}
-		shader.loadFakeLightingVariable(texture.usesFakeLighting());
-		shader.loadShineVariables(texture.getShineDamper(), texture.getReflectivity());
+		Skin skin = model.getSkin();
+		
+		shader.loadShineVariables(skin.getShineDamper(), skin.getReflectivity());
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getID());
+		model.getTexture().bind();
 		GL13.glActiveTexture(GL13.GL_TEXTURE1);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, MasterRenderer.getShadowMapTexture());
 	}
@@ -83,7 +82,6 @@ public class EntityRenderer {
 		Matrix4f transformationMatrix = GLMaths.createTransformationMatrix(entity.position, entity.rotation.x, entity.rotation.y, entity.rotation.z,
 			entity.scale);
 		shader.loadTransformationMatrix(transformationMatrix);
-		shader.loadOffset(entity.getTextureXOffset(), entity.getTextureYOffset());
 	}
 
 }

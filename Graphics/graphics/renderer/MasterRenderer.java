@@ -13,7 +13,7 @@ import graphics.shadows.ShadowMapMasterRenderer;
 import graphics.sky.SkyMaster;
 import graphics.water.WaterFrameBuffers;
 import graphics.water.WaterMaster;
-import loader.asset.TexturedModel;
+import loader.CompleteModel;
 import thedungeonlooter.camera.ICamera;
 import thedungeonlooter.entity.Entity;
 import thedungeonlooter.entity.light.Light;
@@ -43,8 +43,8 @@ public class MasterRenderer {
 
 	private static NormalMappingRenderer normalMapRenderer;
 
-	private static Map<TexturedModel, List<Entity>> entities = new HashMap<TexturedModel, List<Entity>>();
-	private static Map<TexturedModel, List<Entity>> normalMapEntities = new HashMap<TexturedModel, List<Entity>>();
+	private static Map<CompleteModel, List<Entity>> entities = new HashMap<CompleteModel, List<Entity>>();
+	private static Map<CompleteModel, List<Entity>> normalMapEntities = new HashMap<CompleteModel, List<Entity>>();
 	private static List<Terrain> terrains = new ArrayList<Terrain>();
 	private static FrustumCuller culler;
 	
@@ -74,7 +74,7 @@ public class MasterRenderer {
 		for (Entity entity : entities) {
 			if (Maths.approximateDistanceBetweenPoints(entity.position.x, entity.position.z, camera.getPosition().x, camera.getPosition().z) > renderDistance)
 				continue;
-			if (entity.hasNormalMap) {
+			if (entity.getSkin().hasNormalMap()) {
 				processNormalMapEntity(entity);
 			} else {
 				processEntity(entity);
@@ -86,10 +86,10 @@ public class MasterRenderer {
 	public static void render(List<Light> lights, ICamera camera, Vector4f clipPlane) {
 		entitiesRedered = 0;
 		terrainssRedered = terrains.size();
-		for (TexturedModel model : entities.keySet()) {
+		for (CompleteModel model : entities.keySet()) {
 			entitiesRedered += entities.get(model).size();
 		}
-		for (TexturedModel model : normalMapEntities.keySet()) {
+		for (CompleteModel model : normalMapEntities.keySet()) {
 			entitiesRedered += normalMapEntities.get(model).size();
 		}
 		prepare();
@@ -128,7 +128,7 @@ public class MasterRenderer {
 
 	public static void processEntity(Entity entity) {
 		if(!culler.isInFrustum(entity.position, 25)) return;
-		TexturedModel entityModel = entity.model;
+		CompleteModel entityModel = entity.model;
 		List<Entity> batch = entities.get(entityModel);
 		if (batch != null) {
 			batch.add(entity);
@@ -148,7 +148,7 @@ public class MasterRenderer {
 
 	public static void processNormalMapEntity(Entity entity) {
 		if(!culler.isInFrustum(entity.position, 25)) return;
-		TexturedModel entityModel = entity.model;
+		CompleteModel entityModel = entity.model;
 		List<Entity> batch = normalMapEntities.get(entityModel);
 		if (batch != null) {
 			batch.add(entity);
@@ -163,7 +163,7 @@ public class MasterRenderer {
 		if(culler == null)culler = new FrustumCuller(camera);
 		culler.update(camera);
 		for (Entity entity : entitList) {
-			if (entity.hasNormalMap) {
+			if (entity.getSkin().hasNormalMap()) {
 				processNormalMapEntity(entity);
 			} else {
 				processEntity(entity);

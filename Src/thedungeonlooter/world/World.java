@@ -14,7 +14,7 @@ import graphics.renderer.MasterRenderer;
 import graphics.renderer.SplashRenderer;
 import graphics.sky.SkyMaster;
 import graphics.water.WaterTile;
-import loader.asset.Assets;
+import loader.Assets;
 import thedungeonlooter.camera.ICamera;
 import thedungeonlooter.entity.*;
 import thedungeonlooter.entity.light.Light;

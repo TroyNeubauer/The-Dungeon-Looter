@@ -22,10 +22,7 @@ public class StaticShader extends ShaderProgram {
 	private int location_attenuation[];
 	private int location_shineDamper;
 	private int location_reflectivity;
-	private int location_useFakeLighting;
 	private int location_skyColour;
-	private int location_numberOfRows;
-	private int location_offset;
 	private int location_plane;
 	private int location_modelTexture;
 	private int location_toShadowMapSpace;
@@ -56,10 +53,7 @@ public class StaticShader extends ShaderProgram {
 		location_viewMatrix = super.getUniformLocation("viewMatrix");
 		location_shineDamper = super.getUniformLocation("shineDamper");
 		location_reflectivity = super.getUniformLocation("reflectivity");
-		location_useFakeLighting = super.getUniformLocation("useFakeLighting");
 		location_skyColour = super.getUniformLocation("skyColour");
-		location_numberOfRows = super.getUniformLocation("numberOfRows");
-		location_offset = super.getUniformLocation("offset");
 		location_plane = super.getUniformLocation("plane");
 		location_modelTexture = super.getUniformLocation("modelTexture");
 		location_toShadowMapSpace = super.getUniformLocation("toShadowMapSpace");
@@ -121,20 +115,8 @@ public class StaticShader extends ShaderProgram {
 		super.loadVector(location_plane, plane);
 	}
 
-	public void loadNumberOfRows(int numberOfRows) {
-		super.loadFloat(location_numberOfRows, numberOfRows);
-	}
-
-	public void loadOffset(float x, float y) {
-		super.loadVector(location_offset, new Vector2f(x, y));
-	}
-
 	public void loadSkyColor(float r, float g, float b) {
 		super.loadVector(location_skyColour, new Vector3f(r, g, b));
-	}
-
-	public void loadFakeLightingVariable(boolean useFake) {
-		super.loadBoolean(location_useFakeLighting, useFake);
 	}
 
 	public void loadShineVariables(float damper, float reflectivity) {

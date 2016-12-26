@@ -6,6 +6,9 @@ import com.troy.troyberry.math.Vector2f;
 import com.troy.troyberry.math.Vector3f;
 
 import graphics.fontrendering.TextMaster;
+import loader.Asset;
+import loader.mesh.CustomMesh;
+import loader.mesh.Mesh;
 
 /**
  * Represents a piece of text in the game.
@@ -19,8 +22,7 @@ public class GUIText {
 	private float fontSize;
 	private boolean hidden = false;
 
-	private int textMeshVao;
-	private int vertexCount;
+	private Mesh mesh;
 	private Vector3f color = new Vector3f(0f, 0f, 0f);
 
 	private Vector2f position;
@@ -131,14 +133,6 @@ public class GUIText {
 	}
 
 	/**
-	 * @return the ID of the text's VAO, which contains all the vertex data for
-	 *         the quads on which the text will be rendered.
-	 */
-	public int getMesh() {
-		return textMeshVao;
-	}
-
-	/**
 	 * Set the VAO and vertex count for this text.
 	 * 
 	 * @param vao
@@ -147,16 +141,15 @@ public class GUIText {
 	 * @param verticesCount
 	 *            - the total number of vertices in all of the quads.
 	 */
-	public void setMeshInfo(int vao, int verticesCount) {
-		this.textMeshVao = vao;
-		this.vertexCount = verticesCount;
+	public void setMeshInfo(Mesh mesh) {
+		this.mesh = mesh;
 	}
 
 	/**
 	 * @return The total number of vertices of all the text's quads.
 	 */
 	public int getVertexCount() {
-		return this.vertexCount;
+		return mesh.getVao().getVertexCount();
 	}
 
 	/**
@@ -208,7 +201,7 @@ public class GUIText {
 	}
 	
 	public void delete(){
-		GL30.glDeleteVertexArrays(textMeshVao);
+		mesh.delete();
 	}
 	
 	public boolean isHidden() {
@@ -226,6 +219,10 @@ public class GUIText {
 	public GUIText setShown(boolean shown) {
 		hidden = !shown;
 		return this;
+	}
+
+	public Mesh getMesh() {
+		return mesh;
 	}
 
 }

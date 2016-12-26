@@ -4,10 +4,8 @@ import org.lwjgl.opengl.*;
 
 import com.troy.troyberry.opengl.util.Window;
 
-import loader.Loader;
 import loader.LoadingScreenShader;
-import loader.asset.Assets;
-import loader.asset.Mesh;
+import loader.mesh.*;
 
 public class SplashRenderer {
 
@@ -16,25 +14,22 @@ public class SplashRenderer {
 	private static LoadingScreenShader shader;
 
 	public static void init() {
-		quad = Loader.loadToVAO(POSITIONS, 2);
+		quad = new CustomMesh("Splash Renderer Quad", new RawMeshData(POSITIONS, 2)).loadNow();
 		shader = new LoadingScreenShader();
-		SplashRenderer.render();
 	}
 
 	public static void render() {
 		start();
 		shader.start();
-
-		GL13.glActiveTexture(GL13.GL_TEXTURE0);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, Assets.loadingTexture.getID());
+		//texture.bind();
 		GL11.glDrawArrays(GL11.GL_TRIANGLE_STRIP, 0, 4);
-		shader.start();
+		shader.stop();
 		end();
 		Window.getInstance().update();
 	}
 
 	private static void start() {
-		GL30.glBindVertexArray(quad.getID());
+		quad.bind();
 		GL20.glEnableVertexAttribArray(0);
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
 	}

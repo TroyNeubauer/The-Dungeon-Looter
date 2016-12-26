@@ -8,9 +8,6 @@ import com.troy.troyberry.math.Vector3f;
  * Sound sources are what play the sounds in OpenAL. This class represents one
  * source, capable of playing one sound at a time. This object also determines
  * how the sound is played (volume, position, etc).
- * 
- * @author Karl
- *
  */
 public class SoundSource {
 

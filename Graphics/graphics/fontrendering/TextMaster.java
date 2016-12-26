@@ -6,6 +6,7 @@ import org.lwjgl.opengl.GL30;
 
 import graphics.fontcreator.*;
 import loader.Loader;
+import loader.mesh.CustomMesh;
 
 public class TextMaster {
 	
@@ -23,8 +24,7 @@ public class TextMaster {
 	public static void loadText(GUIText text){
 		FontType font = text.getFont();
 		TextMeshData data = font.loadText(text);
-		int vao = Loader.loadToVAO(data.getVertexPositions(), data.getTextureCoords());
-		text.setMeshInfo(vao, data.getVertexCount());
+		text.setMeshInfo(new CustomMesh("Text: ",data.toRawMeshData()));
 		List<GUIText> textBatch = texts.get(font);
 		if(textBatch == null){
 			textBatch = new ArrayList<GUIText>();
@@ -38,7 +38,7 @@ public class TextMaster {
 		textBatch.remove(text);
 		if(textBatch.isEmpty()){
 			texts.remove(texts.get(text.getFont()));
-			GL30.glDeleteVertexArrays(text.getMesh());
+			text.getMesh().delete();
 		}
 	}
 	

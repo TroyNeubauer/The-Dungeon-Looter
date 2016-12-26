@@ -7,19 +7,19 @@ import org.lwjgl.opengl.*;
 
 import com.troy.troyberry.math.Matrix4f;
 import com.troy.troyberry.opengl.util.GLMaths;
+import com.troy.troyberry.opengl.util.OpenGlUtil;
 
-import loader.Loader;
-import loader.asset.Mesh;
+import loader.mesh.*;
 
 public class ImageRenderer {
 	private static final float[] POSITIONS = { -1, 1, -1, -1, 1, 1, 1, -1 };
-	private static final Mesh QUAD = Loader.loadToVAO(POSITIONS, 2);
+	private static final Mesh QUAD = new CustomMesh("Image renderer quad", new RawMeshData(POSITIONS, 2)).loadNow();
 	private static ImageShader shader = new ImageShader();
 	private static volatile List<GLTexture> guis = new ArrayList<GLTexture>();
 
 	public static void render() {
 		shader.start();
-		GL30.glBindVertexArray(QUAD.getID());
+		QUAD.bind();
 		GL20.glEnableVertexAttribArray(0);
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
@@ -41,7 +41,7 @@ public class ImageRenderer {
 
 	public static void render(GLTexture texture) {
 		shader.start();
-		GL30.glBindVertexArray(QUAD.getID());
+		QUAD.bind();
 		GL20.glEnableVertexAttribArray(0);
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);

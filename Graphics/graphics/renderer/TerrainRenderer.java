@@ -12,8 +12,8 @@ import graphics.shader.TerrainShader;
 import graphics.shadows.ShadowBox;
 import graphics.shadows.ShadowMapMasterRenderer;
 import graphics.sky.SkyMaster;
-import loader.asset.Mesh;
-import loader.asset.TerrainTexturePack;
+import loader.mesh.Mesh;
+import loader.texture.TerrainTexturePack;
 import thedungeonlooter.input.GameSettings;
 import thedungeonlooter.world.Terrain;
 
@@ -46,8 +46,8 @@ public class TerrainRenderer {
 	}
 
 	private void prepareTerrain(Terrain terrain) {
-		Mesh rawModel = terrain.model;
-		GL30.glBindVertexArray(rawModel.getID());
+		Mesh mesh = terrain.model;
+		mesh.bind();
 		GL20.glEnableVertexAttribArray(0);
 		GL20.glEnableVertexAttribArray(1);
 		GL20.glEnableVertexAttribArray(2);
@@ -58,15 +58,15 @@ public class TerrainRenderer {
 	private void bindTextures(Terrain terrain) {
 		TerrainTexturePack texturePack = terrain.texturePack;
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texturePack.getBackgroundTexture().getID());
+		texturePack.getBackgroundTexture().bind();
 		GL13.glActiveTexture(GL13.GL_TEXTURE1);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texturePack.getrTexture().getID());
+		texturePack.getrTexture().bind();
 		GL13.glActiveTexture(GL13.GL_TEXTURE2);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texturePack.getgTexture().getID());
+		texturePack.getgTexture().bind();
 		GL13.glActiveTexture(GL13.GL_TEXTURE3);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texturePack.getbTexture().getID());
+		texturePack.getbTexture().bind();
 		GL13.glActiveTexture(GL13.GL_TEXTURE4);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, terrain.blendMap.getID());
+		terrain.blendMap.bind();
 	}
 
 	private void unbindTexturedModel() {

@@ -19,8 +19,7 @@ public class FontRenderer {
 	public void render(Map<FontType, List<GUIText>> texts){
 		prepare();
 		for(FontType font : texts.keySet()){
-			GL13.glActiveTexture(GL13.GL_TEXTURE0);
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D, font.getTextureAtlas().getID());
+			font.getTextureAtlas().bindToUnit(0);
 			for(GUIText text : texts.get(font)){
 				if(text.isHidden())continue;
 				renderText(text);
@@ -41,7 +40,7 @@ public class FontRenderer {
 	}
 	
 	private void renderText(GUIText text){
-		GL30.glBindVertexArray(text.getMesh());
+		text.getMesh().bind();
 		GL20.glEnableVertexAttribArray(0);
 		GL20.glEnableVertexAttribArray(1);
 		shader.loadColour(text.getColor());

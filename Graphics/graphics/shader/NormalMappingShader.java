@@ -22,8 +22,6 @@ public class NormalMappingShader extends ShaderProgram {
 	private int location_shineDamper;
 	private int location_reflectivity;
 	private int location_skyColour;
-	private int location_numberOfRows;
-	private int location_offset;
 	private int location_plane;
 	private int location_modelTexture;
 	private int location_normalMap;
@@ -56,8 +54,6 @@ public class NormalMappingShader extends ShaderProgram {
 		location_shineDamper = super.getUniformLocation("shineDamper");
 		location_reflectivity = super.getUniformLocation("reflectivity");
 		location_skyColour = super.getUniformLocation("skyColour");
-		location_numberOfRows = super.getUniformLocation("numberOfRows");
-		location_offset = super.getUniformLocation("offset");
 		location_plane = super.getUniformLocation("plane");
 		location_modelTexture = super.getUniformLocation("modelTexture");
 		location_normalMap = super.getUniformLocation("normalMap");
@@ -113,14 +109,6 @@ public class NormalMappingShader extends ShaderProgram {
 
 	public void loadClipPlane(Vector4f plane) {
 		super.loadVector(location_plane, plane);
-	}
-
-	public void loadNumberOfRows(int numberOfRows) {
-		super.loadFloat(location_numberOfRows, numberOfRows);
-	}
-
-	public void loadOffset(float x, float y) {
-		super.loadVector(location_offset, new Vector2f(x, y));
 	}
 
 	public void loadSkyColour(float r, float g, float b) {

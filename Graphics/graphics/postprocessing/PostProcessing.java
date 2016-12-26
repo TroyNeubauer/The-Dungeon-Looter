@@ -3,7 +3,7 @@ package graphics.postprocessing;
 import org.lwjgl.opengl.*;
 
 import loader.Loader;
-import loader.asset.Mesh;
+import loader.mesh.*;
 
 public class PostProcessing {
 
@@ -12,7 +12,7 @@ public class PostProcessing {
 	private static ContrastChanger contrastChanger;
 
 	public static void init() {
-		quad = Loader.loadToVAO(POSITIONS, 2);
+		quad = new CustomMesh("Quad for post processing", new RawMeshData(POSITIONS, 2));
 		contrastChanger = new ContrastChanger();
 	}
 
@@ -27,7 +27,7 @@ public class PostProcessing {
 	}
 
 	private static void start() {
-		GL30.glBindVertexArray(quad.getID());
+		quad.bind();
 		GL20.glEnableVertexAttribArray(0);
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
 	}
